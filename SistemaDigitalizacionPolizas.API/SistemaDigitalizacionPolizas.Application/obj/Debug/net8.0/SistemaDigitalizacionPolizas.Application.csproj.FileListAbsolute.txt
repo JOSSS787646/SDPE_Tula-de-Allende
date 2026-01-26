@@ -1,0 +1,15 @@
+C:\Users\josea\Documents\Aprendizaje didactico\,NET\Semana1\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Application\bin\Debug\net8.0\SistemaDigitalizacionPolizas.Application.deps.json
+C:\Users\josea\Documents\Aprendizaje didactico\,NET\Semana1\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Application\bin\Debug\net8.0\SistemaDigitalizacionPolizas.Application.dll
+C:\Users\josea\Documents\Aprendizaje didactico\,NET\Semana1\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Application\bin\Debug\net8.0\SistemaDigitalizacionPolizas.Application.pdb
+C:\Users\josea\Documents\Aprendizaje didactico\,NET\Semana1\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Application\bin\Debug\net8.0\SistemaDigitalizacionPolizas.Domain.dll
+C:\Users\josea\Documents\Aprendizaje didactico\,NET\Semana1\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Application\bin\Debug\net8.0\SistemaDigitalizacionPolizas.Domain.pdb
+C:\Users\josea\Documents\Aprendizaje didactico\,NET\Semana1\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Application\obj\Debug\net8.0\SistemaDigitalizacionPolizas.Application.csproj.AssemblyReference.cache
+C:\Users\josea\Documents\Aprendizaje didactico\,NET\Semana1\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Application\obj\Debug\net8.0\SistemaDigitalizacionPolizas.Application.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\josea\Documents\Aprendizaje didactico\,NET\Semana1\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Application\obj\Debug\net8.0\SistemaDigitalizacionPolizas.Application.AssemblyInfoInputs.cache
+C:\Users\josea\Documents\Aprendizaje didactico\,NET\Semana1\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Application\obj\Debug\net8.0\SistemaDigitalizacionPolizas.Application.AssemblyInfo.cs
+C:\Users\josea\Documents\Aprendizaje didactico\,NET\Semana1\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Application\obj\Debug\net8.0\SistemaDigitalizacionPolizas.Application.csproj.CoreCompileInputs.cache
+C:\Users\josea\Documents\Aprendizaje didactico\,NET\Semana1\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Application\obj\Debug\net8.0\SistemaD.D3D3798D.Up2Date
+C:\Users\josea\Documents\Aprendizaje didactico\,NET\Semana1\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Application\obj\Debug\net8.0\SistemaDigitalizacionPolizas.Application.dll
+C:\Users\josea\Documents\Aprendizaje didactico\,NET\Semana1\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Application\obj\Debug\net8.0\refint\SistemaDigitalizacionPolizas.Application.dll
+C:\Users\josea\Documents\Aprendizaje didactico\,NET\Semana1\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Application\obj\Debug\net8.0\SistemaDigitalizacionPolizas.Application.pdb
+C:\Users\josea\Documents\Aprendizaje didactico\,NET\Semana1\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Application\obj\Debug\net8.0\ref\SistemaDigitalizacionPolizas.Application.dll
