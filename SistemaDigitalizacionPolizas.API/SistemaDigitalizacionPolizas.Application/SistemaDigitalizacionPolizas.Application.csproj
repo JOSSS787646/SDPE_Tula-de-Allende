@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="10.0.0" />
+    <PackageReference Include="BCrypt.Net-Next" Version="3.2.0" />
+    <PackageReference Include="FluentValidation" Version="10.2.0" />
+    <PackageReference Include="MediatR" Version="8.0.0" />
+    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="8.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Services\AdministrativeUnit_Service\Future\CRUD\Queries\" />
+    <Folder Include="Services\Auth_Service\Feature\CRUD\Queries\" />
+    <Folder Include="Services\User_Service\Feature\CRUD\Queries\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SistemaDigitalizacionPolizas.Domain\SistemaDigitalizacionPolizas.Domain.csproj" />
+  </ItemGroup>
+
+</Project>
