@@ -1,6 +1,4 @@
-﻿
-
-namespace SistemaDigitalizacionPolizas.Domain.Interfaces.Services.Auth
+﻿namespace SistemaDigitalizacionPolizas.Domain.Interfaces.Services
 {
     public interface IAuthService
     {

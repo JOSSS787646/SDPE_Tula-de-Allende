@@ -13,6 +13,7 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
         {
             _mediator = mediator;
         }
+        //Permite crear un usuario
 
         [HttpPost]
         public async Task<IActionResult> CreateUser([FromBody] CreateUserRequest request)

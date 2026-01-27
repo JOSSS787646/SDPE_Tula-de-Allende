@@ -10,9 +10,9 @@ namespace SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Administrt
     public interface IAdministrativeUnit
     {
         Task<AdministrativeUnit?> CreateAsync(AdministrativeUnit unit);
-        Task<AdministrativeUnit?> GetByIdAsync(int id);
+        Task<AdministrativeUnit?> GetByCodeAsync(int code);
         Task<IEnumerable<AdministrativeUnit>> GetAllAsync();
         Task<bool> UpdateAsync(AdministrativeUnit unit);
-        Task<bool> DeleteAsync(int id);
+        Task<bool> DeleteAsync(int code);
     }
 }

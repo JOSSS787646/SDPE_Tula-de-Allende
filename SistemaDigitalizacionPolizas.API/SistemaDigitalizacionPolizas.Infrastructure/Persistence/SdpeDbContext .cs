@@ -1,5 +1,7 @@
 ﻿
 
+using SistemaDigitalizacionPolizas.Domain.Entities.Auth_Entities;
+
 namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence
 {
     public class SdpeDbContext : DbContext
@@ -12,6 +14,10 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence
         public DbSet<Role> Roles { get; set; }
         public DbSet<Permission> Permissions { get; set; }
         public DbSet<PermissionRole> PermissionRoles { get; set; }
+
+        //Recuperacion de Contraseñas
+        public DbSet<PasswordResetToken> PasswordResetTokens { get; set; }
+
 
         // Áreas
         public DbSet<AdministrativeUnit> AdministrativeUnits { get; set; }

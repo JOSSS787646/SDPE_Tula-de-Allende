@@ -96,6 +96,23 @@ GO
 
 
 
+--Actulizacion de la bd en dia 26/01/2026
+CREATE TABLE RecuperarContrasenia (
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    IdUsuario INT NOT NULL,
+    Codigo VARCHAR(6) NOT NULL,
+    FechaExpiracion DATETIME NOT NULL,
+    Usado BIT NOT NULL DEFAULT 0,
+    FechaCreacion DATETIME NOT NULL DEFAULT GETDATE(),
+
+    CONSTRAINT FK_RecuperarContrasenia_Usuarios
+        FOREIGN KEY (IdUsuario)
+        REFERENCES Usuarios(idUsuario)
+);
+
+
+
+
 
 /* =====================================================
    DATOS INICIALES

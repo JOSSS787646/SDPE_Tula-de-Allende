@@ -60,7 +60,6 @@ builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
 
 
-
 // =======================
 // JWT Authentication
 // =======================
@@ -102,7 +101,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseAuthentication(); // 👈 SIEMPRE antes de Authorization
+app.UseAuthentication(); 
 app.UseAuthorization();
 
 app.MapControllers();

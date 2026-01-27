@@ -32,7 +32,7 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Permissions_Pe
         }
 
 
-        //Actuliza el ultimi acceso del usuario al sistema
+        //Actuliza el ultimo acceso del usuario al sistema
         public async Task UpdateLastAccessAsync(int idUser)
         {
             var user = await _context.Users.FindAsync(idUser);
@@ -48,6 +48,24 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Permissions_Pe
         {
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
+        }
+
+        //Actualiza la contraseña de un usuario
+        public async Task<bool> UpdatePasswordAsync(int idUser, string hashedPassword)
+        {
+            var user = await _context.Users
+                .FirstOrDefaultAsync(u => u.IdUser == idUser);
+
+            if (user == null)
+                return false;
+
+            user.Password = hashedPassword;
+            user.UpdateDate = DateTime.Now;
+
+            _context.Users.Update(user);
+            await _context.SaveChangesAsync();
+
+            return true;
         }
     }
 }

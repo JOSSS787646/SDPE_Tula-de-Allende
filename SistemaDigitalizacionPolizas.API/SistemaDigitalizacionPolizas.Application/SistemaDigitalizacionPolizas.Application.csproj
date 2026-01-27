@@ -15,7 +15,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Services\AdministrativeUnit_Service\Future\CRUD\Queries\" />
     <Folder Include="Services\Auth_Service\Feature\CRUD\Queries\" />
     <Folder Include="Services\User_Service\Feature\CRUD\Queries\" />
   </ItemGroup>

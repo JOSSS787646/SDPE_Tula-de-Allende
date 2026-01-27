@@ -1,36 +1,30 @@
-﻿using SistemaDigitalizacionPolizas.Domain.Entities.Areas_Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
 
-namespace SistemaDigitalizacionPolizas.Application.Services.AdministrativeUnit_Service.Future.CRUD.Command.CreatedAdministrativeUnit
-{/*
-    public class CreateAdministrativeUnitCommandHandler
-    : IRequestHandler<CreateAdministrativeUnitCommand, int>
+namespace SistemaDigitalizacionPolizas.Application.Services.AdministrativeUnit_Service.Future.CRUD.Command.CreatedAdministrativeUnit;
+public class CreateAdministrativeUnitCommandHandler
+        : IRequestHandler<CreateAdministrativeUnitCommand, int>
+{
+    private readonly IAdministrativeUnit _administrativeUnitRepository;
+
+    public CreateAdministrativeUnitCommandHandler(
+        IAdministrativeUnit administrativeUnitRepository)
     {
-        private readonly SdpeDbContext _context;
+        _administrativeUnitRepository = administrativeUnitRepository;
+    }
 
-        public CreateAdministrativeUnitCommandHandler(SdpeDbContext context)
+    public async Task<int> Handle(
+        CreateAdministrativeUnitCommand request,
+        CancellationToken cancellationToken)
+    {
+        var unit = new AdministrativeUnit
         {
-            _context = context;
-        }
+            Code = request.Code,
+            Description = request.Description
+        };
 
-        public async Task<int> Handle(
-            CreateAdministrativeUnitCommand request,
-            CancellationToken cancellationToken)
-        {
-            var entity = new AdministrativeUnit
-            {
-                Code = request.Code,
-                Description = request.Description
-            };
+        var result = await _administrativeUnitRepository.CreateAsync(unit);
 
-            _context.AdministrativeUnits.Add(entity);
-            await _context.SaveChangesAsync(cancellationToken);
-
-            return entity.IdAdministrativeUnit;
-        }
-    }*/
+        return result!.IdAdministrativeUnit;
+    }
 }
+
