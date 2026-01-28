@@ -30,3 +30,8 @@ global using Microsoft.Extensions.DependencyInjection;
 global using SistemaDigitalizacionPolizas.Application.Common.Behaviours;
 global using System.Reflection;
 
+
+//Los imports en relacion con Handlers
+global using SistemaDigitalizacionPolizas.Domain.Entities.Areas_Entities;
+global using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.AdministrtiveUnit;
+

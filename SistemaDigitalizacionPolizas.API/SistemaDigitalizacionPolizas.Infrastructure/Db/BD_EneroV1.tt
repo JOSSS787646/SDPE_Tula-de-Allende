@@ -96,6 +96,23 @@ GO
 
 
 
+--Actulizacion de la bd en dia 26/01/2026
+CREATE TABLE RecuperarContrasenia (
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    IdUsuario INT NOT NULL,
+    Codigo VARCHAR(6) NOT NULL,
+    FechaExpiracion DATETIME NOT NULL,
+    Usado BIT NOT NULL DEFAULT 0,
+    FechaCreacion DATETIME NOT NULL DEFAULT GETDATE(),
+
+    CONSTRAINT FK_RecuperarContrasenia_Usuarios
+        FOREIGN KEY (IdUsuario)
+        REFERENCES Usuarios(idUsuario)
+);
+
+
+
+
 
 /* =====================================================
    DATOS INICIALES
@@ -198,4 +215,109 @@ VALUES (
     1,
     2
 );
+GO
+
+
+
+--Tabla de Permisos es un index para agializar las consultas con relacion a los permisos
+CREATE NONCLUSTERED INDEX IX_Permisos_Modulo
+ON Permisos (modulo);
+
+CREATE NONCLUSTERED INDEX IX_Permisos_Id
+ON Permisos (idPermiso);
+
+--Tablde Roles Permisos
+CREATE NONCLUSTERED INDEX IX_RolesPermiso_Rol
+ON RolesPermiso (idRoles);
+
+CREATE NONCLUSTERED INDEX IX_RolesPermiso_Permiso
+ON RolesPermiso (idPermiso);
+
+CREATE UNIQUE NONCLUSTERED INDEX IX_RolesPermiso_Rol_Permiso
+ON RolesPermiso (idRoles, idPermiso);
+
+--Tabla de usuarios
+CREATE NONCLUSTERED INDEX IX_Usuarios_Email
+ON Usuarios (email);
+
+CREATE NONCLUSTERED INDEX IX_Usuarios_Rol
+ON Usuarios (idRoles);
+
+
+
+
+
+--Procedeures--
+
+--Obtener permisos por rol--
+CREATE PROCEDURE sp_ObtenerPermisosPorRol
+    @idRol INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT 
+        p.idPermiso,
+        p.modulo,
+        p.accion,
+        CAST(
+            CASE 
+                WHEN rp.idRolPermiso IS NULL THEN 0
+                ELSE 1
+            END 
+        AS BIT) AS asignado
+    FROM Permisos p
+    LEFT JOIN RolesPermiso rp 
+        ON p.idPermiso = rp.idPermiso
+        AND rp.idRoles = @idRol
+    ORDER BY p.modulo, p.accion;
+END;
+GO
+
+--Crea un tipo id permiso
+CREATE TYPE dbo.PermisoTableType AS TABLE
+(
+    idPermiso INT
+);
+GO
+
+--Actuliza permisos por Rol
+CREATE PROCEDURE sp_ActualizarPermisosRol
+    @idRol INT,
+    @Permisos dbo.PermisoTableType READONLY
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    BEGIN TRANSACTION;
+
+    -- Eliminar permisos actuales
+    DELETE FROM RolesPermiso
+    WHERE idRoles = @idRol;
+
+    -- Insertar nuevos permisos
+    INSERT INTO RolesPermiso (idRoles, idPermiso)
+    SELECT @idRol, idPermiso
+    FROM @Permisos;
+
+    COMMIT;
+END;
+GO
+
+
+
+--Obtener permisos por usuario
+
+CREATE PROCEDURE sp_ObtenerPermisosPorUsuario
+    @idUsuario INT
+AS
+BEGIN
+    SELECT 
+        p.modulo,
+        p.accion
+    FROM Usuarios u
+    JOIN RolesPermiso rp ON rp.idRoles = u.idRoles
+    JOIN Permisos p ON p.idPermiso = rp.idPermiso
+    WHERE u.idUsuario = @idUsuario;
+END;
 GO

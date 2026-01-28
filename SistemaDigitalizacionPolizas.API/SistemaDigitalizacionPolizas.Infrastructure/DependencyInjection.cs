@@ -1,5 +1,12 @@
 ﻿
 
+using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.AdministrtiveUnit;
+using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Permissions;
+using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Roles;
+using SistemaDigitalizacionPolizas.Domain.Interfaces.Services;
+using SistemaDigitalizacionPolizas.Infrastructure.Persistence.AdministrativeUnit_Persistences;
+
+
 namespace SistemaDigitalizacionPolizas.Infrastructure
 {
     public static class DependencyInjection
@@ -25,6 +32,23 @@ namespace SistemaDigitalizacionPolizas.Infrastructure
             );
 
             services.AddScoped<IJwtService, JwtService>();
+
+            //Administrative Unit Repository
+            services.AddScoped<IAdministrativeUnit, AdministrativeUnitRepository>();
+            //Role Repository
+            services.AddScoped<IRoleRepository, RoleRepository>();
+
+            //Permission Repository
+            services.AddScoped<IPermissionRepository, PermissionRepository>();
+
+
+
+            //Servicio de Email
+            services.AddScoped<IEmailService, EmailService>();
+            services.AddScoped<IPasswordResetRepository, PasswordResetRepository>();
+            services.AddScoped<IEmailService, EmailService>();
+
+
 
             return services;
         }
