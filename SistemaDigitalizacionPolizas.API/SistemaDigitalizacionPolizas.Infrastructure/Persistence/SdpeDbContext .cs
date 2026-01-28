@@ -1,5 +1,6 @@
 ﻿
 
+using SistemaDigitalizacionPolizas.Domain.Dtos.Permission;
 using SistemaDigitalizacionPolizas.Domain.Entities.Auth_Entities;
 
 namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence
@@ -21,6 +22,9 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence
 
         // Áreas
         public DbSet<AdministrativeUnit> AdministrativeUnits { get; set; }
+
+        //Permisos
+        
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
