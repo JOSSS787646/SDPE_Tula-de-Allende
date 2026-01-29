@@ -29,6 +29,7 @@ namespace SistemaDigitalizacionPolizas.Application.Services.AdministrativeUnit_S
 
             return new AdministrativeUnitDto
             {
+                IdAdministrativeUnit = entity.IdAdministrativeUnit,
                 Code = entity.Code,
                 Description = entity.Description
             };

@@ -23,8 +23,7 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence
         // Áreas
         public DbSet<AdministrativeUnit> AdministrativeUnits { get; set; }
 
-        //Permisos
-        
+       
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -33,6 +32,9 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence
             modelBuilder.ApplyConfigurationsFromAssembly(
                 typeof(SdpeDbContext).Assembly
             );
+            modelBuilder.Entity<PermissionQueryResult>()
+             .HasNoKey()
+             .ToView(null);
         }
     }
 }

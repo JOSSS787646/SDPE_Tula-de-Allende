@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 
 using System.Text;
+using SistemaDigitalizacionPolizas.API.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -87,9 +88,11 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 // =======================
 // Authorization
 // =======================
-builder.Services.AddAuthorization();
-var app = builder.Build();
 
+builder.Services.AddAuthorization();
+
+var app = builder.Build();
+app.UseMiddleware<ExceptionMiddleware>();
 // =======================
 // Pipeline
 // =======================

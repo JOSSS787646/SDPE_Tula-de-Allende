@@ -18,10 +18,13 @@ namespace SistemaDigitalizacionPolizas.Application.Services.Permission_Service.Q
         }
 
         public async Task<List<PermissionDto>> Handle(
-            GetPermissionsByRoleQuery request,
-            CancellationToken cancellationToken)
+        GetPermissionsByRoleQuery request,
+        CancellationToken cancellationToken)
         {
-            return await _repository.GetPermissionByRole(request.IdRol);
+            var result = await _repository.GetPermissionByRole(request.IdRol);
+
+            
+            return result;
         }
     }
 

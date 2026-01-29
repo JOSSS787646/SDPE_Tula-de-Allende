@@ -1,5 +1,4 @@
 ﻿
-
 public class LoginCommandHandler
     : IRequestHandler<LoginCommand, LoginResponse>
 {
@@ -26,6 +25,12 @@ public class LoginCommandHandler
 
         if (!BCrypt.Net.BCrypt.Verify(request.Password, user.Password))
             throw new UnauthorizedAccessException("Credenciales inválidas");
+
+        if (!user.Asset)
+            throw new UnauthorizedAccessException("Usuario inactivo"); 
+
+        if (!user.Role.Asset)
+            throw new UnauthorizedAccessException("El rol del usuario está inactivo");
 
         await _userRepository.UpdateLastAccessAsync(user.IdUser);
 
