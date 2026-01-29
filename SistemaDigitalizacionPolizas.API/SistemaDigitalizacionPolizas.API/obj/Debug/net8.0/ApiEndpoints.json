@@ -298,5 +298,42 @@
       }
     ],
     "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.UsersController",
+    "Method": "ChangeStatus",
+    "RelativePath": "api/users/change-status",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "SistemaDigitalizacionPolizas.Domain.Dtos.User.UpdateUserStatusDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.UsersController",
+    "Method": "GetUsers",
+    "RelativePath": "api/users/paged",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "page",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "pageSize",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
   }
 ]

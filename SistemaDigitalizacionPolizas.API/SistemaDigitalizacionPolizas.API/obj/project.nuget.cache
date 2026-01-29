@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "aSP2scjncN4=",
+  "dgSpecHash": "0z5nX5lTn+M=",
   "success": true,
   "projectFilePath": "C:\\Estadia Ingenieria\\ProyectoTecnico\\Enero\\Back\\Sprint1\\SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.API.csproj",
   "expectedPackageFiles": [
@@ -12,6 +12,8 @@
     "C:\\Users\\josea\\.nuget\\packages\\mediatr\\8.0.0\\mediatr.8.0.0.nupkg.sha512",
     "C:\\Users\\josea\\.nuget\\packages\\mediatr.extensions.microsoft.dependencyinjection\\8.0.0\\mediatr.extensions.microsoft.dependencyinjection.8.0.0.nupkg.sha512",
     "C:\\Users\\josea\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\8.0.0\\microsoft.aspnetcore.authentication.jwtbearer.8.0.0.nupkg.sha512",
+    "C:\\Users\\josea\\.nuget\\packages\\microsoft.aspnetcore.http.abstractions\\2.3.9\\microsoft.aspnetcore.http.abstractions.2.3.9.nupkg.sha512",
+    "C:\\Users\\josea\\.nuget\\packages\\microsoft.aspnetcore.http.features\\2.3.0\\microsoft.aspnetcore.http.features.2.3.0.nupkg.sha512",
     "C:\\Users\\josea\\.nuget\\packages\\microsoft.bcl.asyncinterfaces\\1.1.1\\microsoft.bcl.asyncinterfaces.1.1.1.nupkg.sha512",
     "C:\\Users\\josea\\.nuget\\packages\\microsoft.bcl.memory\\9.0.0\\microsoft.bcl.memory.9.0.0.nupkg.sha512",
     "C:\\Users\\josea\\.nuget\\packages\\microsoft.csharp\\4.7.0\\microsoft.csharp.4.7.0.nupkg.sha512",

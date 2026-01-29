@@ -25,6 +25,7 @@ namespace SistemaDigitalizacionPolizas.Application.Services.AdministrativeUnit_S
 
             return entities.Select(e => new AdministrativeUnitDto
             {
+                IdAdministrativeUnit = e.IdAdministrativeUnit,
                 Code = e.Code,
                 Description = e.Description
             }).ToList();

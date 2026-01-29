@@ -21,11 +21,23 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Permissions_Pe
 
         public async Task<List<PermissionDto>> GetPermissionByRole(int idRol)
         {
-            return await _context.Set<PermissionDto>()
-                .FromSqlRaw("EXEC sp_ObtenerPermisosPorRol @idRol",
-                    new SqlParameter("@idRol", idRol))
+            var data = await _context.Set<PermissionQueryResult>()
+                .FromSqlRaw(
+                    "EXEC sp_ObtenerPermisosPorRol @idRol",
+                    new SqlParameter("@idRol", idRol)
+                )
                 .ToListAsync();
+
+            // 🔥 MAPEO CORRECTO
+            return data.Select(p => new PermissionDto
+            {
+                IdPermiso = p.IdPermiso,
+                Modulo = p.Modulo,
+                Accion = p.Accion,
+                Asignado = p.Asignado
+            }).ToList();
         }
+
 
         public async Task UpdatePermissionByRole(PermissionUpdateRoleDto dto)
         {

@@ -1,5 +1,7 @@
 ﻿
 
+using SistemaDigitalizacionPolizas.Domain.Dtos.User;
+
 namespace SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Auth
 {
     public interface IUserRepository
@@ -13,6 +15,9 @@ namespace SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Auth
         Task AddAsync(User user);
         // Actualiza la contraseña de recuperacion
         Task<bool> UpdatePasswordAsync(int idUser, string hashedPassword);
-
+        //Obtiene todos los usuarios
+        Task<List<UserListDto>> GetUsersAsync(int page, int pageSize);
+        Task<User?> GetByIdAsync(int idUser);
+        Task<bool> UpdateStatusAsync(int idUser, bool status);
     }
 }

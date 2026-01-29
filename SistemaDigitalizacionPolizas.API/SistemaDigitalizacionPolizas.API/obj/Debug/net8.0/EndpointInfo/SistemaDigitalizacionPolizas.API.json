@@ -513,6 +513,69 @@
           }
         }
       }
+    },
+    "/api/users/paged": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/users/change-status": {
+      "put": {
+        "tags": [
+          "Users"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUserStatusDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUserStatusDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUserStatusDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -520,6 +583,10 @@
       "AdministrativeUnitDto": {
         "type": "object",
         "properties": {
+          "idAdministrativeUnit": {
+            "type": "integer",
+            "format": "int32"
+          },
           "code": {
             "type": "integer",
             "format": "int32"
@@ -749,6 +816,19 @@
             "nullable": true
           },
           "active": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "UpdateUserStatusDto": {
+        "type": "object",
+        "properties": {
+          "idUser": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "asset": {
             "type": "boolean"
           }
         },

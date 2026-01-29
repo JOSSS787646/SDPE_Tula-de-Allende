@@ -1,6 +1,8 @@
 ﻿
 
 
+using SistemaDigitalizacionPolizas.Domain.Dtos.User;
+
 namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Permissions_Persistences
 {
     public class UserRepository : IUserRepository
@@ -67,5 +69,53 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Permissions_Pe
 
             return true;
         }
+
+        //Obtiene todos los usuarios con el nomnre de rol y unidad administrativa
+        public async Task<List<UserListDto>> GetUsersAsync(int page, int pageSize)
+        {
+            return await _context.Users
+                .AsNoTracking()
+                .Include(u => u.Role)
+                .Include(u => u.AdministrativeUnit)
+                .OrderBy(u => u.IdUser)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .Select(u => new UserListDto
+                {
+                    IdUser = u.IdUser,
+                    Email = u.Email,
+                    Role = u.Role.RolName,
+                    AdministrativeUnit = u.AdministrativeUnit.Description,
+                    Asset = u.Asset
+                })
+                .ToListAsync();
+        }
+
+
+        //Obtiene un usuario por su ID
+        public async Task<User?> GetByIdAsync(int idUser)
+        {
+            return await _context.Users
+                .FirstOrDefaultAsync(r => r.IdUser == idUser);
+        }
+
+
+        public async Task<bool> UpdateStatusAsync(int idUser, bool status)
+        {
+            var user = await _context.Users
+                .FirstOrDefaultAsync(u => u.IdUser == idUser);
+
+            if (user == null)
+                return false;
+
+            user.Asset = status;
+            user.UpdateDate = DateTime.Now;
+
+            _context.Users.Update(user);
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
+
     }
 }
