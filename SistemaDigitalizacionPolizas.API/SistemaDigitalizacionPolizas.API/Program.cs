@@ -15,6 +15,24 @@ var builder = WebApplication.CreateBuilder(args);
 // =======================
 builder.Services.AddControllers();
 
+
+// =======================
+// CORS (Frontend)
+// =======================
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        policy
+            .WithOrigins(
+                "http://localhost:5173", // Vite
+                "http://localhost:3000"  // CRA
+            )
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
+
 // =======================
 // Swagger
 // =======================
@@ -85,6 +103,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
+
+
+
 // =======================
 // Authorization
 // =======================
@@ -103,7 +124,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+app.UseCors("AllowFrontend");
 app.UseAuthentication(); 
 app.UseAuthorization();
 

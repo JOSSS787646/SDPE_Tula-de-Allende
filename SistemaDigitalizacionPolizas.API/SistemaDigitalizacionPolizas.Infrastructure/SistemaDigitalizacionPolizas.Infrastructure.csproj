@@ -41,4 +41,8 @@
     </Compile>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Persistence\RequestingAdministration_Persistences\" />
+  </ItemGroup>
+
 </Project>

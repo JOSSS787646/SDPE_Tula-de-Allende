@@ -59,10 +59,10 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
 
 
         //Actualizar una unidad administrativa
-        [HttpPut("{code:int}")]
+        [HttpPut]
         public async Task<IActionResult> Update(
-    int code,
-    [FromBody] AdministrativeUnitDto dto)
+        int code,
+         [FromBody] AdministrativeUnitDto dto)
         {
             var result = await _mediator.Send(
                 new UpdateAdministrativeUnitCommand(code, dto)

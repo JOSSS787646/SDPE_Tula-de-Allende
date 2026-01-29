@@ -321,3 +321,48 @@ BEGIN
     WHERE u.idUsuario = @idUsuario;
 END;
 GO
+
+
+//NUEVOS CAMBIOS A A BD PARA PERMITIRME INGRESAR LOS SIGUIENTES CRUDS QUE SON NECESARIOS
+//NO posee relaciones, solo son las tablas
+
+-- =============================================
+-- Tabla: ClasificadorObjetoGasto
+-- =============================================
+CREATE TABLE ClasificadorObjetoGasto (
+    idCog INT IDENTITY(1,1) PRIMARY KEY,
+    clave INT NOT NULL,
+    descripcion VARCHAR(45) NOT NULL
+);
+GO
+
+-- =============================================
+-- Tabla: Fondo
+-- =============================================
+CREATE TABLE Fondo (
+    idFondo INT IDENTITY(1,1) PRIMARY KEY,
+    clave INT NOT NULL,
+    descripcion VARCHAR(45) NOT NULL
+);
+GO
+
+-- =============================================
+-- Tabla: Proyecto
+-- =============================================
+CREATE TABLE Proyecto (
+    idProyecto INT IDENTITY(1,1) PRIMARY KEY,
+    clave INT NOT NULL,
+    descripcion VARCHAR(45) NOT NULL
+);
+GO
+
+-- =============================================
+-- Tabla: Prog
+-- =============================================
+CREATE TABLE Prog (
+    idProg INT IDENTITY(1,1) PRIMARY KEY,
+    clave INT NOT NULL,
+    descripcion VARCHAR(45) NOT NULL
+);
+GO
+

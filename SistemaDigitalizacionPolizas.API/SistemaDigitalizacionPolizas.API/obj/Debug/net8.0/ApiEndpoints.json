@@ -27,6 +27,27 @@
   },
   {
     "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.AdministrativeUnitController",
+    "Method": "Update",
+    "RelativePath": "api/AdministrativeUnit",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "code",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "dto",
+        "Type": "SistemaDigitalizacionPolizas.Domain.Dtos.AdministrativeUnit.AdministrativeUnitDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.AdministrativeUnitController",
     "Method": "GetByCode",
     "RelativePath": "api/AdministrativeUnit/{code}",
     "HttpMethod": "GET",
@@ -36,27 +57,6 @@
       {
         "Name": "code",
         "Type": "System.Int32",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.AdministrativeUnitController",
-    "Method": "Update",
-    "RelativePath": "api/AdministrativeUnit/{code}",
-    "HttpMethod": "PUT",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "code",
-        "Type": "System.Int32",
-        "IsRequired": true
-      },
-      {
-        "Name": "dto",
-        "Type": "SistemaDigitalizacionPolizas.Domain.Dtos.AdministrativeUnit.AdministrativeUnitDto",
         "IsRequired": true
       }
     ],
