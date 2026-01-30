@@ -1,13 +1,8 @@
 ﻿using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Roles;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Permissions_Persistences
 {
-    public class RoleRepository: IRoleRepository
+    public class RoleRepository : IRoleRepository
     {
 
         private readonly SdpeDbContext _context;

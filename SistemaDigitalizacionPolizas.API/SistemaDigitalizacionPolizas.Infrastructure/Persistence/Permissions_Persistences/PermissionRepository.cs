@@ -1,16 +1,11 @@
 ﻿using Microsoft.Data.SqlClient;
 using SistemaDigitalizacionPolizas.Domain.Dtos.Permission;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Permissions;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Permissions_Persistences
 {
-    internal class PermissionRepository: IPermissionRepository
+    internal class PermissionRepository : IPermissionRepository
     {
         private readonly SdpeDbContext _context;
 

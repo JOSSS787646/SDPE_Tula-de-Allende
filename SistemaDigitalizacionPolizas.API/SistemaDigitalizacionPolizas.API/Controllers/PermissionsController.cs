@@ -8,7 +8,7 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
     [Authorize]
     [ApiController]
     [Route("api/[controller]")]
-    public class PermissionsController: ControllerBase
+    public class PermissionsController : ControllerBase
     {
         private readonly IMediator _mediator;
 

@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using SistemaDigitalizacionPolizas.Domain.Entities.Areas_Entities;
-using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.AdministrtiveUnit;
+﻿using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.AdministrtiveUnit;
 
 namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.AdministrativeUnit_Persistences
 {

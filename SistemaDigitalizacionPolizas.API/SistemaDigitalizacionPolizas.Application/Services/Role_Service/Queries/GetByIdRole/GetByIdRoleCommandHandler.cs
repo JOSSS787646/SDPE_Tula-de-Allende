@@ -1,10 +1,4 @@
-﻿using SistemaDigitalizacionPolizas.Application.Services.Role_Service.Queries.GetByNameRol;
-using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Roles;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Roles;
 
 namespace SistemaDigitalizacionPolizas.Application.Services.Role_Service.Queries.GetByIdRole
 {

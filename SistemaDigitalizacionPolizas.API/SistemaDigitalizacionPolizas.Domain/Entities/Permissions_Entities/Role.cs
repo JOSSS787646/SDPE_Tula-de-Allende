@@ -3,7 +3,7 @@
     public int IdRol { get; set; }
     public string RolName { get; set; }
     public string Description { get; set; }
-    public bool Asset { get; set; }  
+    public bool Asset { get; set; }
 
     // Relaciones
     public ICollection<User> Users { get; set; }

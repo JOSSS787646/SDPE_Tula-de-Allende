@@ -1,12 +1,9 @@
-﻿using SistemaDigitalizacionPolizas.Application;
-using SistemaDigitalizacionPolizas.Infrastructure;
-
-using Microsoft.OpenApi.Models;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-
+using Microsoft.OpenApi.Models;
+using SistemaDigitalizacionPolizas.Application;
+using SistemaDigitalizacionPolizas.Infrastructure;
 using System.Text;
-using SistemaDigitalizacionPolizas.API.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +11,24 @@ var builder = WebApplication.CreateBuilder(args);
 // Controllers
 // =======================
 builder.Services.AddControllers();
+
+
+// =======================
+// CORS (Frontend)
+// =======================
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        policy
+            .WithOrigins(
+                "http://localhost:5173", // Vite
+                "http://localhost:3000"  // CRA
+            )
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
 
 // =======================
 // Swagger
@@ -85,6 +100,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
+
+
+
 // =======================
 // Authorization
 // =======================
@@ -92,7 +110,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddAuthorization();
 
 var app = builder.Build();
-app.UseMiddleware<ExceptionMiddleware>();
+//app.UseMiddleware<ExceptionMiddleware>();
 // =======================
 // Pipeline
 // =======================
@@ -103,8 +121,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
-app.UseAuthentication(); 
+app.UseCors("AllowFrontend");
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

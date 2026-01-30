@@ -1,9 +1,4 @@
 ﻿using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Permissions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SistemaDigitalizacionPolizas.Application.Services.Permission_Service.Queries.GetAllPermissions
 {
@@ -23,7 +18,7 @@ namespace SistemaDigitalizacionPolizas.Application.Services.Permission_Service.Q
         {
             var result = await _repository.GetPermissionByRole(request.IdRol);
 
-            
+
             return result;
         }
     }

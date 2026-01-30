@@ -1,13 +1,6 @@
-﻿using SistemaDigitalizacionPolizas.Domain.Entities.Areas_Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Roles
+﻿namespace SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Roles
 {
-    public interface  IRoleRepository
+    public interface IRoleRepository
     {
         Task<IEnumerable<Role>> GetAllAsync();
         Task<Role?> GetByNameAsync(string RolName);

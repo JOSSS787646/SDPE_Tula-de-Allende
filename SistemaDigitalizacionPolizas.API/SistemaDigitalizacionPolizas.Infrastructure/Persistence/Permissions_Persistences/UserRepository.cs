@@ -13,7 +13,7 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Permissions_Pe
         {
             _context = context;
         }
-        
+
 
         //Obtiene a un usuario por su gamil
         public async Task<User?> GetByEmailAsync(string email)
@@ -26,10 +26,10 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Permissions_Pe
         public async Task<User?> GetUserWithRolesAndPermissionsAsync(string email)
         {
             return await _context.Users
-                .Include(u => u.Role)                            
-                    .ThenInclude(r => r.PermissionRoles)          
-                        .ThenInclude(pr => pr.Permission)         
-                .Include(u => u.AdministrativeUnit)               
+                .Include(u => u.Role)
+                    .ThenInclude(r => r.PermissionRoles)
+                        .ThenInclude(pr => pr.Permission)
+                .Include(u => u.AdministrativeUnit)
                 .FirstOrDefaultAsync(u => u.Email == email);
         }
 

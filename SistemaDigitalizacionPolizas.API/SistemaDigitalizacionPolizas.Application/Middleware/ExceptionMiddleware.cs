@@ -1,18 +1,10 @@
-﻿using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
-
-
-
-    namespace SistemaDigitalizacionPolizas.API.Middleware
-    {
+﻿namespace SistemaDigitalizacionPolizas.API.Middleware
+{/*
         public class ExceptionMiddleware
         {
 
+
+        
         //Permite lanzar los errores de UnauthorizedAccessException como 403 Forbidden
         private readonly RequestDelegate _next;
 
@@ -50,7 +42,7 @@ using System.Threading.Tasks;
                     }));
                 }
             }
-        }
-    }
+        }*/
+}
 
 
