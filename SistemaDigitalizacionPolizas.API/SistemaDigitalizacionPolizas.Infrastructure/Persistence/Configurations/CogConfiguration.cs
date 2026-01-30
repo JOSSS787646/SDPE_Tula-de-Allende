@@ -1,10 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SistemaDigitalizacionPolizas.Domain.Entities.RequestingAdministration_Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Configurations
 {
@@ -19,13 +14,15 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Configurations
             builder.HasKey(x => x.idCog);
 
             builder.Property(x => x.idCog)
-                   .HasColumnName("idUnidadesAdministrativas");
+                   .HasColumnName("idCog");
 
             builder.Property(x => x.Code)
                    .HasColumnName("clave");
 
             builder.Property(x => x.Description)
                    .HasColumnName("descripcion");
+            builder.Property(x => x.Active)
+                   .HasColumnName("Activo");
         }
     }
 }

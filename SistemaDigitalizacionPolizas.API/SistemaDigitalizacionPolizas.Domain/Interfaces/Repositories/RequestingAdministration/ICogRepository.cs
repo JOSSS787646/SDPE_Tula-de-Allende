@@ -1,18 +1,13 @@
-﻿using SistemaDigitalizacionPolizas.Domain.Entities.Areas_Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using SistemaDigitalizacionPolizas.Domain.Entities.RequestingAdministration_Entities;
 
 namespace SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.RequestingAdministration
 {
     public interface ICogRepository
-    {/*
-        Task<?> CreateAsync(AdministrativeUnit unit);
-        Task<AdministrativeUnit?> GetByCodeAsync(int code);
-        Task<IEnumerable<AdministrativeUnit>> GetAllAsync();
-        Task<bool> UpdateAsync(AdministrativeUnit unit);
-        Task<bool> DeleteAsync(int code);*/
+    {
+        Task<COG?> AddAsync(COG unit);
+        Task<COG?> GetByCodeAsync(int code);
+        Task<IEnumerable<COG>> GetAllAsync();
+        Task<bool> UpdateAsync(COG unit);
+        Task<bool> DeleteAsync(int code);
     }
 }

@@ -1,11 +1,4 @@
-﻿using SistemaDigitalizacionPolizas.Application.Services.Role_Service.Queries.GetAllRoles;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SistemaDigitalizacionPolizas.Application.Services.User_Service.Feature.CRUD.Queries.GetAllUser
+﻿namespace SistemaDigitalizacionPolizas.Application.Services.User_Service.Feature.CRUD.Queries.GetAllUser
 {
     public class GetUsersPagedQueryHandler
     : IRequestHandler<GetUsersPagedQuery, List<UserListDto>>

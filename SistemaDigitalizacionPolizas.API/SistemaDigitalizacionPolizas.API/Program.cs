@@ -1,12 +1,9 @@
-﻿using SistemaDigitalizacionPolizas.Application;
-using SistemaDigitalizacionPolizas.Infrastructure;
-
-using Microsoft.OpenApi.Models;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-
+using Microsoft.OpenApi.Models;
+using SistemaDigitalizacionPolizas.Application;
+using SistemaDigitalizacionPolizas.Infrastructure;
 using System.Text;
-using SistemaDigitalizacionPolizas.API.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -113,7 +110,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddAuthorization();
 
 var app = builder.Build();
-app.UseMiddleware<ExceptionMiddleware>();
+//app.UseMiddleware<ExceptionMiddleware>();
 // =======================
 // Pipeline
 // =======================
@@ -125,7 +122,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseCors("AllowFrontend");
-app.UseAuthentication(); 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

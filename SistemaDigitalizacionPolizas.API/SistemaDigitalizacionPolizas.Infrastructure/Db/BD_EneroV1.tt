@@ -1,5 +1,4 @@
 ﻿
-
 USE SDPE_dev;
 GO
 
@@ -29,9 +28,9 @@ GO
 -- =============================================
 CREATE TABLE Permisos (
     idPermiso INT IDENTITY(1,1) PRIMARY KEY,
-    nombrePermiso VARCHAR(250) NOT NULL,
-    modulo VARCHAR(250) NOT NULL,
-    accion VARCHAR(250) NOT NULL,
+    nombrePermiso VARCHAR(250) NULL,
+    modulo VARCHAR(250) NULL,
+    accion VARCHAR(250) NULL,
     descripcion VARCHAR(250)
 );
 GO
@@ -109,113 +108,6 @@ CREATE TABLE RecuperarContrasenia (
         FOREIGN KEY (IdUsuario)
         REFERENCES Usuarios(idUsuario)
 );
-
-
-
-
-
-/* =====================================================
-   DATOS INICIALES
-===================================================== */
-
--- Unidad Administrativa
-INSERT INTO UnidadesAdministrativas (clave, descripcion)
-VALUES (100, 'Unidad Administrativa General');
-GO
-
--- Roles
-INSERT INTO Roles (nombreRol, descripcion)
-VALUES 
-('Administrador', 'Acceso total al sistema'),
-('Usuario', 'Acceso limitado al sistema');
-GO
-
-/* =====================================================
-   PERMISOS - MODULO 1
-===================================================== */
-INSERT INTO Permisos (nombrePermiso, modulo, accion, descripcion)
-VALUES
-('Modulo1_Crear', 'Modulo 1', 'CREATE', 'Crear en módulo 1'),
-('Modulo1_Leer', 'Modulo 1', 'READ', 'Leer en módulo 1'),
-('Modulo1_Actualizar', 'Modulo 1', 'UPDATE', 'Actualizar en módulo 1'),
-('Modulo1_Eliminar', 'Modulo 1', 'DELETE', 'Eliminar en módulo 1');
-GO
-
-/* =====================================================
-   PERMISOS - MODULO 2
-===================================================== */
-INSERT INTO Permisos (nombrePermiso, modulo, accion, descripcion)
-VALUES
-('Modulo2_Crear', 'Modulo 2', 'CREATE', 'Crear en módulo 2'),
-('Modulo2_Leer', 'Modulo 2', 'READ', 'Leer en módulo 2'),
-('Modulo2_Actualizar', 'Modulo 2', 'UPDATE', 'Actualizar en módulo 2'),
-('Modulo2_Eliminar', 'Modulo 2', 'DELETE', 'Eliminar en módulo 2');
-GO
-
-/* =====================================================
-   PERMISOS - MODULO 3
-===================================================== */
-INSERT INTO Permisos (nombrePermiso, modulo, accion, descripcion)
-VALUES
-('Modulo3_Crear', 'Modulo 3', 'CREATE', 'Crear en módulo 3'),
-('Modulo3_Leer', 'Modulo 3', 'READ', 'Leer en módulo 3'),
-('Modulo3_Actualizar', 'Modulo 3', 'UPDATE', 'Actualizar en módulo 3'),
-('Modulo3_Eliminar', 'Modulo 3', 'DELETE', 'Eliminar en módulo 3');
-GO
-
-/* =====================================================
-   ASIGNAR PERMISOS AL ADMIN (TODOS)
-===================================================== */
-INSERT INTO RolesPermiso (idRoles, idPermiso)
-SELECT 1, idPermiso FROM Permisos;
-GO
-
-/* =====================================================
-   ASIGNAR PERMISOS AL USUARIO (SOLO MODULO 1)
-===================================================== */
-INSERT INTO RolesPermiso (idRoles, idPermiso)
-SELECT 2, idPermiso
-FROM Permisos
-WHERE modulo = 'Modulo 1';
-GO
-
-/* =====================================================
-   USUARIOS
-===================================================== */
-
--- ADMIN
-INSERT INTO Usuarios (
-    email,
-    password,
-    idUnidadAdministrativa,
-    activo,
-    idRoles
-)
-VALUES (
-    'admin@sdpe.com',
-    'Admin123',
-    1,
-    1,
-    1
-);
-GO
-
--- USUARIO NORMAL
-INSERT INTO Usuarios (
-    email,
-    password,
-    idUnidadAdministrativa,
-    activo,
-    idRoles
-)
-VALUES (
-    'usuario@sdpe.com',
-    'Usuario123',
-    1,
-    1,
-    2
-);
-GO
 
 
 
@@ -365,4 +257,3 @@ CREATE TABLE Prog (
     descripcion VARCHAR(45) NOT NULL
 );
 GO
-

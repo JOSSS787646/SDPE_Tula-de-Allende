@@ -1,7 +1,5 @@
-﻿
-
-using SistemaDigitalizacionPolizas.Domain.Dtos.Permission;
-using SistemaDigitalizacionPolizas.Domain.Entities.Auth_Entities;
+﻿using SistemaDigitalizacionPolizas.Domain.Entities.Auth_Entities;
+using SistemaDigitalizacionPolizas.Domain.Entities.RequestingAdministration_Entities;
 
 namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence
 {
@@ -15,6 +13,8 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence
         public DbSet<Role> Roles { get; set; }
         public DbSet<Permission> Permissions { get; set; }
         public DbSet<PermissionRole> PermissionRoles { get; set; }
+        public DbSet<COG> Cog { get; set; }
+
 
         //Recuperacion de Contraseñas
         public DbSet<PasswordResetToken> PasswordResetTokens { get; set; }
@@ -23,7 +23,7 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence
         // Áreas
         public DbSet<AdministrativeUnit> AdministrativeUnits { get; set; }
 
-       
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -2,9 +2,11 @@
 
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.AdministrtiveUnit;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Permissions;
+using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.RequestingAdministration;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Roles;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Services;
 using SistemaDigitalizacionPolizas.Infrastructure.Persistence.AdministrativeUnit_Persistences;
+using SistemaDigitalizacionPolizas.Infrastructure.Persistence.RequestingAdministration_Persistences;
 
 
 namespace SistemaDigitalizacionPolizas.Infrastructure
@@ -24,7 +26,7 @@ namespace SistemaDigitalizacionPolizas.Infrastructure
 
             // Repositories
             services.AddScoped<IUserRepository, UserRepository>();
-           
+
 
             // JWT
             services.Configure<JwtSettings>(
@@ -40,7 +42,8 @@ namespace SistemaDigitalizacionPolizas.Infrastructure
 
             //Permission Repository
             services.AddScoped<IPermissionRepository, PermissionRepository>();
-
+            // Requesting Administration Repository
+            services.AddScoped<ICogRepository, CogRepository>();
 
 
             //Servicio de Email

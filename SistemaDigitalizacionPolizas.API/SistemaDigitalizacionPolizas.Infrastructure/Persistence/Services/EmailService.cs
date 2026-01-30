@@ -1,7 +1,6 @@
-﻿using System.Net;
+﻿using SistemaDigitalizacionPolizas.Domain.Interfaces.Services;
+using System.Net;
 using System.Net.Mail;
-using Microsoft.Extensions.Configuration;
-using SistemaDigitalizacionPolizas.Domain.Interfaces.Services;
 
 public class EmailService : IEmailService
 {

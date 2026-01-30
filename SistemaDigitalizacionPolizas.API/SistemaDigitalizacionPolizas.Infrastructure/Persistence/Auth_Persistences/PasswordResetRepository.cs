@@ -1,9 +1,4 @@
 ﻿using SistemaDigitalizacionPolizas.Domain.Entities.Auth_Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Auth_Persistences
 {
@@ -45,7 +40,7 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Auth_Persisten
             }
         }
 
-      
+
 
     }
 }

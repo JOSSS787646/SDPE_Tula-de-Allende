@@ -1,9 +1,4 @@
-﻿
-
-using Microsoft.Extensions.Options;
-using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Auth;
-
-namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Auth_Persistences
+﻿namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Auth_Persistences
 {
     public class JwtService : IJwtService
     {

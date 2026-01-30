@@ -1,5 +1,4 @@
 ﻿using FluentValidation;
-using MediatR;
 
 namespace SistemaDigitalizacionPolizas.Application.Common.Behaviours
 {
@@ -38,7 +37,7 @@ namespace SistemaDigitalizacionPolizas.Application.Common.Behaviours
                 }
             }
 
-           
+
             return await next();
         }
     }

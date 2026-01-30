@@ -1,10 +1,4 @@
-﻿
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SistemaDigitalizacionPolizas.Application.AutoMapper
+﻿namespace SistemaDigitalizacionPolizas.Application.AutoMapper
 {
     public static class LoginResponseMapper
     {
