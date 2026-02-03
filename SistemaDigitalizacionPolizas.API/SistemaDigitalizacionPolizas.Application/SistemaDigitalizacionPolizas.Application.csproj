@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="Services\RequestingAdministration_Service\FundingSource_Service\Commands\CreateFundingSource\CreateFundingSourceCommandHandler.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="10.0.0" />
     <PackageReference Include="BCrypt.Net-Next" Version="3.2.0" />
     <PackageReference Include="FluentValidation" Version="10.2.0" />
@@ -17,6 +21,7 @@
 
   <ItemGroup>
     <Folder Include="Services\Auth_Service\Feature\CRUD\Queries\" />
+    <Folder Include="Services\RequestingAdministration_Service\FundingSource_Service\Queries\" />
   </ItemGroup>
 
   <ItemGroup>

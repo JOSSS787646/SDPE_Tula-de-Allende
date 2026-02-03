@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 namespace SistemaDigitalizacionPolizas.Application.Services.RequestingAdministration_Service.Cod_Service.Commands.CreateCog
 {
     public record CreateCogCommand(
-    int idCog,
         int Code,
         string Description,
         bool Active

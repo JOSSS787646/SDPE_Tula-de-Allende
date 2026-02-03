@@ -27,10 +27,11 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Permissions_Pe
             return data.Select(p => new PermissionDto
             {
                 IdPermiso = p.IdPermiso,
-                Modulo = p.Modulo,
-                Accion = p.Accion,
+                Modulo = p.Modulo ?? string.Empty,
+                Accion = p.Accion ?? string.Empty,
                 Asignado = p.Asignado
             }).ToList();
+
         }
 
 

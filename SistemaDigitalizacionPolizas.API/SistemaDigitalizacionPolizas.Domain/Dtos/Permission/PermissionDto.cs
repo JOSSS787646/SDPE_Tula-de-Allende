@@ -4,8 +4,8 @@
     {
         public int IdPermiso { get; set; }
         public string Modulo { get; set; }
-        public string Accion { get; set; }
-        public bool Asignado { get; set; }
+        public string? Accion { get; set; }
+        public bool? Asignado { get; set; }
 
     }
 }
