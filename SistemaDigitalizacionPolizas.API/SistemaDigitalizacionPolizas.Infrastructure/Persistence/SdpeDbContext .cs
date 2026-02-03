@@ -14,6 +14,7 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence
         public DbSet<Permission> Permissions { get; set; }
         public DbSet<PermissionRole> PermissionRoles { get; set; }
         public DbSet<COG> Cog { get; set; }
+        public DbSet<FundingSource> FundingSources { get; set; }
 
 
         //Recuperacion de Contraseñas

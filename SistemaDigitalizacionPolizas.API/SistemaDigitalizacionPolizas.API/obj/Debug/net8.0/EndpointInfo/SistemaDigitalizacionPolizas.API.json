@@ -808,10 +808,6 @@
       "CreateCogCommand": {
         "type": "object",
         "properties": {
-          "idCog": {
-            "type": "integer",
-            "format": "int32"
-          },
           "code": {
             "type": "integer",
             "format": "int32"

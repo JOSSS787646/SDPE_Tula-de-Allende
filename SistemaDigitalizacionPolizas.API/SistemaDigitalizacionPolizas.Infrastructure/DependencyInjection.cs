@@ -44,7 +44,8 @@ namespace SistemaDigitalizacionPolizas.Infrastructure
             services.AddScoped<IPermissionRepository, PermissionRepository>();
             // Requesting Administration Repository
             services.AddScoped<ICogRepository, CogRepository>();
-
+            //Funding Source Repository
+            services.AddScoped<IFundingSourceRepository, FundingSourceRepository>();
 
             //Servicio de Email
             services.AddScoped<IEmailService, EmailService>();

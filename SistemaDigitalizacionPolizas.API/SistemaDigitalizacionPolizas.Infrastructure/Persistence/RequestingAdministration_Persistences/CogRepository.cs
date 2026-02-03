@@ -35,10 +35,17 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.RequestingAdmi
         //Agrega un COG 
         public async Task<COG?> AddAsync(COG unit)
         {
+            var exists = await _context.Cog
+                .AnyAsync(c => c.Code == unit.Code);
+
+            if (exists)
+                return null;
+
             await _context.Cog.AddAsync(unit);
             await _context.SaveChangesAsync();
             return unit;
         }
+
 
         //Actualiza un COG
         public async Task<bool> UpdateAsync(COG unit)
