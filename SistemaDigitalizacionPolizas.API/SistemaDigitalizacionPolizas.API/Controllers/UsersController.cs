@@ -1,5 +1,6 @@
 ﻿using SistemaDigitalizacionPolizas.Application.Services.User_Service.Feature.CRUD.Command.CreatedUser;
 using SistemaDigitalizacionPolizas.Application.Services.User_Service.Feature.CRUD.Command.UpdateStatusUser;
+using SistemaDigitalizacionPolizas.Application.Services.User_Service.Feature.CRUD.Command.UpdateUserData;
 using SistemaDigitalizacionPolizas.Application.Services.User_Service.Feature.CRUD.Queries.GetAllUser;
 using SistemaDigitalizacionPolizas.Domain.Dtos.User;
 
@@ -61,6 +62,20 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
                 return NotFound("Usuario no encontrado");
 
             return Ok("Estado actualizado correctamente");
+        }
+
+
+
+        [HttpPut("update")]
+        public async Task<IActionResult> UpdateUserData(
+          [FromBody] UpdateUserDataCommand command)
+        {
+            var result = await _mediator.Send(command);
+
+            if (!result)
+                return NotFound("Usuario no enconttrado");
+
+            return Ok("Usuario actualizado correctamente");
         }
     }
 }

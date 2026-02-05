@@ -117,5 +117,31 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Permissions_Pe
             return true;
         }
 
+        //Actualiza los datos del usuario
+        public async Task<bool> UpdateUserDataAsync(
+        int idUser,
+        string email,
+        int idRole,
+        int idAdministrativeUnit
+)
+        {
+            var user = await _context.Users
+                .FirstOrDefaultAsync(u => u.IdUser == idUser);
+
+            if (user == null)
+                return false;
+
+            user.Email = email;
+            user.IdRole = idRole;
+            user.IdAdministrativeUnit = idAdministrativeUnit;
+            user.UpdateDate = DateTime.UtcNow;
+
+            _context.Users.Update(user);
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
+
+
     }
 }

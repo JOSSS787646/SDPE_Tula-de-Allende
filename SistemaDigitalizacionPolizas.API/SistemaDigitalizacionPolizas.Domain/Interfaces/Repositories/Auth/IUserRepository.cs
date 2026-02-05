@@ -19,5 +19,8 @@ namespace SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Auth
         Task<List<UserListDto>> GetUsersAsync(int page, int pageSize);
         Task<User?> GetByIdAsync(int idUser);
         Task<bool> UpdateStatusAsync(int idUser, bool status);
+
+        //Actualiza los datos del usuario
+        Task<bool> UpdateUserDataAsync(int idUser, string email, int idRole, int idAdministrativeUnit);
     }
 }
