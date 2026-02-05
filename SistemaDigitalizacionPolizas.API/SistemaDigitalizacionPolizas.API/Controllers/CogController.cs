@@ -52,6 +52,8 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
             return CreatedAtAction(nameof(GetByCode), new { code = command.Code }, id);
         }
 
+        //Actualiza un COG existente
+
         [HttpPut("{code:int}")]
         public async Task<IActionResult> Update(
          int code,

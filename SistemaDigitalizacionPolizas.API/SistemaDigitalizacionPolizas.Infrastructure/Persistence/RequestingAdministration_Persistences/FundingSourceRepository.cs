@@ -20,11 +20,14 @@ public class FundingSourceRepository : IFundingSourceRepository
 
     //Obtiene un un fondo de financiamiento por su codigo
 
+
     public async Task<FundingSource?> GetByCodeAsync(int code)
     {
+        Console.WriteLine("🔥 FUNDING SOURCE REPO");
         return await _context.FundingSources
             .FirstOrDefaultAsync(c => c.Code == code);
     }
+
 
 
 
