@@ -41,6 +41,9 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.RequestingAdmi
             if (exists)
                 return null;
 
+            unit.Active = true;
+            unit.CreatedAt = DateTime.Now;
+
             await _context.Cog.AddAsync(unit);
             await _context.SaveChangesAsync();
             return unit;
@@ -59,6 +62,8 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.RequestingAdmi
             existing.Description = unit.Description;
             existing.Active = unit.Active;
 
+            existing.UpdatedBy = unit.UpdatedBy; 
+            existing.UpdatedAt = DateTime.Now;
             await _context.SaveChangesAsync();
             return true;
         }
@@ -66,13 +71,18 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.RequestingAdmi
 
         //Elimina un COG
 
-        public async Task<bool> DeleteAsync(int code)
+        public async Task<bool> DeleteAsync(int code, int userId)
         {
             var cog = await _context.Cog
-                .FirstOrDefaultAsync(c => c.Code == code);
+                .FirstOrDefaultAsync(x => x.Code == code);
+
             if (cog == null)
                 return false;
-            _context.Cog.Remove(cog);
+
+            cog.Active = false;
+            cog.UpdatedBy = userId;
+            cog.UpdatedAt = DateTime.Now;
+
             await _context.SaveChangesAsync();
             return true;
         }

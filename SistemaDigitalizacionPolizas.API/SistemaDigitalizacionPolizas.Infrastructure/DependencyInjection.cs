@@ -7,6 +7,7 @@ using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Roles;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Services;
 using SistemaDigitalizacionPolizas.Infrastructure.Persistence.AdministrativeUnit_Persistences;
 using SistemaDigitalizacionPolizas.Infrastructure.Persistence.RequestingAdministration_Persistences;
+using SistemaDigitalizacionPolizas.Infrastructure.Persistence.Services.Auditory;
 
 
 namespace SistemaDigitalizacionPolizas.Infrastructure
@@ -46,11 +47,20 @@ namespace SistemaDigitalizacionPolizas.Infrastructure
             services.AddScoped<ICogRepository, CogRepository>();
             //Funding Source Repository
             services.AddScoped<IFundingSourceRepository, FundingSourceRepository>();
+            //Proyect Repository
+            services.AddScoped<IProyectRepository, ProyectRepository>();
+            //Prog Repository
+            services.AddScoped<IProgRepository, ProgRepository>();
 
             //Servicio de Email
             services.AddScoped<IEmailService, EmailService>();
             services.AddScoped<IPasswordResetRepository, PasswordResetRepository>();
             services.AddScoped<IEmailService, EmailService>();
+
+            //Servicio de  Auditoria
+            services.AddScoped<ICurrentUserService, CurrentUserService>();
+
+
 
 
 

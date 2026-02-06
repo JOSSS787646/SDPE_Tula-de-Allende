@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "0z5nX5lTn+M=",
+  "dgSpecHash": "VhQcU9aZ0Fc=",
   "success": true,
-  "projectFilePath": "C:\\Estadia Ingenieria\\ProyectoTecnico\\Enero\\Back\\Sprint1\\SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.API.csproj",
+  "projectFilePath": "C:\\ProyectoTecnico\\Enero\\Back\\Sprint 2\\SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.API.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\josea\\.nuget\\packages\\automapper\\10.0.0\\automapper.10.0.0.nupkg.sha512",
     "C:\\Users\\josea\\.nuget\\packages\\azure.core\\1.38.0\\azure.core.1.38.0.nupkg.sha512",

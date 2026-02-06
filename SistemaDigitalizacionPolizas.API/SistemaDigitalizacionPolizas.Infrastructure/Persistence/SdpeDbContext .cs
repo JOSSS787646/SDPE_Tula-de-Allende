@@ -1,4 +1,5 @@
-﻿using SistemaDigitalizacionPolizas.Domain.Entities.Auth_Entities;
+﻿using SistemaDigitalizacionPolizas.Domain.Entities.Actions_Entities;
+using SistemaDigitalizacionPolizas.Domain.Entities.Auth_Entities;
 using SistemaDigitalizacionPolizas.Domain.Entities.RequestingAdministration_Entities;
 
 namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence
@@ -15,7 +16,9 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence
         public DbSet<PermissionRole> PermissionRoles { get; set; }
         public DbSet<COG> Cog { get; set; }
         public DbSet<FundingSource> FundingSources { get; set; }
-
+        public DbSet<Proyect> Proyects { get; set; }
+        public DbSet<Prog> Progs { get; set; }
+        public DbSet <ActionsPolicy> Actions { get; set; }
 
         //Recuperacion de Contraseñas
         public DbSet<PasswordResetToken> PasswordResetTokens { get; set; }

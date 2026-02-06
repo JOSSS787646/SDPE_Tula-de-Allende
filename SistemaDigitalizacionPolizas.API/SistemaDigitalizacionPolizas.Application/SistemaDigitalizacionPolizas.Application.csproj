@@ -6,9 +6,6 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Compile Include="Services\RequestingAdministration_Service\FundingSource_Service\Commands\CreateFundingSource\CreateFundingSourceCommandHandler.cs" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="10.0.0" />
@@ -20,8 +17,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Services\ActionPolicy_Service\Commands\UpdateStatusActionPolicy\" />
+    <Folder Include="Services\ActionPolicy_Service\Queries\" />
     <Folder Include="Services\Auth_Service\Feature\CRUD\Queries\" />
-    <Folder Include="Services\RequestingAdministration_Service\FundingSource_Service\Queries\" />
   </ItemGroup>
 
   <ItemGroup>

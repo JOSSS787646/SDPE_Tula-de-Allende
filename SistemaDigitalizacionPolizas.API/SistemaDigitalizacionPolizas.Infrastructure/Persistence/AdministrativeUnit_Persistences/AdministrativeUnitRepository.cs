@@ -18,7 +18,13 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Administrative
         {
             _context.AdministrativeUnits.Add(unit);
             await _context.SaveChangesAsync();
+
+            unit.Active = true;
+            unit.CreatedAt = DateTime.Now;
+
             return unit;
+
+    
         }
 
         // ===============================
@@ -45,21 +51,27 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Administrative
         // ===============================
         public async Task<bool> UpdateAsync(AdministrativeUnit unit)
         {
-            var exists = await _context.AdministrativeUnits
-                .AnyAsync(x => x.Code == unit.Code);
+            var entity = await _context.AdministrativeUnits
+                .FirstOrDefaultAsync(x => x.Code == unit.Code);
 
-            if (!exists)
+            if (entity is null)
                 return false;
 
-            _context.AdministrativeUnits.Update(unit);
+            entity.Code = unit.Code;
+            entity.Description = unit.Description;   
+            entity.UpdatedBy = unit.UpdatedBy;
+            entity.UpdatedAt = DateTime.Now;
+            entity.Active = unit.Active;
+
             await _context.SaveChangesAsync();
             return true;
         }
 
+
         // ===============================
         // DELETE
         // ===============================
-        public async Task<bool> DeleteAsync(int code)
+        public async Task<bool> DeleteAsync(int code, int userId)
         {
             var entity = await _context.AdministrativeUnits
                 .FirstOrDefaultAsync(x => x.Code == code);
@@ -67,7 +79,10 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Administrative
             if (entity == null)
                 return false;
 
-            _context.AdministrativeUnits.Remove(entity);
+            entity.Active = false;
+            entity.UpdatedBy = userId;
+            entity.UpdatedAt = DateTime.Now;
+
             await _context.SaveChangesAsync();
             return true;
         }

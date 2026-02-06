@@ -1,4 +1,6 @@
-﻿namespace SistemaDigitalizacionPolizas.Application
+﻿using SistemaDigitalizacionPolizas.Application.Services.RequestingAdministration_Service.Prog.Queries.GetAllProg;
+
+namespace SistemaDigitalizacionPolizas.Application
 {
     public static class DependencyInjection
     {
@@ -7,12 +9,15 @@
         {
             services.AddMediatR(
                 typeof(LoginCommandHandler).Assembly
+
             );
 
             services.AddTransient(
                 typeof(IPipelineBehavior<,>),
                 typeof(ValidationBehaviour<,>)
             );
+
+
 
             return services;
         }
