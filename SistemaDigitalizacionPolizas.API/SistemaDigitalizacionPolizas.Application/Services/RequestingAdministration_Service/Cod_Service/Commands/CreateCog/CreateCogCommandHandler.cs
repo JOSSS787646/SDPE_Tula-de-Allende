@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using SistemaDigitalizacionPolizas.Domain.Entities.RequestingAdministration_Entities;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.RequestingAdministration;
+using SistemaDigitalizacionPolizas.Domain.Interfaces.Services;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -10,10 +11,12 @@ namespace SistemaDigitalizacionPolizas.Application.Services.RequestingAdministra
         : IRequestHandler<CreateCogCommand, int>
     {
         private readonly ICogRepository _repository;
+        private readonly ICurrentUserService _currentUserService;
 
-        public CreateCogCommandHandler(ICogRepository repository)
+        public CreateCogCommandHandler(ICogRepository repository, ICurrentUserService currentUserService)
         {
             _repository = repository;
+            _currentUserService = currentUserService;
         }
 
         public async Task<int> Handle(
@@ -24,7 +27,11 @@ namespace SistemaDigitalizacionPolizas.Application.Services.RequestingAdministra
             {
                 Code = request.Code,
                 Description = request.Description,
-                Active = request.Active
+                Active = request.Active,
+
+
+                CreatedBy = _currentUserService.UserId,
+                CreatedAt = DateTime.Now
             };
 
             var result = await _repository.AddAsync(cog);

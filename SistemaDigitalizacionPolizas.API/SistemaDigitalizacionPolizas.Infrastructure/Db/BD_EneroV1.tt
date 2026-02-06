@@ -257,3 +257,25 @@ CREATE TABLE Prog (
     descripcion VARCHAR(45) NOT NULL
 );
 GO
+
+
+
+
+ALTER TABLE Proyecto ADD
+creadoPor INT NOT NULL DEFAULT 1,
+fechaCreacion DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
+modificadoPor INT NULL,
+fechaModificacion DATETIME2 NULL;
+
+ALTER TABLE ClasificadorObjetoGasto ADD
+creadoPor INT NOT NULL DEFAULT 1,
+fechaCreacion DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
+modificadoPor INT NULL,
+fechaModificacion DATETIME2 NULL;
+
+ALTER TABLE fondo ADD
+creadoPor INT NOT NULL DEFAULT 1,
+fechaCreacion DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
+modificadoPor INT NULL,
+fechaModificacion DATETIME2 NULL;
+

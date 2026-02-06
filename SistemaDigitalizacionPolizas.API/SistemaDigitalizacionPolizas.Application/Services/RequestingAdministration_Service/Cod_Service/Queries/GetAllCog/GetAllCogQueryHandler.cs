@@ -21,7 +21,7 @@ namespace SistemaDigitalizacionPolizas.Application.Services.RequestingAdministra
 
             return cogs.Select(r => new COGDto
             {
-                idCog = r.Code,
+                idCog = r.idCog,
                 Code = r.Code,
                 Description = r.Description,
                 Active = r.Active

@@ -27,27 +27,6 @@
   },
   {
     "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.AdministrativeUnitController",
-    "Method": "Update",
-    "RelativePath": "api/AdministrativeUnit",
-    "HttpMethod": "PUT",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "code",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "dto",
-        "Type": "SistemaDigitalizacionPolizas.Domain.Dtos.AdministrativeUnit.AdministrativeUnitDto",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.AdministrativeUnitController",
     "Method": "GetByCode",
     "RelativePath": "api/AdministrativeUnit/{code}",
     "HttpMethod": "GET",
@@ -64,15 +43,41 @@
   },
   {
     "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.AdministrativeUnitController",
-    "Method": "Delete",
+    "Method": "Update",
     "RelativePath": "api/AdministrativeUnit/{code}",
-    "HttpMethod": "DELETE",
+    "HttpMethod": "PUT",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
         "Name": "code",
         "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "dto",
+        "Type": "SistemaDigitalizacionPolizas.Domain.Dtos.AdministrativeUnit.AdministrativeUnitDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.AdministrativeUnitController",
+    "Method": "ChangeStatus",
+    "RelativePath": "api/AdministrativeUnit/{code}/active",
+    "HttpMethod": "PATCH",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "code",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "active",
+        "Type": "System.Boolean",
         "IsRequired": true
       }
     ],
@@ -246,8 +251,8 @@
   },
   {
     "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.CogController",
-    "Method": "Deactivate",
-    "RelativePath": "api/Cog/{code}/desactivar",
+    "Method": "ChangeStatus",
+    "RelativePath": "api/Cog/{code}/active",
     "HttpMethod": "PATCH",
     "IsController": true,
     "Order": 0,
@@ -255,6 +260,11 @@
       {
         "Name": "code",
         "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "active",
+        "Type": "System.Boolean",
         "IsRequired": true
       }
     ],
@@ -337,7 +347,7 @@
       },
       {
         "Name": "command",
-        "Type": "SistemaDigitalizacionPolizas.Application.Services.RequestingAdministration_Service.FundingSource_Service.Commands.UpdateFundingSource.UpdateFundingSourceCommand",
+        "Type": "SistemaDigitalizacionPolizas.Application.Services.RequestingAdministration_Service.FundingSource_Service.Commands.UpdateStateFunding.UpdateStateFundingCommand",
         "IsRequired": true
       }
     ],
@@ -345,8 +355,8 @@
   },
   {
     "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.FundingSourceController",
-    "Method": "Deactivate",
-    "RelativePath": "api/FundingSource/{code}/desactivar",
+    "Method": "ChangeStatus",
+    "RelativePath": "api/FundingSource/{code}/active",
     "HttpMethod": "PATCH",
     "IsController": true,
     "Order": 0,
@@ -354,6 +364,11 @@
       {
         "Name": "code",
         "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "active",
+        "Type": "System.Boolean",
         "IsRequired": true
       }
     ],
@@ -476,8 +491,8 @@
   },
   {
     "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.ProyectController",
-    "Method": "Deactivate",
-    "RelativePath": "api/Proyect/{code}/Active",
+    "Method": "ChangeStatus",
+    "RelativePath": "api/Proyect/{code}/active",
     "HttpMethod": "PATCH",
     "IsController": true,
     "Order": 0,
@@ -485,6 +500,11 @@
       {
         "Name": "code",
         "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "active",
+        "Type": "System.Boolean",
         "IsRequired": true
       }
     ],

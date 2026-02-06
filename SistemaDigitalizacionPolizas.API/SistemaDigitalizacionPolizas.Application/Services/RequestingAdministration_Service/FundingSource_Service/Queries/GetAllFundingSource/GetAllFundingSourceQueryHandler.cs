@@ -30,7 +30,7 @@ namespace SistemaDigitalizacionPolizas.Application.Services.RequestingAdministra
             var fundingSources = await _repository.GetAllAsync();
             return fundingSources.Select(r => new FundingSourceDto
             {
-                
+                idFundingSource=r.idFundingSource,
                 Code = r.Code,
                 Description = r.Description,
                 Active = r.Active

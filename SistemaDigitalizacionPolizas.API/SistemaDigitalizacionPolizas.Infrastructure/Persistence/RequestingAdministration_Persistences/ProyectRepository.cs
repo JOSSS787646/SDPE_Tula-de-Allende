@@ -35,8 +35,7 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.RequestingAdmi
         public async Task<Proyect?> GetByCodeAsync(int code)
         {
             return await _context.Proyects
-                .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Code == code && x.Active);
+                .FirstOrDefaultAsync(x => x.Code == code);
         }
 
         // =========================
@@ -101,5 +100,15 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.RequestingAdmi
             await _context.SaveChangesAsync();
             return true;
         }
+
+
+
+        public async Task<Proyect?> GetByCodeIncludingInactiveAsync(int code)
+        {
+            return await _context.Proyects
+                .IgnoreQueryFilters()
+                .FirstOrDefaultAsync(x => x.Code == code);
+        }
+
     }
 }

@@ -8,6 +8,6 @@ namespace SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Requesting
         Task<COG?> GetByCodeAsync(int code);
         Task<IEnumerable<COG>> GetAllAsync();
         Task<bool> UpdateAsync(COG unit);
-        Task<bool> DeleteAsync(int code);
+        Task<bool> DeleteAsync(int code, int userId);
     }
 }

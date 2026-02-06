@@ -29,10 +29,10 @@ namespace SistemaDigitalizacionPolizas.Application.Services.RequestingAdministra
                 Code = request.Code,
                 Description = request.Description,
 
-                // Control interno
+              
                 Active = true,
 
-                // Auditoría
+              
                 CreatedBy = _currentUser.UserId,
                 CreatedAt = DateTime.Now
             };

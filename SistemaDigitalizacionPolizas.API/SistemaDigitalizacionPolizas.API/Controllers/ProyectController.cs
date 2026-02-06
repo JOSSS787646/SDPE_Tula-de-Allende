@@ -78,22 +78,30 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
         }
 
 
-        // Desactiva (soft delete) un Proyecto
+       
         // --------------------------------------------------
-        [HttpPatch("{code:int}/Active")]
-        public async Task<IActionResult> Deactivate(int code)
+        // Cambia el estado (activar / desactivar) de un Proyecto
+        // --------------------------------------------------
+        [HttpPatch("{code:int}/active")]
+        public async Task<IActionResult> ChangeStatus(
+            int code,
+            [FromBody] bool active)
         {
-            var success = await _mediator.Send(new UpdateStatusProyectCommand(code));
+            var success = await _mediator.Send(
+                new UpdateStatusProyectCommand(code, active)
+            );
 
             if (!success)
-                return NotFound($"No existe un COG con código {code}");
+                return NotFound($"No existe un Proyecto con código {code}");
 
             return NoContent();
         }
 
-
-
-
-
     }
+
+
+
+
+
 }
+

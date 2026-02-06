@@ -23,16 +23,18 @@ namespace SistemaDigitalizacionPolizas.Application.Services.RequestingAdministra
         }
 
         public async Task<bool> Handle(
-           UpdateStatusProyectCommand request,
-           CancellationToken cancellationToken)
+          UpdateStatusProyectCommand request,
+          CancellationToken cancellationToken)
         {
             var proyect = await _repository.GetByCodeAsync(request.Code);
 
             if (proyect == null)
                 return false;
 
-            proyect.Active = false;
+            
+            proyect.Active = request.Active;
 
+            // Auditoría
             proyect.UpdatedBy = _currentUser.UserId;
             proyect.UpdatedAt = DateTime.Now;
 

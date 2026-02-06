@@ -24,6 +24,15 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Configurations
 
             builder.Property(x => x.Active)
                    .HasColumnName("Activo");
+
+            builder.Property(x => x.CreatedBy)
+                .HasColumnName("creadoPor");
+            builder.Property(x => x.CreatedAt)
+                   .HasColumnName("fechaCreacion");
+            builder.Property(x => x.UpdatedBy)
+                   .HasColumnName("modificadoPor");
+            builder.Property(x => x.UpdatedAt)
+                   .HasColumnName("fechaModificacion");
         }
     }
 }

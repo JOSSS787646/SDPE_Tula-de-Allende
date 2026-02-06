@@ -20,5 +20,7 @@ namespace SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Requesting
         Task<bool> UpdateAsync(Proyect unit);
         //Desactivar un proyecto
         Task<bool> DeleteAsync(int code, int userId);
+
+        Task<Proyect?> GetByCodeIncludingInactiveAsync(int code);
     }
 }

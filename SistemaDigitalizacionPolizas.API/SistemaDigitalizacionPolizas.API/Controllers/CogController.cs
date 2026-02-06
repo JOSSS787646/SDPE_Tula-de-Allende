@@ -4,6 +4,7 @@ using SistemaDigitalizacionPolizas.Application.Services.RequestingAdministration
 using SistemaDigitalizacionPolizas.Application.Services.RequestingAdministration_Service.Cod_Service.Commands.UpdateStateCog;
 using SistemaDigitalizacionPolizas.Application.Services.RequestingAdministration_Service.Cod_Service.Queries.GetAllCog;
 using SistemaDigitalizacionPolizas.Application.Services.RequestingAdministration_Service.Cod_Service.Queries.GetCogByCode;
+using SistemaDigitalizacionPolizas.Application.Services.RequestingAdministration_Service.Proyect_Service.Commands.UpdateStatusProyect;
 using SistemaDigitalizacionPolizas.Domain.Dtos.RequestingAdministration;
 
 namespace SistemaDigitalizacionPolizas.API.Controllers
@@ -20,7 +21,7 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
         }
 
 
-        //Obtener todos los roles
+        //Obtener todos los cogs
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
@@ -73,13 +74,17 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
 
         // Desactiva (soft delete) un COG
         // --------------------------------------------------
-        [HttpPatch("{code:int}/desactivar")]
-        public async Task<IActionResult> Deactivate(int code)
+        [HttpPatch("{code:int}/active")]
+        public async Task<IActionResult> ChangeStatus(
+        int code,
+        [FromBody] bool active)
         {
-            var success = await _mediator.Send(new UpdateStatusCogCommand(code));
+            var success = await _mediator.Send(
+                new UpdateStatusCogCommand(code, active)
+            );
 
             if (!success)
-                return NotFound($"No existe un COG con código {code}");
+                return NotFound($"No existe un Proyecto con código {code}");
 
             return NoContent();
         }

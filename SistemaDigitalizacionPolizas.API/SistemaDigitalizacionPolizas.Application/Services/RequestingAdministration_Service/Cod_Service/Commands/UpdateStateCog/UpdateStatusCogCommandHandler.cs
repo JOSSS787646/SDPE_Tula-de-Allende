@@ -1,5 +1,7 @@
 ﻿using MediatR;
+using SistemaDigitalizacionPolizas.Application.Services.RequestingAdministration_Service.Proyect_Service.Commands.UpdateStatusProyect;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.RequestingAdministration;
+using SistemaDigitalizacionPolizas.Domain.Interfaces.Services;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -9,24 +11,31 @@ namespace SistemaDigitalizacionPolizas.Application.Services.RequestingAdministra
         : IRequestHandler<UpdateStatusCogCommand, bool>
     {
         private readonly ICogRepository _repository;
+        private readonly ICurrentUserService _currentUser;
 
-        public UpdateStatusCogCommandHandler(ICogRepository repository)
+        public UpdateStatusCogCommandHandler(ICogRepository repository, ICurrentUserService currentUserService)
         {
             _repository = repository;
+            _currentUser = currentUserService;
         }
 
         public async Task<bool> Handle(
-            UpdateStatusCogCommand request,
-            CancellationToken cancellationToken)
+       UpdateStatusCogCommand request,
+       CancellationToken cancellationToken)
         {
-            var cog = await _repository.GetByCodeAsync(request.Code);
+            var proyect = await _repository.GetByCodeAsync(request.Code);
 
-            if (cog == null)
+            if (proyect == null)
                 return false;
 
-            cog.Active = false;
 
-            return await _repository.UpdateAsync(cog);
+            proyect.Active = request.Active;
+
+            // Auditoría
+            proyect.UpdatedBy = _currentUser.UserId;
+            proyect.UpdatedAt = DateTime.Now;
+
+            return await _repository.UpdateAsync(proyect);
         }
     }
 }

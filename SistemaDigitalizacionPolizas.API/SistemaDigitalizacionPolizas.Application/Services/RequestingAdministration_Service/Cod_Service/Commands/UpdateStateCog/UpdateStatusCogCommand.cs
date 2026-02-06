@@ -8,7 +8,7 @@ namespace SistemaDigitalizacionPolizas.Application.Services.RequestingAdministra
 {
   
 
-public record UpdateStatusCogCommand(int Code) : IRequest<bool>;
+public record UpdateStatusCogCommand(int Code, bool Active) : IRequest<bool>;
 
 
 }
