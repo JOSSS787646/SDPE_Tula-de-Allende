@@ -49,6 +49,8 @@ namespace SistemaDigitalizacionPolizas.Infrastructure
             services.AddScoped<IFundingSourceRepository, FundingSourceRepository>();
             //Proyect Repository
             services.AddScoped<IProyectRepository, ProyectRepository>();
+            //Prog Repository
+            services.AddScoped<IProgRepository, ProgRepository>();
 
             //Servicio de Email
             services.AddScoped<IEmailService, EmailService>();

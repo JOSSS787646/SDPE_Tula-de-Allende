@@ -1,5 +1,5 @@
 ﻿
-USE SDPE_dev;
+/*USE SDPE_dev;
 GO
 
 -- =============================================
@@ -259,7 +259,7 @@ CREATE TABLE Prog (
 GO
 
 
-
+//CAMBIOS APLICADOS EL DIA 06/02/2024 PARA AGREGAR AUDITORIA A LAS TABLAS RECIENTEMENTE CREADAS
 
 ALTER TABLE Proyecto ADD
 creadoPor INT NOT NULL DEFAULT 1,
@@ -279,3 +279,16 @@ fechaCreacion DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
 modificadoPor INT NULL,
 fechaModificacion DATETIME2 NULL;
 
+CREATE TABLE Acciones (
+    idAcciones INT IDENTITY(1,1) PRIMARY KEY,
+	clave int null,
+    descripcion VARCHAR(100),
+    activo BIT NOT NULL DEFAULT 1,
+	creadoPor INT NOT NULL DEFAULT 1,
+	fechaCreacion DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
+	modificadoPor INT NULL,
+	fechaModificacion DATETIME2 NULL
+);
+GO
+
+*/

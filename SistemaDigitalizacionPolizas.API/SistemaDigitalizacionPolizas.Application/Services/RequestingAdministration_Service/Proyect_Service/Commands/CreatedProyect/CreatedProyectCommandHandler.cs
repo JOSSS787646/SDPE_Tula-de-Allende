@@ -28,11 +28,7 @@ namespace SistemaDigitalizacionPolizas.Application.Services.RequestingAdministra
             {
                 Code = request.Code,
                 Description = request.Description,
-
-              
                 Active = true,
-
-              
                 CreatedBy = _currentUser.UserId,
                 CreatedAt = DateTime.Now
             };

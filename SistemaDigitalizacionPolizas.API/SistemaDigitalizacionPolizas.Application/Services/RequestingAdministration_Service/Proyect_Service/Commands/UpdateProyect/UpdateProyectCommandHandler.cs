@@ -29,7 +29,6 @@ namespace SistemaDigitalizacionPolizas.Application.Services.RequestingAdministra
                 Code = request.Code,
                 Description = request.Description,
                 Active = request.Active,
-
                 UpdatedBy = _currentUser.UserId,
                 UpdatedAt = DateTime.Now
             };

@@ -29,12 +29,8 @@ namespace SistemaDigitalizacionPolizas.Application.Services.RequestingAdministra
             var proyect = await _repository.GetByCodeAsync(request.Code);
 
             if (proyect == null)
-                return false;
-
-            
+                return false;    
             proyect.Active = request.Active;
-
-            // Auditoría
             proyect.UpdatedBy = _currentUser.UserId;
             proyect.UpdatedAt = DateTime.Now;
 
