@@ -5,9 +5,11 @@ using SistemaDigitalizacionPolizas.Application.Services.RequestingAdministration
 using SistemaDigitalizacionPolizas.Application.Services.RequestingAdministration_Service.Cod_Service.Queries.GetAllCog;
 using SistemaDigitalizacionPolizas.Application.Services.RequestingAdministration_Service.Cod_Service.Queries.GetCogByCode;
 using SistemaDigitalizacionPolizas.Application.Services.RequestingAdministration_Service.FundingSource_Service.Commands.AddFundingSource;
+using SistemaDigitalizacionPolizas.Application.Services.RequestingAdministration_Service.FundingSource_Service.Commands.UpdateFundingSource;
 using SistemaDigitalizacionPolizas.Application.Services.RequestingAdministration_Service.FundingSource_Service.Commands.UpdateStateFunding;
 using SistemaDigitalizacionPolizas.Application.Services.RequestingAdministration_Service.FundingSource_Service.Queries.GetAllFundingSource;
 using SistemaDigitalizacionPolizas.Application.Services.RequestingAdministration_Service.FundingSource_Service.Queries.GetByCodeFundingSource;
+using SistemaDigitalizacionPolizas.Application.Services.RequestingAdministration_Service.Proyect_Service.Commands.UpdateStatusProyect;
 using SistemaDigitalizacionPolizas.Domain.Dtos.RequestingAdministration;
 
 namespace SistemaDigitalizacionPolizas.API.Controllers
@@ -52,11 +54,11 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
             return Ok(result);
         }
 
-
+        //Actualiza un fondo de financiamiento
         [HttpPut("{code:int}")]
         public async Task<IActionResult> Update(
-       int code,
-       [FromBody] UpdateStateFundingCommand command)
+        int code,
+        [FromBody] UpdateStateFundingCommand command)
         {
             if (code != command.Code)
                 return BadRequest("El código de la URL no coincide con el cuerpo de la solicitud.");
@@ -64,19 +66,23 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
             var success = await _mediator.Send(command);
 
             if (!success)
-                return NotFound($"No existe un COG con código {code}");
+                return NotFound($"No existe una fuente de financiamiento con código {code}");
 
             return NoContent();
         }
 
-        //Desactiva un fondo de financiamiento
-        [HttpPatch("{code:int}/desactivar")]
-        public async Task<IActionResult> Deactivate(int code)
+
+        [HttpPatch("{code:int}/active")]
+        public async Task<IActionResult> ChangeStatus(
+         int code,
+         [FromBody] bool active)
         {
-            var success = await _mediator.Send(new UpdateStateFundingCommand(code));
+            var success = await _mediator.Send(
+                new UpdateStateFundingCommand(code, active)
+            );
 
             if (!success)
-                return NotFound($"No existe un COG con código {code}");
+                return NotFound($"No existe un Proyecto con código {code}");
 
             return NoContent();
         }

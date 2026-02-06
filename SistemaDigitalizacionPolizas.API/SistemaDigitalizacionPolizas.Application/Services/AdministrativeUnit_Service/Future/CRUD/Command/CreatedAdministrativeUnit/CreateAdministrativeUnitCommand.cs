@@ -4,6 +4,7 @@ namespace SistemaDigitalizacionPolizas.Application.Services.AdministrativeUnit_S
 {
     public record CreateAdministrativeUnitCommand(
      int Code,
-     string Description
+     string Description,
+     bool Active
  ) : IRequest<int>;
 }

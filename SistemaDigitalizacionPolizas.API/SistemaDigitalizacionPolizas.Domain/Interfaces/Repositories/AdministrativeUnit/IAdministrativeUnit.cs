@@ -8,6 +8,6 @@ namespace SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Administrt
         Task<AdministrativeUnit?> GetByCodeAsync(int code);
         Task<IEnumerable<AdministrativeUnit>> GetAllAsync();
         Task<bool> UpdateAsync(AdministrativeUnit unit);
-        Task<bool> DeleteAsync(int code);
+        Task<bool> DeleteAsync(int code, int userId);
     }
 }

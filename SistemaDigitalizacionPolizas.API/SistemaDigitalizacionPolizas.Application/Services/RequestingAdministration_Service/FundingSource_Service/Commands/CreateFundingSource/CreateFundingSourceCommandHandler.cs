@@ -2,6 +2,7 @@
 using SistemaDigitalizacionPolizas.Application.Services.RequestingAdministration_Service.FundingSource_Service.Commands.AddFundingSource;
 using SistemaDigitalizacionPolizas.Domain.Entities.RequestingAdministration_Entities;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.RequestingAdministration;
+using SistemaDigitalizacionPolizas.Domain.Interfaces.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,10 +15,12 @@ namespace SistemaDigitalizacionPolizas.Application.Services.RequestingAdministra
          : IRequestHandler<CreateFundingSourceCommand, int>
     {
         private readonly IFundingSourceRepository _repository;
-
-        public CreateFundingSourceCommandHandler(IFundingSourceRepository repository)
+        private readonly ICurrentUserService _currentUserService;
+        public CreateFundingSourceCommandHandler(IFundingSourceRepository repository,
+            ICurrentUserService currentUserService)
         {
             _repository = repository;
+            _currentUserService = currentUserService;
         }
         public async Task<int> Handle(
             CreateFundingSourceCommand request,
@@ -27,7 +30,12 @@ namespace SistemaDigitalizacionPolizas.Application.Services.RequestingAdministra
             {
                 Code = request.Code,
                 Description = request.Description,
-                Active = request.Active
+                Active = request.Active,
+
+
+
+                CreatedBy = _currentUserService.UserId,
+                CreatedAt = DateTime.Now
             };
             var result = await _repository.AddAsync(fundingSource);
             if (result == null)

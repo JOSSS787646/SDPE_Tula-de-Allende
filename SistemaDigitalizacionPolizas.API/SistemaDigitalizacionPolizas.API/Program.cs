@@ -12,6 +12,8 @@ var builder = WebApplication.CreateBuilder(args);
 // =======================
 builder.Services.AddControllers();
 
+// 🔥 NECESARIO para CurrentUserService
+builder.Services.AddHttpContextAccessor();
 
 // =======================
 // CORS (Frontend)

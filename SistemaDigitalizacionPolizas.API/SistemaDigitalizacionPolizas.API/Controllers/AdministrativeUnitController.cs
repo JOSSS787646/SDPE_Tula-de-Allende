@@ -4,6 +4,7 @@ using SistemaDigitalizacionPolizas.Application.Services.AdministrativeUnit_Servi
 using SistemaDigitalizacionPolizas.Application.Services.AdministrativeUnit_Service.Future.CRUD.Command.UpdateAAdministrativeUnits;
 using SistemaDigitalizacionPolizas.Application.Services.AdministrativeUnit_Service.Future.CRUD.Queries.GetAllAdministrativeUnit;
 using SistemaDigitalizacionPolizas.Application.Services.AdministrativeUnit_Service.Future.CRUD.Queries.GeyByIdAdministrativeUnit;
+using SistemaDigitalizacionPolizas.Application.Services.RequestingAdministration_Service.Cod_Service.Commands.UpdateStateCog;
 using SistemaDigitalizacionPolizas.Domain.Dtos.AdministrativeUnit;
 
 namespace SistemaDigitalizacionPolizas.API.Controllers
@@ -20,14 +21,19 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
             _mediator = mediator;
         }
 
-        //Crear una unidad administrativa
+        // Crear una unidad administrativa
         [HttpPost]
-        public async Task<IActionResult> Create(
+        public async Task<ActionResult<int>> Create(
             [FromBody] CreateAdministrativeUnitCommand command)
         {
             var id = await _mediator.Send(command);
-            return Ok(id);
+
+            if (id == 0)
+                return Conflict("Ya existe una unidad administrativa con ese código");
+
+            return CreatedAtAction(nameof(GetByCode), new { code = command.Code }, id);
         }
+
 
 
         //Obtener una unidad administrativa por su id
@@ -56,11 +62,11 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
         }
 
 
-        //Actualizar una unidad administrativa
-        [HttpPut]
+        // Actualizar una unidad administrativa
+        [HttpPut("{code:int}")]
         public async Task<IActionResult> Update(
-        int code,
-         [FromBody] AdministrativeUnitDto dto)
+            int code,
+            [FromBody] AdministrativeUnitDto dto)
         {
             var result = await _mediator.Send(
                 new UpdateAdministrativeUnitCommand(code, dto)
@@ -73,17 +79,20 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
         }
 
         //Eliminar una unidad administrativa
-        [HttpDelete("{code}")]
-        public async Task<IActionResult> Delete(int code)
+
+        [HttpPatch("{code:int}/active")]
+        public async Task<IActionResult> ChangeStatus(
+      int code,
+      [FromBody] bool active)
         {
-            var result = await _mediator.Send(
-                new DeleteAdministrativeUnitCommand(code)
+            var success = await _mediator.Send(
+                new DeleteAdministrativeUnitCommand(code, active)
             );
 
-            if (!result)
-                return NotFound("Unidad administrativa no encontrada");
+            if (!success)
+                return NotFound($"No existe un Proyecto con código {code}");
 
-            return Ok(new { message = "Unidad administrativa eliminada correctamente" });
+            return NoContent();
         }
     }
 
