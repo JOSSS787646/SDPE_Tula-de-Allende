@@ -22,21 +22,23 @@ namespace SistemaDigitalizacionPolizas.Application.Services.RequestingAdministra
 
 
         public async Task<bool> Handle(
-            UpdateCogCommand request,
-            CancellationToken cancellationToken)
+      UpdateCogCommand request,
+      CancellationToken cancellationToken)
         {
-            var cog = new COG
-            {
-                Code = request.Code,
-                Description = request.Description,
-                Active = request.Active,
+            // 1️⃣ Buscar por ID
+            var cog = await _repository.GetByIdAsync(request.idCog);
 
+            if (cog == null)
+                return false;
 
+            // 2️⃣ Modificar
+            cog.Code = request.Code;
+            cog.Description = request.Description;
+            cog.Active = request.Active;
+            cog.UpdatedBy = _currentUserService.UserId;
+            cog.UpdatedAt = DateTime.Now;
 
-                UpdatedBy = _currentUserService.UserId,
-                UpdatedAt = DateTime.Now
-            };
-
+            // 3️⃣ Guardar
             return await _repository.UpdateAsync(cog);
         }
     }

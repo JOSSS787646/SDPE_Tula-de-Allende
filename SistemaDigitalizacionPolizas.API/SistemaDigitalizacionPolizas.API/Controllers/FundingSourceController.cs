@@ -55,18 +55,18 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
         }
 
         //Actualiza un fondo de financiamiento
-        [HttpPut("{code:int}")]
+        [HttpPut("{id:int}")]
         public async Task<IActionResult> Update(
-        int code,
-        [FromBody] UpdateStateFundingCommand command)
+ int id,
+ [FromBody] UpdateFundingSourceCommand command)
         {
-            if (code != command.Code)
-                return BadRequest("El código de la URL no coincide con el cuerpo de la solicitud.");
+            // Forzamos el ID desde la URL
+            var fixedCommand = command with { idFundingSource = id };
 
-            var success = await _mediator.Send(command);
+            var success = await _mediator.Send(fixedCommand);
 
             if (!success)
-                return NotFound($"No existe una fuente de financiamiento con código {code}");
+                return NotFound($"No existe un fondo de financiamiento con id {id}");
 
             return NoContent();
         }

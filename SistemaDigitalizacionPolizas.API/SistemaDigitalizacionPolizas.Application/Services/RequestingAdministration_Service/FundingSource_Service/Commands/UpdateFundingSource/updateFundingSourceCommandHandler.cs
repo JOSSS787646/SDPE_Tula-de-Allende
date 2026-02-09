@@ -23,19 +23,23 @@ namespace SistemaDigitalizacionPolizas.Application.Services.RequestingAdministra
         }
 
         public async Task<bool> Handle(
-            UpdateFundingSourceCommand request,
-            CancellationToken cancellationToken)
+     UpdateFundingSourceCommand request,
+     CancellationToken cancellationToken)
         {
-            var fundingSource = new FundingSource
+            // 1️⃣ Buscar por ID
+            var fundingSource = await _repository.GetByIdAsync(request.idFundingSource);
 
-            {
-                Code = request.Code,
-                Description = request.Description,
-                Active = request.Active,
-                UpdatedBy = _currentUser.UserId,
-                UpdatedAt = DateTime.Now
-            };
+            if (fundingSource == null)
+                return false;
 
+            // 2️⃣ Modificar
+            fundingSource.Code = request.Code;
+            fundingSource.Description = request.Description;
+            fundingSource.Active = request.Active;
+            fundingSource.UpdatedBy = _currentUser.UserId;
+            fundingSource.UpdatedAt = DateTime.Now;
+
+            // 3️⃣ Guardar
             return await _repository.UpdateAsync(fundingSource);
         }
     }

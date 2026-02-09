@@ -53,27 +53,6 @@
   },
   {
     "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.AdministrativeUnitController",
-    "Method": "Update",
-    "RelativePath": "api/AdministrativeUnit/{code}",
-    "HttpMethod": "PUT",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "code",
-        "Type": "System.Int32",
-        "IsRequired": true
-      },
-      {
-        "Name": "dto",
-        "Type": "SistemaDigitalizacionPolizas.Domain.Dtos.AdministrativeUnit.AdministrativeUnitDto",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.AdministrativeUnitController",
     "Method": "ChangeStatus",
     "RelativePath": "api/AdministrativeUnit/{code}/active",
     "HttpMethod": "PATCH",
@@ -88,6 +67,27 @@
       {
         "Name": "active",
         "Type": "System.Boolean",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.AdministrativeUnitController",
+    "Method": "Update",
+    "RelativePath": "api/AdministrativeUnit/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "dto",
+        "Type": "SistemaDigitalizacionPolizas.Domain.Dtos.AdministrativeUnit.AdministrativeUnitDto",
         "IsRequired": true
       }
     ],
@@ -240,27 +240,6 @@
   },
   {
     "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.CogController",
-    "Method": "Update",
-    "RelativePath": "api/Cog/{code}",
-    "HttpMethod": "PUT",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "code",
-        "Type": "System.Int32",
-        "IsRequired": true
-      },
-      {
-        "Name": "command",
-        "Type": "SistemaDigitalizacionPolizas.Application.Services.RequestingAdministration_Service.Cod_Service.Commands.UpdateCog.UpdateCogCommand",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.CogController",
     "Method": "ChangeStatus",
     "RelativePath": "api/Cog/{code}/active",
     "HttpMethod": "PATCH",
@@ -275,6 +254,27 @@
       {
         "Name": "active",
         "Type": "System.Boolean",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.CogController",
+    "Method": "Update",
+    "RelativePath": "api/Cog/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "command",
+        "Type": "SistemaDigitalizacionPolizas.Application.Services.RequestingAdministration_Service.Cod_Service.Commands.UpdateCog.UpdateCogCommand",
         "IsRequired": true
       }
     ],
@@ -344,27 +344,6 @@
   },
   {
     "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.FundingSourceController",
-    "Method": "Update",
-    "RelativePath": "api/FundingSource/{code}",
-    "HttpMethod": "PUT",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "code",
-        "Type": "System.Int32",
-        "IsRequired": true
-      },
-      {
-        "Name": "command",
-        "Type": "SistemaDigitalizacionPolizas.Application.Services.RequestingAdministration_Service.FundingSource_Service.Commands.UpdateStateFunding.UpdateStateFundingCommand",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.FundingSourceController",
     "Method": "ChangeStatus",
     "RelativePath": "api/FundingSource/{code}/active",
     "HttpMethod": "PATCH",
@@ -379,6 +358,27 @@
       {
         "Name": "active",
         "Type": "System.Boolean",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.FundingSourceController",
+    "Method": "Update",
+    "RelativePath": "api/FundingSource/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "command",
+        "Type": "SistemaDigitalizacionPolizas.Application.Services.RequestingAdministration_Service.FundingSource_Service.Commands.UpdateFundingSource.UpdateFundingSourceCommand",
         "IsRequired": true
       }
     ],
@@ -480,27 +480,6 @@
   },
   {
     "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.ProgController",
-    "Method": "Update",
-    "RelativePath": "api/Prog/{code}",
-    "HttpMethod": "PUT",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "code",
-        "Type": "System.Int32",
-        "IsRequired": true
-      },
-      {
-        "Name": "command",
-        "Type": "SistemaDigitalizacionPolizas.Application.Services.RequestingAdministration_Service.Prog.Commands.UpdateProg.UpdateProgCommand",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.ProgController",
     "Method": "ChangeStatus",
     "RelativePath": "api/Prog/{code}/active",
     "HttpMethod": "PATCH",
@@ -515,6 +494,27 @@
       {
         "Name": "active",
         "Type": "System.Boolean",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.ProgController",
+    "Method": "Update",
+    "RelativePath": "api/Prog/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "command",
+        "Type": "SistemaDigitalizacionPolizas.Application.Services.RequestingAdministration_Service.Prog.Commands.UpdateProg.UpdateProgCommand",
         "IsRequired": true
       }
     ],
@@ -584,27 +584,6 @@
   },
   {
     "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.ProyectController",
-    "Method": "Update",
-    "RelativePath": "api/Proyect/{code}",
-    "HttpMethod": "PUT",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "code",
-        "Type": "System.Int32",
-        "IsRequired": true
-      },
-      {
-        "Name": "command",
-        "Type": "SistemaDigitalizacionPolizas.Application.Services.RequestingAdministration_Service.Proyect_Service.Commands.UpdateProyect.UpdateProyectCommand",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.ProyectController",
     "Method": "ChangeStatus",
     "RelativePath": "api/Proyect/{code}/active",
     "HttpMethod": "PATCH",
@@ -619,6 +598,27 @@
       {
         "Name": "active",
         "Type": "System.Boolean",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.ProyectController",
+    "Method": "Update",
+    "RelativePath": "api/Proyect/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "command",
+        "Type": "SistemaDigitalizacionPolizas.Application.Services.RequestingAdministration_Service.Proyect_Service.Commands.UpdateProyect.UpdateProyectCommand",
         "IsRequired": true
       }
     ],

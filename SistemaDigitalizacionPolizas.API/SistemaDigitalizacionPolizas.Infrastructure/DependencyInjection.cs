@@ -1,10 +1,12 @@
 ﻿
 
+using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Actions;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.AdministrtiveUnit;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Permissions;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.RequestingAdministration;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Roles;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Services;
+using SistemaDigitalizacionPolizas.Infrastructure.Persistence.Action_Persistences;
 using SistemaDigitalizacionPolizas.Infrastructure.Persistence.AdministrativeUnit_Persistences;
 using SistemaDigitalizacionPolizas.Infrastructure.Persistence.RequestingAdministration_Persistences;
 using SistemaDigitalizacionPolizas.Infrastructure.Persistence.Services.Auditory;
@@ -60,6 +62,7 @@ namespace SistemaDigitalizacionPolizas.Infrastructure
             //Servicio de  Auditoria
             services.AddScoped<ICurrentUserService, CurrentUserService>();
 
+            services.AddScoped<IActionPolicyRepository, ActionPolicyRepository>();
 
 
 

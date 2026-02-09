@@ -7,7 +7,10 @@ namespace SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Administrt
         Task<AdministrativeUnit?> CreateAsync(AdministrativeUnit unit);
         Task<AdministrativeUnit?> GetByCodeAsync(int code);
         Task<IEnumerable<AdministrativeUnit>> GetAllAsync();
-        Task<bool> UpdateAsync(AdministrativeUnit unit);
+        Task<bool> UpdateAsync(AdministrativeUnit id);
         Task<bool> DeleteAsync(int code, int userId);
+
+        Task<AdministrativeUnit?> GetByIdAsync(int id);
+
     }
 }

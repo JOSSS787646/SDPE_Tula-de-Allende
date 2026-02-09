@@ -26,13 +26,6 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Action_Persist
                 .ToListAsync();
         }
 
-        //Obtiene una accion por su ID
-
-        public async Task<ActionsPolicy?> GetByCodeAsync(int code)
-        {
-            return await _context.Actions
-                .FirstOrDefaultAsync(c => c.Code == code);
-        }
 
 
 

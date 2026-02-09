@@ -1,4 +1,5 @@
-﻿using SistemaDigitalizacionPolizas.Application.Services.RequestingAdministration_Service.Proyect_Service.Commands.UpdateProyect;
+﻿using SistemaDigitalizacionPolizas.Application.Services.RequestingAdministration_Service.Cod_Service.Commands.UpdateCog;
+using SistemaDigitalizacionPolizas.Application.Services.RequestingAdministration_Service.Proyect_Service.Commands.UpdateProyect;
 using SistemaDigitalizacionPolizas.Domain.Entities.RequestingAdministration_Entities;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.RequestingAdministration;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Services;
@@ -13,37 +14,34 @@ namespace SistemaDigitalizacionPolizas.Application.Services.RequestingAdministra
     public class UpdateProgCommandHandler
         : IRequestHandler<UpdateProgCommand, bool>
     {
-        private readonly IProgRepository _Progrepository;
+        private readonly IProgRepository _repository;
         private readonly ICurrentUserService _currentUserService;
 
         public UpdateProgCommandHandler(IProgRepository repository, ICurrentUserService currentUserService)
         {
-            _Progrepository = repository;
+            _repository = repository;
             _currentUserService = currentUserService;
         }
 
         public async Task<bool> Handle(
-           UpdateProgCommand request,
-           CancellationToken cancellationToken)
+     UpdateProgCommand request,
+     CancellationToken cancellationToken)
         {
-            var prog = new Domain.Entities.RequestingAdministration_Entities.Prog
-            {
-                Code = request.Code,
-                Description = request.Description,
-                Active = request.Active,
-                UpdatedBy = _currentUserService.UserId,
-                UpdatedAt = DateTime.Now
-            };
+            // 1️⃣ Buscar por ID
+            var progr = await _repository.GetByIdAsync(request.idProg);
 
-            var result = await _Progrepository.UpdateAsync(prog);
+            if (progr == null)
+                return false;
 
-            if (!result)
-            {
-                throw new InvalidOperationException(
-                    $"No se pudo actualizar el proyecto con código {request.Code}");
-            }
+            // 2️⃣ Modificar
+            progr.Code = request.Code;
+            progr.Description = request.Description;
+            progr.Active = request.Active;
+            progr.UpdatedBy = _currentUserService.UserId;
+            progr.UpdatedAt = DateTime.Now;
 
-            return true;
+            // 3️⃣ Guardar
+            return await _repository.UpdateAsync(progr);
         }
     }
 }

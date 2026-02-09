@@ -37,6 +37,17 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Administrative
         }
 
         // ===============================
+        // GET BY ID
+        // ===============================
+
+        public async Task<AdministrativeUnit?> GetByIdAsync(int id)
+        {
+            return await _context.AdministrativeUnits
+                .FirstOrDefaultAsync(x => x.IdAdministrativeUnit == id);
+        }
+
+
+        // ===============================
         // GET ALL
         // ===============================
         public async Task<IEnumerable<AdministrativeUnit>> GetAllAsync()
@@ -49,19 +60,19 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Administrative
         // ===============================
         // UPDATE
         // ===============================
-        public async Task<bool> UpdateAsync(AdministrativeUnit unit)
+        public async Task<bool> UpdateAsync(AdministrativeUnit id)
         {
             var entity = await _context.AdministrativeUnits
-                .FirstOrDefaultAsync(x => x.Code == unit.Code);
+                .FirstOrDefaultAsync(x => x.IdAdministrativeUnit == id.IdAdministrativeUnit);
 
             if (entity is null)
                 return false;
 
-            entity.Code = unit.Code;
-            entity.Description = unit.Description;   
-            entity.UpdatedBy = unit.UpdatedBy;
+            entity.Code = id.Code;
+            entity.Description = id.Description;   
+            entity.UpdatedBy = id.UpdatedBy;
             entity.UpdatedAt = DateTime.Now;
-            entity.Active = unit.Active;
+            entity.Active = id.Active;
 
             await _context.SaveChangesAsync();
             return true;

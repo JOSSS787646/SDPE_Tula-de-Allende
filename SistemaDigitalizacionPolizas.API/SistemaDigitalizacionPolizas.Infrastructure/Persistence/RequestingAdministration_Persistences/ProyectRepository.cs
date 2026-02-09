@@ -60,27 +60,17 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.RequestingAdmi
             return unit;
         }
 
+
         // =========================
         // ACTUALIZAR
         // =========================
         public async Task<bool> UpdateAsync(Proyect unit)
         {
-            var existing = await _context.Proyects
-                .FirstOrDefaultAsync(x => x.Code == unit.Code);
-
-            if (existing == null)
-                return false;
-
-            existing.Description = unit.Description;
-            existing.Active = unit.Active;
-
-            // Auditoría
-            existing.UpdatedBy = unit.UpdatedBy; // usuario autenticado
-            existing.UpdatedAt = DateTime.Now;
-
+            _context.Proyects.Update(unit);
             await _context.SaveChangesAsync();
             return true;
         }
+
 
         // =========================
         // ELIMINADO LÓGICO
@@ -100,6 +90,17 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.RequestingAdmi
             await _context.SaveChangesAsync();
             return true;
         }
+
+        // ===============================
+        // GET BY ID
+        // ===============================
+
+        public async Task<Proyect?> GetByIdAsync(int id)
+        {
+            return await _context.Proyects
+                .FirstOrDefaultAsync(x => x.idProyect == id);
+        }
+
 
 
 

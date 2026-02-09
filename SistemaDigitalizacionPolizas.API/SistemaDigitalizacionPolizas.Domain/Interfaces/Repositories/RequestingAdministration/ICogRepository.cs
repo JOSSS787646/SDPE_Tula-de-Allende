@@ -1,4 +1,5 @@
-﻿using SistemaDigitalizacionPolizas.Domain.Entities.RequestingAdministration_Entities;
+﻿using SistemaDigitalizacionPolizas.Domain.Entities.Areas_Entities;
+using SistemaDigitalizacionPolizas.Domain.Entities.RequestingAdministration_Entities;
 
 namespace SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.RequestingAdministration
 {
@@ -9,5 +10,6 @@ namespace SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Requesting
         Task<IEnumerable<COG>> GetAllAsync();
         Task<bool> UpdateAsync(COG unit);
         Task<bool> DeleteAsync(int code, int userId);
+        Task<COG?> GetByIdAsync(int id);
     }
 }

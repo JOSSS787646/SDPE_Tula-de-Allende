@@ -1,4 +1,5 @@
 ﻿using SistemaDigitalizacionPolizas.Domain.Entities.Actions_Entities;
+using SistemaDigitalizacionPolizas.Domain.Entities.Areas_Entities;
 using SistemaDigitalizacionPolizas.Domain.Entities.RequestingAdministration_Entities;
 using System;
 using System.Collections.Generic;
@@ -13,12 +14,13 @@ namespace SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Actions
         //Agregar un nuevo fondo
         Task<ActionsPolicy?> AddAsync(ActionsPolicy unit);
         //Obtener un fondo por su codigo
-        Task<ActionsPolicy?> GetByCodeAsync(int code);
         //Obtener todos los fondos
         Task<IEnumerable<ActionsPolicy>> GetAllAsync();
         //Acctualizar la informacion de un fondo
         Task<bool> UpdateAsync(ActionsPolicy unit);
         //Desactivar un fondo
         Task<bool> DeleteAsync(int code, int userId);
+
+     
     }
 }

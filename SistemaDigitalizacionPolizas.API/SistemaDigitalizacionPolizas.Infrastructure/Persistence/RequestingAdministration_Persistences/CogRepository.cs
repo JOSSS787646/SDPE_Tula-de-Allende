@@ -31,6 +31,17 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.RequestingAdmi
         }
 
 
+        // ===============================
+        // GET BY ID
+        // ===============================
+
+        public async Task<COG?> GetByIdAsync(int id)
+        {
+            return await _context.Cog
+                .FirstOrDefaultAsync(x => x.idCog == id);
+        }
+
+
 
         //Agrega un COG 
         public async Task<COG?> AddAsync(COG unit)
@@ -53,17 +64,7 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.RequestingAdmi
         //Actualiza un COG
         public async Task<bool> UpdateAsync(COG unit)
         {
-            var existing = await _context.Cog
-                .FirstOrDefaultAsync(c => c.Code == unit.Code);
-
-            if (existing == null)
-                return false;
-
-            existing.Description = unit.Description;
-            existing.Active = unit.Active;
-
-            existing.UpdatedBy = unit.UpdatedBy; 
-            existing.UpdatedAt = DateTime.Now;
+            _context.Cog.Update(unit);
             await _context.SaveChangesAsync();
             return true;
         }

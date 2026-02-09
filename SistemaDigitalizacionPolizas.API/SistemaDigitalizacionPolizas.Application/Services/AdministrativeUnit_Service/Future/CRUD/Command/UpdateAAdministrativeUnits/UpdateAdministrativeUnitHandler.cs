@@ -15,20 +15,22 @@ namespace SistemaDigitalizacionPolizas.Application.Services.AdministrativeUnit_S
         }
 
         public async Task<bool> Handle(
-    UpdateAdministrativeUnitCommand request,
-    CancellationToken cancellationToken)
+      UpdateAdministrativeUnitCommand request,
+      CancellationToken cancellationToken)
         {
-            var unit = await _repository.GetByCodeAsync(request.code);
+            var unit = await _repository.GetByIdAsync(request.idAdministraionUnit);
 
             if (unit == null)
                 return false;
-
-            unit.Active = request.Unit.Active;
+            unit.Code = request.Unit.Code;
             unit.Description = request.Unit.Description;
+            unit.Active = request.Unit.Active;
             unit.UpdatedBy = _currentUserService.UserId;
             unit.UpdatedAt = DateTime.Now;
 
             return await _repository.UpdateAsync(unit);
         }
+
+
     }
 }

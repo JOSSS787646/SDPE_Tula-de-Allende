@@ -61,15 +61,14 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
             return Ok(result);
         }
 
-
-        // Actualizar una unidad administrativa
-        [HttpPut("{code:int}")]
+        //Actualiza por id
+        [HttpPut("{id:int}")]
         public async Task<IActionResult> Update(
-            int code,
+            int id,
             [FromBody] AdministrativeUnitDto dto)
         {
             var result = await _mediator.Send(
-                new UpdateAdministrativeUnitCommand(code, dto)
+                new UpdateAdministrativeUnitCommand(id, dto)
             );
 
             if (!result)
@@ -77,6 +76,10 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
 
             return Ok("Unidad administrativa actualizada correctamente");
         }
+
+
+
+
 
         //Eliminar una unidad administrativa
 

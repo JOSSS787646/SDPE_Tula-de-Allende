@@ -8,6 +8,7 @@ namespace SistemaDigitalizacionPolizas.Application.Services.RequestingAdministra
 {
    public record UpdateProyectCommand
     (
+       int idProyect,
      int Code,
      string Description,
      bool Active

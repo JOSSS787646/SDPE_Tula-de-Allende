@@ -4,6 +4,7 @@ using SistemaDigitalizacionPolizas.Application.Services.RequestingAdministration
 using SistemaDigitalizacionPolizas.Application.Services.RequestingAdministration_Service.Cod_Service.Commands.UpdateStateCog;
 using SistemaDigitalizacionPolizas.Application.Services.RequestingAdministration_Service.Cod_Service.Queries.GetAllCog;
 using SistemaDigitalizacionPolizas.Application.Services.RequestingAdministration_Service.Cod_Service.Queries.GetCogByCode;
+using SistemaDigitalizacionPolizas.Application.Services.RequestingAdministration_Service.Prog.Commands.UpdateProg;
 using SistemaDigitalizacionPolizas.Application.Services.RequestingAdministration_Service.Proyect_Service.Commands.CreatedProyect;
 using SistemaDigitalizacionPolizas.Application.Services.RequestingAdministration_Service.Proyect_Service.Commands.UpdateProyect;
 using SistemaDigitalizacionPolizas.Application.Services.RequestingAdministration_Service.Proyect_Service.Commands.UpdateStatusProyect;
@@ -54,31 +55,31 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
             var result = await _mediator.Send(new GetProyectByCodeQuery(code));
 
             if (result == null)
-                return NotFound($"No existe un COG con código {code}");
+                return NotFound($"No existe un proyecto con código {code}");
 
             return Ok(result);
         }
 
         //Actualiza la data de un proyecto
 
-        [HttpPut("{code:int}")]
+        [HttpPut("{id:int}")]
         public async Task<IActionResult> Update(
-         int code,
-         [FromBody] UpdateProyectCommand command)
+int id,
+[FromBody] UpdateProyectCommand command)
         {
-            if (code != command.Code)
-                return BadRequest("El código de la URL no coincide con el cuerpo de la solicitud.");
+            // Forzamos el ID desde la URL
+            var fixedCommand = command with { idProyect = id };
 
-            var success = await _mediator.Send(command);
+            var success = await _mediator.Send(fixedCommand);
 
             if (!success)
-                return NotFound($"No existe un proyecto con código {code}");
+                return NotFound($"No existe un proyecto con id {id}");
 
             return NoContent();
         }
 
 
-       
+
         // --------------------------------------------------
         // Cambia el estado (activar / desactivar) de un Proyecto
         // --------------------------------------------------
