@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace SistemaDigitalizacionPolizas.Application.Services.RequestingAdministration_Service.FundingSource_Service.Queries.GetByCodeFundingSource
 {
     public class GetByCodeFundingSourceQueryHandler
-        : IRequestHandler<GetByCodeFundingSourceQuery, FundingSourceDto?>
+        : IRequestHandler<GetByCodeCommunityQuery, FundingSourceDto?>
     {
 
         private readonly IFundingSourceRepository _repository;
@@ -20,7 +20,7 @@ namespace SistemaDigitalizacionPolizas.Application.Services.RequestingAdministra
         }
 
         public async Task<FundingSourceDto?> Handle(
-            GetByCodeFundingSourceQuery request,
+            GetByCodeCommunityQuery request,
             CancellationToken cancellationToken)
         {
             var fundingSource = await _repository.GetByCodeAsync(request.code);

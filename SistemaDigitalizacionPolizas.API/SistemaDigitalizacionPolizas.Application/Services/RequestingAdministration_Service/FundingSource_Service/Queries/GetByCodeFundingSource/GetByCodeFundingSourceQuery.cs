@@ -7,6 +7,6 @@ using System.Threading.Tasks;
 
 namespace SistemaDigitalizacionPolizas.Application.Services.RequestingAdministration_Service.FundingSource_Service.Queries.GetByCodeFundingSource
 {
-    public record GetByCodeFundingSourceQuery(int code)
+    public record GetByCodeCommunityQuery(int code)
      : IRequest<FundingSourceDto?>;
 }
