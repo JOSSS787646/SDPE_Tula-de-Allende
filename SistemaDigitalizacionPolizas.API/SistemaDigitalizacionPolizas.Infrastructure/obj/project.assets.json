@@ -4750,11 +4750,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\ProyectoTecnico\\Enero\\Back\\Sprint 2\\SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.Infrastructure\\SistemaDigitalizacionPolizas.Infrastructure.csproj",
+      "projectUniqueName": "C:\\Estadia Ingenieria\\Febrero\\Back\\Sprint3\\SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.Infrastructure\\SistemaDigitalizacionPolizas.Infrastructure.csproj",
       "projectName": "SistemaDigitalizacionPolizas.Infrastructure",
-      "projectPath": "C:\\ProyectoTecnico\\Enero\\Back\\Sprint 2\\SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.Infrastructure\\SistemaDigitalizacionPolizas.Infrastructure.csproj",
+      "projectPath": "C:\\Estadia Ingenieria\\Febrero\\Back\\Sprint3\\SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.Infrastructure\\SistemaDigitalizacionPolizas.Infrastructure.csproj",
       "packagesPath": "C:\\Users\\josea\\.nuget\\packages\\",
-      "outputPath": "C:\\ProyectoTecnico\\Enero\\Back\\Sprint 2\\SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.Infrastructure\\obj\\",
+      "outputPath": "C:\\Estadia Ingenieria\\Febrero\\Back\\Sprint3\\SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.Infrastructure\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -4775,8 +4775,8 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "C:\\ProyectoTecnico\\Enero\\Back\\Sprint 2\\SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.Domain\\SistemaDigitalizacionPolizas.Domain.csproj": {
-              "projectPath": "C:\\ProyectoTecnico\\Enero\\Back\\Sprint 2\\SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.Domain\\SistemaDigitalizacionPolizas.Domain.csproj"
+            "C:\\Estadia Ingenieria\\Febrero\\Back\\Sprint3\\SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.Domain\\SistemaDigitalizacionPolizas.Domain.csproj": {
+              "projectPath": "C:\\Estadia Ingenieria\\Febrero\\Back\\Sprint3\\SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.Domain\\SistemaDigitalizacionPolizas.Domain.csproj"
             }
           }
         }

@@ -1,4 +1,5 @@
-﻿using SistemaDigitalizacionPolizas.Application.Services.RequestingAdministration_Service.Cod_Service.Commands.UpdateCog;
+﻿
+using SistemaDigitalizacionPolizas.Application.Services.RequestingAdministration_Service.Prog.Commands.UpdateProg;
 using SistemaDigitalizacionPolizas.Domain.Entities.Actions_Entities;
 using SistemaDigitalizacionPolizas.Domain.Entities.RequestingAdministration_Entities;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Actions;
@@ -24,23 +25,27 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ActionPolicy_Service
             _currentUserService = currentUserService;
         }
 
+
         public async Task<bool> Handle(
-         UpdateActionPolicyCommand request,
-         CancellationToken cancellationToken)
+   UpdateActionPolicyCommand request,
+   CancellationToken cancellationToken)
         {
-            var action = new ActionsPolicy
-            {
-                Code = request.Code,
-                Description = request.Description,
-                Active = request.Active,
+            // 1️⃣ Buscar por ID
+            var actionsPolicy = await _repository.GetByIdAsync(request.idActionPolicy);
 
+            if (actionsPolicy == null)
+                return false;
 
+            // 2️⃣ Modificar
+            actionsPolicy.Code = request.Code;
+            actionsPolicy.Description = request.Description;
+            actionsPolicy.Active = request.Active;
+            actionsPolicy.UpdatedBy = _currentUserService.UserId;
+            actionsPolicy.UpdatedAt = DateTime.Now;
 
-                UpdatedBy = _currentUserService.UserId,
-                UpdatedAt = DateTime.Now
-            };
-
-            return await _repository.UpdateAsync(action);
+            // 3️⃣ Guardar
+            return await _repository.UpdateAsync(actionsPolicy);
         }
     }
 }
+
