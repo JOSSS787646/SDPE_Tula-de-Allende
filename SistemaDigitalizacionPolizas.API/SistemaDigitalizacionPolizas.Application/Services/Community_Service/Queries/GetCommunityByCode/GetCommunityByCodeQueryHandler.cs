@@ -1,7 +1,7 @@
 ﻿using SistemaDigitalizacionPolizas.Application.Services.RequestingAdministration_Service.Prog.Queries.GetByCodeProg;
 using SistemaDigitalizacionPolizas.Domain.Dtos.Community;
 using SistemaDigitalizacionPolizas.Domain.Dtos.RequestingAdministration;
-using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Communitys;
+using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Community;
 using System;
 using System.Collections.Generic;
 using System.Linq;

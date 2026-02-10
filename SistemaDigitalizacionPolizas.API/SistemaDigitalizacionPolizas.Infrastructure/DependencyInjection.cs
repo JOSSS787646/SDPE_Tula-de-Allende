@@ -2,7 +2,8 @@
 
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Actions;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.AdministrtiveUnit;
-using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Communitys;
+using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Community;
+
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Permissions;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.RequestingAdministration;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Roles;
@@ -57,6 +58,8 @@ namespace SistemaDigitalizacionPolizas.Infrastructure
             services.AddScoped<IProgRepository, ProgRepository>();
             //Community Repository
             services.AddScoped<ICommunityRepository, CommunityRepository>();
+            //Beneficiary Repository
+            services.AddScoped<IBeneficiaryRepository, BeneficiaryRepository>();
 
 
             //Servicio de Email

@@ -22,6 +22,8 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence
         public DbSet <ActionsPolicy> Actions { get; set; }
         public DbSet<Community> Communities { get; set; }
 
+        public DbSet<Beneficiary> Beneficiaries { get; set; }
+
         //Recuperacion de Contraseñas
         public DbSet<PasswordResetToken> PasswordResetTokens { get; set; }
 

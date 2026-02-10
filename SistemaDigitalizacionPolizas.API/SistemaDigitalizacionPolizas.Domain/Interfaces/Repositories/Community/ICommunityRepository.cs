@@ -1,22 +1,21 @@
 ﻿using SistemaDigitalizacionPolizas.Domain.Entities.Community_Entities;
-using SistemaDigitalizacionPolizas.Domain.Entities.RequestingAdministration_Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using CommunityEntity = SistemaDigitalizacionPolizas.Domain.Entities.Community_Entities.Community;
 
-namespace SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Communitys
+
+
+namespace SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Community
 {
     public interface ICommunityRepository
     {
 
-        Task<Community?> AddAsync(Community unit);
-        Task<Community?> GetByCodeAsync(int code);
-        Task<IEnumerable<Community>> GetAllAsync();
-        Task<bool> UpdateAsync(Community unit);
+        //SE DECLARO UNA VARIBALE PARA GUADAR EL VALOR DE LA INTERFAZ DEBIDO A 
+        //INCOHERENCIA DE NOMBRES ENTRE LA ENTIDAD Y LA INTERFAZ, SE DECLARO COMO COMMUNITYENTITY PARA EVITAR CONFLICTOS
+        Task<CommunityEntity?> AddAsync(CommunityEntity unit);
+        Task<CommunityEntity?> GetByCodeAsync(int code);
+        Task<IEnumerable<CommunityEntity>> GetAllAsync();
+        Task<bool> UpdateAsync(CommunityEntity unit);
         Task<bool> DeleteAsync(int code, int idCommunity);
-        Task<Community?> GetByIdAsync(int idCommunity);
+        Task<CommunityEntity?> GetByIdAsync(int idCommunity);
 
     }
 }
