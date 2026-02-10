@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Services\Acquisition_Service\AcquisitionClassification_Service\Queries\" />
     <Folder Include="Services\Auth_Service\Feature\CRUD\Queries\" />
   </ItemGroup>
 

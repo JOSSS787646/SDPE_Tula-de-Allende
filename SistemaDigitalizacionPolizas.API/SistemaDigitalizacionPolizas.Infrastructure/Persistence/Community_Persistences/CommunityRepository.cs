@@ -66,13 +66,13 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Community_Pers
         }
 
 
-        //Actualiza un COG
         public async Task<bool> UpdateAsync(Community unit)
         {
             _context.Communities.Update(unit);
             await _context.SaveChangesAsync();
             return true;
         }
+
 
 
         //Elimina un COG

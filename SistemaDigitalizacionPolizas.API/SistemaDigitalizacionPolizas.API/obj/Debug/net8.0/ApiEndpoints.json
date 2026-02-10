@@ -1,5 +1,99 @@
 [
   {
+    "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.AcquisitionTypeController",
+    "Method": "Create",
+    "RelativePath": "api/AcquisitionType",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "command",
+        "Type": "SistemaDigitalizacionPolizas.Application.Services.Acquisition_Service.Commands.CreateAcquisitionType.CreateAcquisitionTypeCommand",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Int32",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.AcquisitionTypeController",
+    "Method": "GetAll",
+    "RelativePath": "api/AcquisitionType",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.AcquisitionTypeController",
+    "Method": "GetByCode",
+    "RelativePath": "api/AcquisitionType/{code}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "code",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.AcquisitionTypeController",
+    "Method": "ChangeStatus",
+    "RelativePath": "api/AcquisitionType/{code}/active",
+    "HttpMethod": "PATCH",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "code",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "active",
+        "Type": "System.Boolean",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.AcquisitionTypeController",
+    "Method": "Update",
+    "RelativePath": "api/AcquisitionType/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "command",
+        "Type": "SistemaDigitalizacionPolizas.Application.Services.Acquisition_Service.Commands.UpdateAcquisitionType.UpdateAcquisitionTypeCommand",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.ActionsPolicyController",
     "Method": "Create",
     "RelativePath": "api/ActionsPolicy",
