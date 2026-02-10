@@ -46,7 +46,7 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
         [HttpGet("{code:int}")]
         public async Task<ActionResult<FundingSourceDto>> GetByCode(int code)
         {
-            var result = await _mediator.Send(new GetByCodeCommunityQuery(code));
+            var result = await _mediator.Send(new GetByCodeFundingSourceQuery(code));
 
             if (result == null)
                 return NotFound($"No existe un fondo de financiamiento con código {code}");

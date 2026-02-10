@@ -21,21 +21,21 @@ namespace SistemaDigitalizacionPolizas.Application.Services.Community_Service.Qu
             _communityRepository = repository;
         }
 
-        public async Task<CommunityDto?> Handle(
-          GetCommunityByCodeQuery request,
-          CancellationToken cancellationToken)
+        public async Task<CommunityDto> Handle(
+            GetCommunityByCodeQuery request,
+            CancellationToken cancellationToken)
         {
-            var communities = await _communityRepository.GetByCodeAsync(request.Code);
+            var community = await _communityRepository.GetByCodeAsync(request.Code);
 
-            if (communities == null)
+            if (community == null)
                 return null;
 
             return new CommunityDto
             {
-                idCommunity = communities.idCommunity,
-                Code = communities.Code,
-                Description = communities.Description,
-                Active = communities.Active
+                idCommunity = community.idCommunity,
+                Code = community.Code,
+                Description = community.Description,
+                Active = community.Active
             };
         }
     }

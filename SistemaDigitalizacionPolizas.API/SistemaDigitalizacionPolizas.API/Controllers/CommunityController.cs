@@ -3,6 +3,7 @@ using SistemaDigitalizacionPolizas.Application.Services.Community_Service.Comman
 using SistemaDigitalizacionPolizas.Application.Services.Community_Service.Commands.UpdateCommunity;
 using SistemaDigitalizacionPolizas.Application.Services.Community_Service.Commands.UpdateStatusCommunity;
 using SistemaDigitalizacionPolizas.Application.Services.Community_Service.Queries.GetAllCommunity;
+using SistemaDigitalizacionPolizas.Application.Services.Community_Service.Queries.GetCommunityByCode;
 using SistemaDigitalizacionPolizas.Application.Services.RequestingAdministration_Service.FundingSource_Service.Commands.UpdateFundingSource;
 using SistemaDigitalizacionPolizas.Application.Services.RequestingAdministration_Service.FundingSource_Service.Commands.UpdateStateFunding;
 using SistemaDigitalizacionPolizas.Application.Services.RequestingAdministration_Service.FundingSource_Service.Queries.GetAllFundingSource;
@@ -50,7 +51,7 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
         [HttpGet("{code:int}")]
         public async Task<ActionResult<CommunityDto>> GetByCode(int code)
         {
-            var result = await _mediator.Send(new GetByCodeCommunityQuery(code));
+            var result = await _mediator.Send(new GetCommunityByCodeQuery(code));
 
             if (result == null)
                 return NotFound($"No existe un fondo de financiamiento con código {code}");
