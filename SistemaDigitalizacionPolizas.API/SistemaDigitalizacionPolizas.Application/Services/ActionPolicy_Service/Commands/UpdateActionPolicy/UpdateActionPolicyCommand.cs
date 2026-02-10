@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SistemaDigitalizacionPolizas.Domain.Dtos.Action;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,7 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ActionPolicy_Service
 {
     public record UpdateActionPolicyCommand
     (
+          int idActionPolicy,
      int Code,
      string Description,
      bool Active

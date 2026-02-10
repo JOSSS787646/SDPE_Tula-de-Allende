@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "XI0OLwcbNnI=",
+  "dgSpecHash": "BZrjLXHkUS4=",
   "success": true,
-  "projectFilePath": "C:\\ProyectoTecnico\\Enero\\Back\\Sprint 2\\SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.Infrastructure\\SistemaDigitalizacionPolizas.Infrastructure.csproj",
+  "projectFilePath": "C:\\Estadia Ingenieria\\Febrero\\Back\\Sprint3\\SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.Infrastructure\\SistemaDigitalizacionPolizas.Infrastructure.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\josea\\.nuget\\packages\\azure.core\\1.38.0\\azure.core.1.38.0.nupkg.sha512",
     "C:\\Users\\josea\\.nuget\\packages\\azure.identity\\1.11.4\\azure.identity.1.11.4.nupkg.sha512",

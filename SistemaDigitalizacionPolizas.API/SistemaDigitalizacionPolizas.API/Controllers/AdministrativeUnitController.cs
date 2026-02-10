@@ -36,7 +36,7 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
 
 
 
-        //Obtener una unidad administrativa por su id
+        //Obtener una unidad administrativa por su codigo
         [HttpGet("{code:int}")]
         public async Task<IActionResult> GetByCode(int code)
         {

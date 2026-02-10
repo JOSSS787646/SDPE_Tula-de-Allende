@@ -1,4 +1,5 @@
 ﻿using SistemaDigitalizacionPolizas.Application.Services.RequestingAdministration_Service.Prog.Queries.GetAllProg;
+using SistemaDigitalizacionPolizas.Domain.Entities.RequestingAdministration_Entities;
 
 namespace SistemaDigitalizacionPolizas.Application
 {
@@ -8,8 +9,7 @@ namespace SistemaDigitalizacionPolizas.Application
             this IServiceCollection services)
         {
             services.AddMediatR(
-                typeof(LoginCommandHandler).Assembly
-
+                typeof(DependencyInjection).Assembly
             );
 
             services.AddTransient(
@@ -17,9 +17,9 @@ namespace SistemaDigitalizacionPolizas.Application
                 typeof(ValidationBehaviour<,>)
             );
 
-
-
             return services;
         }
     }
 }
+
+
