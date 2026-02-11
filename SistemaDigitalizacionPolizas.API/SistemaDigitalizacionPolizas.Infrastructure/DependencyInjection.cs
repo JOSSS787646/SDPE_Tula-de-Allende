@@ -1,12 +1,15 @@
 ﻿
 
+using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Acquisition;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Actions;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.AdministrtiveUnit;
-using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Communitys;
+using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Community;
+
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Permissions;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.RequestingAdministration;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Roles;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Services;
+using SistemaDigitalizacionPolizas.Infrastructure.Persistence.Acquisition_Persistences;
 using SistemaDigitalizacionPolizas.Infrastructure.Persistence.Action_Persistences;
 using SistemaDigitalizacionPolizas.Infrastructure.Persistence.AdministrativeUnit_Persistences;
 using SistemaDigitalizacionPolizas.Infrastructure.Persistence.Community_Persistences;
@@ -57,7 +60,12 @@ namespace SistemaDigitalizacionPolizas.Infrastructure
             services.AddScoped<IProgRepository, ProgRepository>();
             //Community Repository
             services.AddScoped<ICommunityRepository, CommunityRepository>();
-
+            //Beneficiary Repository
+            services.AddScoped<IBeneficiaryRepository, BeneficiaryRepository>();
+            //Acquisition Repository
+            services.AddScoped<IAcquisitionRepository, AcquisitionRepository>();
+            //Acquisition Classification Repository
+            services.AddScoped<IAcquisitionClassificationRepository, AcquisitionClassificationRepository>();
 
             //Servicio de Email
             services.AddScoped<IEmailService, EmailService>();

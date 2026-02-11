@@ -1,5 +1,6 @@
 ﻿
-using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Communitys;
+using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Community;
+
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Services;
 
 

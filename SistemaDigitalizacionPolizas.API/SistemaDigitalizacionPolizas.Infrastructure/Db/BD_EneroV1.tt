@@ -279,3 +279,18 @@ fechaCreacion DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
 modificadoPor INT NULL,
 fechaModificacion DATETIME2 NULL;
 
+
+
+CREATE TABLE Beneficiarios (
+    nombre INT IDENTITY(1,1) PRIMARY KEY,
+    direccion VARCHAR(254) NOT NULL,
+    ine VARCHAR(13) NOT NULL,
+	curp VARCHAR(16) NOT NULL,
+	telefono int null,
+	correo varchar(125),
+	creadoPor INT  DEFAULT 1,
+	fechaCreacion DATETIME2  DEFAULT SYSDATETIME(),
+	modificadoPor INT NULL,
+	fechaModificacion DATETIME2 NULL
+	--comunidad, tendra un FK
+);

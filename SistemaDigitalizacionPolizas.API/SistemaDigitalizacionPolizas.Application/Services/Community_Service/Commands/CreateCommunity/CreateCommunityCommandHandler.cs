@@ -1,6 +1,7 @@
 ﻿using SistemaDigitalizacionPolizas.Application.Services.RequestingAdministration_Service.Prog.Commands.CreateProg;
 using SistemaDigitalizacionPolizas.Domain.Entities.Community_Entities;
-using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Communitys;
+using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Community;
+
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Services;
 using System;
 using System.Collections.Generic;

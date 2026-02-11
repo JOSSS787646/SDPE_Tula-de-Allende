@@ -318,14 +318,10 @@ C:\ProyectoTecnico\Enero\Back\Sprint 2\SistemaDigitalizacionPolizas.API\SistemaD
 C:\ProyectoTecnico\Enero\Back\Sprint 2\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.API\obj\Debug\net8.0\SistemaDigitalizacionPolizas.API.pdb
 C:\ProyectoTecnico\Enero\Back\Sprint 2\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.API\obj\Debug\net8.0\SistemaDigitalizacionPolizas.API.genruntimeconfig.cache
 C:\ProyectoTecnico\Enero\Back\Sprint 2\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.API\obj\Debug\net8.0\ref\SistemaDigitalizacionPolizas.API.dll
+C:\Estadia Ingenieria\Febrero\Back\Sprint3\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.API\bin\Debug\net8.0\SistemaDigitalizacionPolizas.API.exe
 C:\Estadia Ingenieria\Febrero\Back\Sprint3\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.API\bin\Debug\net8.0\appsettings.Development.json
 C:\Estadia Ingenieria\Febrero\Back\Sprint3\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.API\bin\Debug\net8.0\appsettings.json
 C:\Estadia Ingenieria\Febrero\Back\Sprint3\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.API\bin\Debug\net8.0\SistemaDigitalizacionPolizas.API.staticwebassets.endpoints.json
-C:\Estadia Ingenieria\Febrero\Back\Sprint3\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.API\bin\Debug\net8.0\SistemaDigitalizacionPolizas.API.exe
-C:\Estadia Ingenieria\Febrero\Back\Sprint3\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.API\bin\Debug\net8.0\SistemaDigitalizacionPolizas.API.deps.json
-C:\Estadia Ingenieria\Febrero\Back\Sprint3\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.API\bin\Debug\net8.0\SistemaDigitalizacionPolizas.API.runtimeconfig.json
-C:\Estadia Ingenieria\Febrero\Back\Sprint3\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.API\bin\Debug\net8.0\SistemaDigitalizacionPolizas.API.dll
-C:\Estadia Ingenieria\Febrero\Back\Sprint3\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.API\bin\Debug\net8.0\SistemaDigitalizacionPolizas.API.pdb
 C:\Estadia Ingenieria\Febrero\Back\Sprint3\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.API\bin\Debug\net8.0\AutoMapper.dll
 C:\Estadia Ingenieria\Febrero\Back\Sprint3\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.API\bin\Debug\net8.0\Azure.Core.dll
 C:\Estadia Ingenieria\Febrero\Back\Sprint3\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.API\bin\Debug\net8.0\Azure.Identity.dll
@@ -423,5 +419,9 @@ C:\Estadia Ingenieria\Febrero\Back\Sprint3\SistemaDigitalizacionPolizas.API\Sist
 C:\Estadia Ingenieria\Febrero\Back\Sprint3\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.API\obj\Debug\net8.0\SistemaDigitalizacionPolizas.API.dll
 C:\Estadia Ingenieria\Febrero\Back\Sprint3\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.API\obj\Debug\net8.0\refint\SistemaDigitalizacionPolizas.API.dll
 C:\Estadia Ingenieria\Febrero\Back\Sprint3\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.API\obj\Debug\net8.0\SistemaDigitalizacionPolizas.API.pdb
+C:\Estadia Ingenieria\Febrero\Back\Sprint3\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.API\bin\Debug\net8.0\SistemaDigitalizacionPolizas.API.deps.json
+C:\Estadia Ingenieria\Febrero\Back\Sprint3\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.API\bin\Debug\net8.0\SistemaDigitalizacionPolizas.API.runtimeconfig.json
+C:\Estadia Ingenieria\Febrero\Back\Sprint3\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.API\bin\Debug\net8.0\SistemaDigitalizacionPolizas.API.dll
+C:\Estadia Ingenieria\Febrero\Back\Sprint3\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.API\bin\Debug\net8.0\SistemaDigitalizacionPolizas.API.pdb
 C:\Estadia Ingenieria\Febrero\Back\Sprint3\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.API\obj\Debug\net8.0\SistemaDigitalizacionPolizas.API.genruntimeconfig.cache
 C:\Estadia Ingenieria\Febrero\Back\Sprint3\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.API\obj\Debug\net8.0\ref\SistemaDigitalizacionPolizas.API.dll
