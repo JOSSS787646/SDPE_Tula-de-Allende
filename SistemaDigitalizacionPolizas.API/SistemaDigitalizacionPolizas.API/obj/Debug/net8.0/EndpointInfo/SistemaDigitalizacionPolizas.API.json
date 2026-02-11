@@ -2640,6 +2640,10 @@
           "user": {
             "$ref": "#/components/schemas/UserSessionDto"
           },
+          "idRole": {
+            "type": "integer",
+            "format": "int32"
+          },
           "permissions": {
             "type": "array",
             "items": {
@@ -3033,6 +3037,10 @@
           "role": {
             "type": "string",
             "nullable": true
+          },
+          "idRole": {
+            "type": "integer",
+            "format": "int32"
           },
           "administrativeUnit": {
             "type": "string",

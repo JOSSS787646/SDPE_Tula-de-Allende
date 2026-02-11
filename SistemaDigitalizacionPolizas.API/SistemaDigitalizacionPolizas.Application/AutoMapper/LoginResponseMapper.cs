@@ -14,7 +14,9 @@
                     IdUser = user.IdUser,
                     Email = user.Email,
                     Role = user.Role.RolName,
+                    idRole=user.IdRole,
                     AdministrativeUnit = user.AdministrativeUnit.Description
+
                 },
 
                 Permissions = user.Role.PermissionRoles

@@ -15,7 +15,10 @@
         {
             new Claim(ClaimTypes.NameIdentifier, user.IdUser.ToString()),
             new Claim(ClaimTypes.Email, user.Email),
-            new Claim(ClaimTypes.Role, user.Role.RolName)
+            new Claim(ClaimTypes.Role, user.Role.RolName),
+            new Claim(ClaimTypes.Role, user.IdRole.ToString())
+
+
         };
 
             var key = new SymmetricSecurityKey(
