@@ -1,5 +1,99 @@
 [
   {
+    "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.AcquisitionClassificationController",
+    "Method": "Create",
+    "RelativePath": "api/AcquisitionClassification",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "command",
+        "Type": "SistemaDigitalizacionPolizas.Application.Services.Acquisition_Service.AcquisitionClassification_Service.Commands.CreateAcquisitionClassification.AddAcquisitionClassificationCmd",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Int32",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.AcquisitionClassificationController",
+    "Method": "GetAll",
+    "RelativePath": "api/AcquisitionClassification",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.AcquisitionClassificationController",
+    "Method": "GetByCode",
+    "RelativePath": "api/AcquisitionClassification/{code}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "code",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.AcquisitionClassificationController",
+    "Method": "ChangeStatus",
+    "RelativePath": "api/AcquisitionClassification/{code}/active",
+    "HttpMethod": "PATCH",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "code",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "active",
+        "Type": "System.Boolean",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.AcquisitionClassificationController",
+    "Method": "Update",
+    "RelativePath": "api/AcquisitionClassification/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "command",
+        "Type": "SistemaDigitalizacionPolizas.Application.Services.Acquisition_Service.AcquisitionClassification_Service.Commands.UpdateAcquisitionClassification.UpdateAcqClassificationCmd",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.AcquisitionTypeController",
     "Method": "Create",
     "RelativePath": "api/AcquisitionType",
@@ -9,7 +103,7 @@
     "Parameters": [
       {
         "Name": "command",
-        "Type": "SistemaDigitalizacionPolizas.Application.Services.Acquisition_Service.Commands.CreateAcquisitionType.CreateAcquisitionTypeCommand",
+        "Type": "SistemaDigitalizacionPolizas.Application.Services.Acquisition_Service.AcquisitionType_Service.Commands.CreateAcquisitionType.CreateAcquisitionTypeCommand",
         "IsRequired": true
       }
     ],
@@ -87,7 +181,7 @@
       },
       {
         "Name": "command",
-        "Type": "SistemaDigitalizacionPolizas.Application.Services.Acquisition_Service.Commands.UpdateAcquisitionType.UpdateAcquisitionTypeCommand",
+        "Type": "SistemaDigitalizacionPolizas.Application.Services.Acquisition_Service.AcquisitionType_Service.Commands.UpdateAcquisitionType.UpdateAcquisitionTypeCommand",
         "IsRequired": true
       }
     ],

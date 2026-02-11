@@ -13,3 +13,4 @@ namespace SistemaDigitalizacionPolizas.Application.Services.Acquisition_Service.
     ) : IRequest<int>;
 
 }
+

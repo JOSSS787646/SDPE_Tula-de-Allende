@@ -64,7 +64,8 @@ namespace SistemaDigitalizacionPolizas.Infrastructure
             services.AddScoped<IBeneficiaryRepository, BeneficiaryRepository>();
             //Acquisition Repository
             services.AddScoped<IAcquisitionRepository, AcquisitionRepository>();
-
+            //Acquisition Classification Repository
+            services.AddScoped<IAcquisitionClassificationRepository, AcquisitionClassificationRepository>();
 
             //Servicio de Email
             services.AddScoped<IEmailService, EmailService>();
