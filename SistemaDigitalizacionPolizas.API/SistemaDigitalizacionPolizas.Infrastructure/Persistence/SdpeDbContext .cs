@@ -3,6 +3,7 @@ using SistemaDigitalizacionPolizas.Domain.Entities.Actions_Entities;
 using SistemaDigitalizacionPolizas.Domain.Entities.Auth_Entities;
 using SistemaDigitalizacionPolizas.Domain.Entities.Community_Entities;
 using SistemaDigitalizacionPolizas.Domain.Entities.RequestingAdministration_Entities;
+using SistemaDigitalizacionPolizas.Domain.Entities.Supplier_Entities;
 
 namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence
 {
@@ -25,6 +26,7 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence
         public DbSet<Beneficiary> Beneficiaries { get; set; }
         public DbSet<AcquisitionType> AcquisitionTypes { get; set; }
         public DbSet<AcquisitionClassification> AcquisitionClassifications { get; set; }
+        public DbSet<Supplier> Suppliers { get; set; }
         //Recuperacion de Contraseñas
         public DbSet<PasswordResetToken> PasswordResetTokens { get; set; }
 
