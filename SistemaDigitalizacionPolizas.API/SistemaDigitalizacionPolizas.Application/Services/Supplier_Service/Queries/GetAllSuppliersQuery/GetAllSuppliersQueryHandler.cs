@@ -48,6 +48,7 @@ namespace SistemaDigitalizacionPolizas.Application.Services.Supplier_Service.Que
                 Email = s.Email,
                 Active=s.Active
             }).ToList();
+
         }
     }
 }
