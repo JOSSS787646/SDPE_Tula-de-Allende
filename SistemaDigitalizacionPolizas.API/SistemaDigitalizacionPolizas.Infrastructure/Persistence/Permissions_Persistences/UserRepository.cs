@@ -85,6 +85,7 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Permissions_Pe
                     IdUser = u.IdUser,
                     Email = u.Email,
                     Role = u.Role.RolName,
+                    idRole=u.IdRole,
                     AdministrativeUnit = u.AdministrativeUnit.Description,
                     Asset = u.Asset
                 })

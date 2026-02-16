@@ -1,4 +1,5 @@
-﻿using SistemaDigitalizacionPolizas.Domain.Entities.RequestingAdministration_Entities;
+﻿using SistemaDigitalizacionPolizas.Domain.Entities.Areas_Entities;
+using SistemaDigitalizacionPolizas.Domain.Entities.RequestingAdministration_Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,5 +20,6 @@ namespace SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Requesting
         Task<bool> UpdateAsync(FundingSource unit);
         //Desactivar un fondo
         Task<bool> DeleteAsync(int code);
+        Task<FundingSource?> GetByIdAsync(int id);
     }
 }

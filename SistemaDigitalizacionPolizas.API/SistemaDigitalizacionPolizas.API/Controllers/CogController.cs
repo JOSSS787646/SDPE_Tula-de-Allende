@@ -53,23 +53,24 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
             return CreatedAtAction(nameof(GetByCode), new { code = command.Code }, id);
         }
 
-        //Actualiza un COG existente
-
-        [HttpPut("{code:int}")]
+        // Actualiza un COG existente
+        [HttpPut("{id:int}")]
         public async Task<IActionResult> Update(
-         int code,
-         [FromBody] UpdateCogCommand command)
+    int id,
+    [FromBody] UpdateCogCommand command)
         {
-            if (code != command.Code)
-                return BadRequest("El código de la URL no coincide con el cuerpo de la solicitud.");
+            // Forzamos el ID desde la URL
+            var fixedCommand = command with { idCog = id };
 
-            var success = await _mediator.Send(command);
+            var success = await _mediator.Send(fixedCommand);
 
             if (!success)
-                return NotFound($"No existe un COG con código {code}");
+                return NotFound($"No existe un COG con id {id}");
 
             return NoContent();
         }
+
+
 
 
         // Desactiva (soft delete) un COG

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using SistemaDigitalizacionPolizas.Application.Services.RequestingAdministration_Service.Cod_Service.Commands.UpdateCog;
 using SistemaDigitalizacionPolizas.Application.Services.RequestingAdministration_Service.Prog.Commands.CreateProg;
 using SistemaDigitalizacionPolizas.Application.Services.RequestingAdministration_Service.Prog.Commands.UpdateProg;
 using SistemaDigitalizacionPolizas.Application.Services.RequestingAdministration_Service.Prog.Commands.UpdateStatusProg;
@@ -54,25 +55,24 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
             var result = await _mediator.Send(new GetByCodeProgQuery(code));
 
             if (result == null)
-                return NotFound($"No existe un COG con código {code}");
+                return NotFound($"No existe un prog con código {code}");
 
             return Ok(result);
         }
 
         //Actualiza la data de un prog
-
-        [HttpPut("{code:int}")]
+        [HttpPut("{id:int}")]
         public async Task<IActionResult> Update(
-         int code,
-         [FromBody] UpdateProgCommand command)
+    int id,
+    [FromBody] UpdateProgCommand command)
         {
-            if (code != command.Code)
-                return BadRequest("El código de la URL no coincide con el cuerpo de la solicitud.");
+            // Forzamos el ID desde la URL
+            var fixedCommand = command with { idProg = id };
 
-            var success = await _mediator.Send(command);
+            var success = await _mediator.Send(fixedCommand);
 
             if (!success)
-                return NotFound($"No existe un prog con código {code}");
+                return NotFound($"No existe un prog con id {id}");
 
             return NoContent();
         }

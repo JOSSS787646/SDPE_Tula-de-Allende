@@ -1,13 +1,22 @@
 ﻿
 
+using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Acquisition;
+using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Actions;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.AdministrtiveUnit;
+using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Community;
+
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Permissions;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.RequestingAdministration;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Roles;
+using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Suppliers;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Services;
+using SistemaDigitalizacionPolizas.Infrastructure.Persistence.Acquisition_Persistences;
+using SistemaDigitalizacionPolizas.Infrastructure.Persistence.Action_Persistences;
 using SistemaDigitalizacionPolizas.Infrastructure.Persistence.AdministrativeUnit_Persistences;
+using SistemaDigitalizacionPolizas.Infrastructure.Persistence.Community_Persistences;
 using SistemaDigitalizacionPolizas.Infrastructure.Persistence.RequestingAdministration_Persistences;
 using SistemaDigitalizacionPolizas.Infrastructure.Persistence.Services.Auditory;
+using SistemaDigitalizacionPolizas.Infrastructure.Persistence.Supplier_Persistence;
 
 
 namespace SistemaDigitalizacionPolizas.Infrastructure
@@ -51,7 +60,16 @@ namespace SistemaDigitalizacionPolizas.Infrastructure
             services.AddScoped<IProyectRepository, ProyectRepository>();
             //Prog Repository
             services.AddScoped<IProgRepository, ProgRepository>();
-
+            //Community Repository
+            services.AddScoped<ICommunityRepository, CommunityRepository>();
+            //Beneficiary Repository
+            services.AddScoped<IBeneficiaryRepository, BeneficiaryRepository>();
+            //Acquisition Repository
+            services.AddScoped<IAcquisitionRepository, AcquisitionRepository>();
+            //Acquisition Classification Repository
+            services.AddScoped<IAcquisitionClassificationRepository, AcquisitionClassificationRepository>();
+            //Supplier Repository
+            services.AddScoped<ISupplierRepository, SupplierRepository>();
             //Servicio de Email
             services.AddScoped<IEmailService, EmailService>();
             services.AddScoped<IPasswordResetRepository, PasswordResetRepository>();
@@ -60,6 +78,8 @@ namespace SistemaDigitalizacionPolizas.Infrastructure
             //Servicio de  Auditoria
             services.AddScoped<ICurrentUserService, CurrentUserService>();
 
+            services.AddScoped<IActionPolicyRepository, ActionPolicyRepository>();
+         
 
 
 

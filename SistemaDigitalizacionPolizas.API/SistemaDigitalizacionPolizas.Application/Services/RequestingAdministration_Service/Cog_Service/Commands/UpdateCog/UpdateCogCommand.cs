@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 namespace SistemaDigitalizacionPolizas.Application.Services.RequestingAdministration_Service.Cod_Service.Commands.UpdateCog
 {
     public record UpdateCogCommand(
+        int idCog,
      int Code,
      string Description,
      bool Active

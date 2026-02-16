@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using SistemaDigitalizacionPolizas.Application.Services.RequestingAdministration_Service.Prog.Commands.UpdateProg;
 using SistemaDigitalizacionPolizas.Domain.Entities.RequestingAdministration_Entities;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.RequestingAdministration;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Services;
@@ -21,27 +22,24 @@ namespace SistemaDigitalizacionPolizas.Application.Services.RequestingAdministra
         }
 
         public async Task<bool> Handle(
-            UpdateProyectCommand request,
-            CancellationToken cancellationToken)
+ UpdateProyectCommand request,
+ CancellationToken cancellationToken)
         {
-            var proyect = new Proyect
-            {
-                Code = request.Code,
-                Description = request.Description,
-                Active = request.Active,
-                UpdatedBy = _currentUser.UserId,
-                UpdatedAt = DateTime.Now
-            };
+            // 1️⃣ Buscar por ID
+            var proyect = await _repository.GetByIdAsync(request.idProyect);
 
-            var result = await _repository.UpdateAsync(proyect);
+            if (proyect == null)
+                return false;
 
-            if (!result)
-            {
-                throw new InvalidOperationException(
-                    $"No se pudo actualizar el proyecto con código {request.Code}");
-            }
+            // 2️⃣ Modificar
+            proyect.Code = request.Code;
+            proyect.Description = request.Description;
+            proyect.Active = request.Active;
+            proyect.UpdatedBy = _currentUser.UserId;
+            proyect.UpdatedAt = DateTime.Now;
 
-            return true;
+            // 3️⃣ Guardar
+            return await _repository.UpdateAsync(proyect);
         }
     }
 

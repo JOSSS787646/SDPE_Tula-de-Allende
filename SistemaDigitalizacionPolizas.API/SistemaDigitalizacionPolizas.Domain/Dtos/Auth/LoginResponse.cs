@@ -11,6 +11,7 @@ namespace SistemaDigitalizacionPolizas.Domain.Dtos.Auth
         public DateTime Expiration { get; set; }
 
         public UserSessionDto User { get; set; }
+        public int IdRole { get; set; }
         public List<PermissionGroupDto> Permissions { get; set; }
     }
 }

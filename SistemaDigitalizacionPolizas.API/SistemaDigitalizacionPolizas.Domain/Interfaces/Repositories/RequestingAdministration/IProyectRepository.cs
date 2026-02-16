@@ -1,4 +1,5 @@
-﻿using SistemaDigitalizacionPolizas.Domain.Entities.RequestingAdministration_Entities;
+﻿using SistemaDigitalizacionPolizas.Domain.Entities.Areas_Entities;
+using SistemaDigitalizacionPolizas.Domain.Entities.RequestingAdministration_Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,5 +23,6 @@ namespace SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Requesting
         Task<bool> DeleteAsync(int code, int userId);
 
         Task<Proyect?> GetByCodeIncludingInactiveAsync(int code);
+        Task<Proyect?> GetByIdAsync(int id);
     }
 }

@@ -30,6 +30,17 @@ public class FundingSourceRepository : IFundingSourceRepository
 
 
 
+    // ===============================
+    // GET BY ID
+    // ===============================
+
+    public async Task<FundingSource?> GetByIdAsync(int id)
+    {
+        return await _context.FundingSources
+            .FirstOrDefaultAsync(x => x.idFundingSource == id);
+    }
+
+
 
     //Agrega un  fondo de financiamiento nuevo 
     public async Task<FundingSource?> AddAsync(FundingSource unit)
@@ -49,18 +60,11 @@ public class FundingSourceRepository : IFundingSourceRepository
     //Actualiza un  fondo de financiamiento
     public async Task<bool> UpdateAsync(FundingSource unit)
     {
-        var existing = await _context.FundingSources
-            .FirstOrDefaultAsync(c => c.Code == unit.Code);
-
-        if (existing == null)
-            return false;
-
-        existing.Description = unit.Description;
-        existing.Active = unit.Active;
-
+        _context.FundingSources.Update(unit);
         await _context.SaveChangesAsync();
         return true;
     }
+
 
 
     //Elimina un  fondo de financiamiento

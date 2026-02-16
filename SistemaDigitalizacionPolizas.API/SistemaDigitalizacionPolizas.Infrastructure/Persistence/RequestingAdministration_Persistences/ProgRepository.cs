@@ -38,6 +38,18 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.RequestingAdmi
                 .FirstOrDefaultAsync(x => x.Code == code);
         }
 
+
+        // ===============================
+        // GET BY ID
+        // ===============================
+
+        public async Task<Prog?> GetByIdAsync(int id)
+        {
+            return await _context.Progs
+                .FirstOrDefaultAsync(x => x.idProg == id);
+        }
+
+
         // =========================
         // AGREGAR
         // =========================
@@ -63,21 +75,11 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.RequestingAdmi
         // =========================
         public async Task<bool> UpdateAsync(Prog unit)
         {
-            var existing = await _context.Progs
-                .FirstOrDefaultAsync(x => x.Code == unit.Code);
-
-            if (existing == null)
-                return false;
-
-            existing.Description = unit.Description;
-            existing.Active = unit.Active;
-
-            existing.UpdatedBy = unit.UpdatedBy;
-            existing.UpdatedAt = DateTime.Now;
-
+            _context.Progs.Update(unit);
             await _context.SaveChangesAsync();
             return true;
         }
+
 
         // =========================
         // ELIMINADO LÓGICO

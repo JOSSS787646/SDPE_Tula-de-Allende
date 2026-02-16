@@ -8,6 +8,7 @@ namespace SistemaDigitalizacionPolizas.Application.Services.RequestingAdministra
 {
     public record UpdateProgCommand
      (
+        int idProg,
      int Code,
      string Description,
      bool Active

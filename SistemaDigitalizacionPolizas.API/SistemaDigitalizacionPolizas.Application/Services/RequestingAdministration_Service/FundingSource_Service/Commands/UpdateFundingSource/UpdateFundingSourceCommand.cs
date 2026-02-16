@@ -9,6 +9,7 @@ namespace SistemaDigitalizacionPolizas.Application.Services.RequestingAdministra
 {
     public record UpdateFundingSourceCommand
     (
+        int idFundingSource,
      int Code,
      string Description,
      bool Active
