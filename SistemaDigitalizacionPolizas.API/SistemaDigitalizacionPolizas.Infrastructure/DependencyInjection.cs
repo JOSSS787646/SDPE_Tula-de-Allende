@@ -4,7 +4,7 @@ using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Acquisition;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Actions;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.AdministrtiveUnit;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Community;
-
+using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Document;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Permissions;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.RequestingAdministration;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Roles;
@@ -14,6 +14,7 @@ using SistemaDigitalizacionPolizas.Infrastructure.Persistence.Acquisition_Persis
 using SistemaDigitalizacionPolizas.Infrastructure.Persistence.Action_Persistences;
 using SistemaDigitalizacionPolizas.Infrastructure.Persistence.AdministrativeUnit_Persistences;
 using SistemaDigitalizacionPolizas.Infrastructure.Persistence.Community_Persistences;
+using SistemaDigitalizacionPolizas.Infrastructure.Persistence.Document_Persistences;
 using SistemaDigitalizacionPolizas.Infrastructure.Persistence.RequestingAdministration_Persistences;
 using SistemaDigitalizacionPolizas.Infrastructure.Persistence.Services.Auditory;
 using SistemaDigitalizacionPolizas.Infrastructure.Persistence.Supplier_Persistence;
@@ -70,6 +71,10 @@ namespace SistemaDigitalizacionPolizas.Infrastructure
             services.AddScoped<IAcquisitionClassificationRepository, AcquisitionClassificationRepository>();
             //Supplier Repository
             services.AddScoped<ISupplierRepository, SupplierRepository>();
+            //Action Policy Repository
+            services.AddScoped<IActionPolicyRepository, ActionPolicyRepository>();
+            //Document Type Repository
+            services.AddScoped<IDocumentTypeRepository, DocumentTypeRepository>();
             //Servicio de Email
             services.AddScoped<IEmailService, EmailService>();
             services.AddScoped<IPasswordResetRepository, PasswordResetRepository>();
@@ -77,9 +82,9 @@ namespace SistemaDigitalizacionPolizas.Infrastructure
 
             //Servicio de  Auditoria
             services.AddScoped<ICurrentUserService, CurrentUserService>();
+      
 
-            services.AddScoped<IActionPolicyRepository, ActionPolicyRepository>();
-         
+
 
 
 

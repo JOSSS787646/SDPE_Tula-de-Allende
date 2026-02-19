@@ -58,6 +58,15 @@ namespace SistemaDigitalizacionPolizas.Domain.Entities.Community_Entities
 
         public int? ModifiedBy { get; set; }
         public DateTime? ModifiedAt { get; set; }
+
+
+
+        // ===============================
+        // Navegación
+        // ===============================
+        public int? idCommunity { get; set; }  // FK
+        public Community? Community { get; set; }  // navegación
+
     }
 
 }

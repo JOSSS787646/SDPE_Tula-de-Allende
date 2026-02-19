@@ -8,7 +8,7 @@ using SistemaDigitalizacionPolizas.Domain.Dtos.Supplier;
 
 namespace SistemaDigitalizacionPolizas.API.Controllers
 {
-
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class SupplierController: ControllerBase

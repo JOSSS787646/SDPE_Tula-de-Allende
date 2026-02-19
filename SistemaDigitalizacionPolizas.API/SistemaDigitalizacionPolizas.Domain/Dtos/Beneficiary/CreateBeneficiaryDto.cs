@@ -4,11 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SistemaDigitalizacionPolizas.Domain.Dtos.Community
+namespace SistemaDigitalizacionPolizas.Domain.Dtos.Beneficiary
 {
-    public class BeneficiaryDto
+    public class CreateBeneficiaryDto
     {
-
         public int IdBeneficiary { get; set; }
 
         public string FirstName { get; set; } = null!;
@@ -33,5 +32,9 @@ namespace SistemaDigitalizacionPolizas.Domain.Dtos.Community
         public string? Email { get; set; }
 
         public bool Active { get; set; } = true;
+
+        public int? IdCommunity { get; set; }
+
+   
     }
 }
