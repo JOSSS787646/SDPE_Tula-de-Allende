@@ -2,8 +2,10 @@
 using SistemaDigitalizacionPolizas.Domain.Entities.Actions_Entities;
 using SistemaDigitalizacionPolizas.Domain.Entities.Auth_Entities;
 using SistemaDigitalizacionPolizas.Domain.Entities.Community_Entities;
+using SistemaDigitalizacionPolizas.Domain.Entities.Document_Entities;
 using SistemaDigitalizacionPolizas.Domain.Entities.RequestingAdministration_Entities;
 using SistemaDigitalizacionPolizas.Domain.Entities.Supplier_Entities;
+using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Document;
 using SistemaDigitalizacionPolizas.Infrastructure.Persistence.Document_Persistences;
 
 namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence
@@ -29,7 +31,8 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence
         public DbSet<AcquisitionClassification> AcquisitionClassifications { get; set; }
         public DbSet<Supplier> Suppliers { get; set; }
         public DbSet<DocumentType> Documents { get; set; }
-
+        public DbSet<ClasificationDocumentType> ClasificationDocumentTypes { get; set; }
+        public DbSet<ExpedientDocument> ExpedientDocuments { get; set; }
         //Recuperacion de Contraseñas
         public DbSet<PasswordResetToken> PasswordResetTokens { get; set; }
 

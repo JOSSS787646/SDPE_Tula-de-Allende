@@ -69,6 +69,13 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Configurations
             builder.Property(x => x.Active)
                 .HasColumnName("activo")
                 .HasDefaultValue(true);
+
+
+            builder.HasMany(x => x.Classifications)
+       .WithOne(x => x.DocumentType)
+       .HasForeignKey(x => x.DocumentTypeId)
+       .OnDelete(DeleteBehavior.Restrict);
+
         }
     }
 }

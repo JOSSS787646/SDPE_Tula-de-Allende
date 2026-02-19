@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SistemaDigitalizacionPolizas.Domain.Entities.Document_Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,5 +24,14 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Document_Persi
 
         // 🔹 Soft Delete
         public bool Active { get; set; } = true;
+
+        public ICollection<ClasificationDocumentType> Classifications { get; set; }
+    = new List<ClasificationDocumentType>();
+
+
+        // 🔹 NUEVA navegación
+        public ICollection<ExpedientDocument> ExpedientDocuments { get; set; }
+            = new List<ExpedientDocument>();
+
     }
 }

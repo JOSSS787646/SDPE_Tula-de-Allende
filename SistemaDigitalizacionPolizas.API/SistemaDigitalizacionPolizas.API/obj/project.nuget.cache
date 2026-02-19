@@ -1,10 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "TEj9foo1trc=",
+  "dgSpecHash": "oCh5wc8eRMM=",
   "success": true,
   "projectFilePath": "C:\\Estadia Ingenieria\\Febrero\\Back\\Sprint4\\SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.API.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\josea\\.nuget\\packages\\automapper\\10.0.0\\automapper.10.0.0.nupkg.sha512",
+    "C:\\Users\\josea\\.nuget\\packages\\awssdk.core\\4.0.3.8\\awssdk.core.4.0.3.8.nupkg.sha512",
+    "C:\\Users\\josea\\.nuget\\packages\\awssdk.s3\\4.0.17\\awssdk.s3.4.0.17.nupkg.sha512",
     "C:\\Users\\josea\\.nuget\\packages\\azure.core\\1.38.0\\azure.core.1.38.0.nupkg.sha512",
     "C:\\Users\\josea\\.nuget\\packages\\azure.identity\\1.11.4\\azure.identity.1.11.4.nupkg.sha512",
     "C:\\Users\\josea\\.nuget\\packages\\bcrypt.net-next\\3.2.0\\bcrypt.net-next.3.2.0.nupkg.sha512",

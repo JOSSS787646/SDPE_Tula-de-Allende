@@ -532,3 +532,5 @@ C:\Estadia Ingenieria\Febrero\Back\Sprint4\SistemaDigitalizacionPolizas.API\Sist
 C:\Estadia Ingenieria\Febrero\Back\Sprint4\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.API\obj\Debug\net8.0\SistemaDigitalizacionPolizas.API.pdb
 C:\Estadia Ingenieria\Febrero\Back\Sprint4\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.API\obj\Debug\net8.0\SistemaDigitalizacionPolizas.API.genruntimeconfig.cache
 C:\Estadia Ingenieria\Febrero\Back\Sprint4\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.API\obj\Debug\net8.0\ref\SistemaDigitalizacionPolizas.API.dll
+C:\Estadia Ingenieria\Febrero\Back\Sprint4\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.API\bin\Debug\net8.0\AWSSDK.Core.dll
+C:\Estadia Ingenieria\Febrero\Back\Sprint4\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.API\bin\Debug\net8.0\AWSSDK.S3.dll

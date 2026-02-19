@@ -17,6 +17,7 @@ using SistemaDigitalizacionPolizas.Infrastructure.Persistence.Community_Persiste
 using SistemaDigitalizacionPolizas.Infrastructure.Persistence.Document_Persistences;
 using SistemaDigitalizacionPolizas.Infrastructure.Persistence.RequestingAdministration_Persistences;
 using SistemaDigitalizacionPolizas.Infrastructure.Persistence.Services.Auditory;
+using SistemaDigitalizacionPolizas.Infrastructure.Persistence.Services.UploatFile;
 using SistemaDigitalizacionPolizas.Infrastructure.Persistence.Supplier_Persistence;
 
 
@@ -75,6 +76,10 @@ namespace SistemaDigitalizacionPolizas.Infrastructure
             services.AddScoped<IActionPolicyRepository, ActionPolicyRepository>();
             //Document Type Repository
             services.AddScoped<IDocumentTypeRepository, DocumentTypeRepository>();
+            //Clasification Document Type Repository
+            services.AddScoped<IClasificationDocumentTypeRepository, ClasificationDocumentTypeRepository>();
+            services.AddScoped<IDocumentExpedientRepository, DocumentExpedientRepository>();
+
             //Servicio de Email
             services.AddScoped<IEmailService, EmailService>();
             services.AddScoped<IPasswordResetRepository, PasswordResetRepository>();
@@ -82,7 +87,11 @@ namespace SistemaDigitalizacionPolizas.Infrastructure
 
             //Servicio de  Auditoria
             services.AddScoped<ICurrentUserService, CurrentUserService>();
-      
+
+            //Servicio de Almacenamiento de Archivos
+            services.AddScoped<IFileStorageService, WasabiFileStorageService>();
+
+
 
 
 

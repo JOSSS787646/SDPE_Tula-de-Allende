@@ -984,6 +984,60 @@
         }
       }
     },
+    "/api/ClasificationDocumentType/assign": {
+      "post": {
+        "tags": [
+          "ClasificationDocumentType"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AssignDocumentsToClassificationCommand"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AssignDocumentsToClassificationCommand"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/AssignDocumentsToClassificationCommand"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/ClasificationDocumentType/by-classification/{acquisitionClassificationId}": {
+      "get": {
+        "tags": [
+          "ClasificationDocumentType"
+        ],
+        "parameters": [
+          {
+            "name": "acquisitionClassificationId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Cog": {
       "get": {
         "tags": [
@@ -1510,6 +1564,64 @@
             "application/*+json": {
               "schema": {
                 "type": "boolean"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/ExpedientDocument/upload": {
+      "post": {
+        "tags": [
+          "ExpedientDocument"
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "RequestId": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "DocumentTypeId": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "File": {
+                    "type": "string",
+                    "format": "binary"
+                  },
+                  "DocumentStatus": {
+                    "type": "string"
+                  },
+                  "Observations": {
+                    "type": "string"
+                  }
+                }
+              },
+              "encoding": {
+                "RequestId": {
+                  "style": "form"
+                },
+                "DocumentTypeId": {
+                  "style": "form"
+                },
+                "File": {
+                  "style": "form"
+                },
+                "DocumentStatus": {
+                  "style": "form"
+                },
+                "Observations": {
+                  "style": "form"
+                }
               }
             }
           }
@@ -2611,6 +2723,23 @@
         },
         "additionalProperties": false
       },
+      "AssignDocumentsToClassificationCommand": {
+        "type": "object",
+        "properties": {
+          "acquisitionClassificationId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "documents": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DocumentAssignmentDto"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "BeneficiaryDto": {
         "type": "object",
         "properties": {
@@ -3040,6 +3169,22 @@
           "description": {
             "type": "string",
             "nullable": true
+          },
+          "active": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "DocumentAssignmentDto": {
+        "type": "object",
+        "properties": {
+          "documentTypeId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "isRequired": {
+            "type": "boolean"
           },
           "active": {
             "type": "boolean"

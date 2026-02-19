@@ -22,7 +22,8 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
     /// - Actualizar información
     /// - Activar / Desactivar (Soft status update)
     /// </summary>
-    //[Authorize] // Se puede habilitar para proteger los endpoints
+    [Authorize] // Se puede habilitar para proteger los endpoints
+
     [ApiController]
     [Route("api/[controller]")]
     public class DocumentTypeController : ControllerBase
