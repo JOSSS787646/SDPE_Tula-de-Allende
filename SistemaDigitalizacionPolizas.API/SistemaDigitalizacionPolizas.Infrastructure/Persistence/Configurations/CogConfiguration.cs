@@ -9,7 +9,7 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Configurations
 
         public void Configure(EntityTypeBuilder<COG> builder)
         {
-            builder.ToTable("ClasificadorObjetoGasto");
+            builder.ToTable("ClasificadorObjectoGasto");
 
             builder.HasKey(x => x.idCog);
 

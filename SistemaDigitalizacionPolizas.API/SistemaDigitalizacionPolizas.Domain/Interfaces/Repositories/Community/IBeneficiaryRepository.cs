@@ -1,4 +1,5 @@
-﻿using SistemaDigitalizacionPolizas.Domain.Entities.Community_Entities;
+﻿using SistemaDigitalizacionPolizas.Domain.Dtos.Beneficiary;
+using SistemaDigitalizacionPolizas.Domain.Entities.Community_Entities;
 using SistemaDigitalizacionPolizas.Domain.Entities.RequestingAdministration_Entities;
 using System;
 using System.Collections.Generic;
@@ -14,7 +15,7 @@ namespace SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Community
 
         Task<bool> ExistsByCurpAsync(string curp);
         Task<bool> ExistsByIneAsync(string ine);
-        Task<IEnumerable<Beneficiary>> GetAllAsync();
+        Task<List<BeneficiaryDto>> GetAllAsync();
         Task<bool> UpdateAsync(Beneficiary unit);
         Task<bool> DeleteAsync(string curp, int beneficiaryId);
         Task<Beneficiary?> GetByIdAsync(int id);

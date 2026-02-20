@@ -36,6 +36,12 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Configurations
 
             builder.Property(x => x.UpdatedAt)
                    .HasColumnName("fechaModificacion");
+
+            builder.HasMany(x => x.DocumentTypes)
+       .WithOne(x => x.ClassificationAcquisition)
+       .HasForeignKey(x => x.ClassificationAcquisitionId)
+       .OnDelete(DeleteBehavior.Restrict);
+
         }
     }
 }
