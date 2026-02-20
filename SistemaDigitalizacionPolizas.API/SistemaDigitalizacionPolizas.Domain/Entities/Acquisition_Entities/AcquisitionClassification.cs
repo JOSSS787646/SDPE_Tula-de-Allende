@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SistemaDigitalizacionPolizas.Domain.Entities.Document_Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,5 +20,9 @@ namespace SistemaDigitalizacionPolizas.Domain.Entities.Acquisition_Entities
         public DateTime CreatedAt { get; set; }
         public int? UpdatedBy { get; set; }
         public DateTime? UpdatedAt { get; set; }
+
+        public ICollection<ClasificationDocumentType> DocumentTypes { get; set; }
+    = new List<ClasificationDocumentType>();
+
     }
 }

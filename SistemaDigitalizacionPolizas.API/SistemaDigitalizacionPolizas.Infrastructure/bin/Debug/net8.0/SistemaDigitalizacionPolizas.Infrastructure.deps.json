@@ -8,6 +8,7 @@
     ".NETCoreApp,Version=v8.0": {
       "SistemaDigitalizacionPolizas.Infrastructure/1.0.0": {
         "dependencies": {
+          "AWSSDK.S3": "4.0.17",
           "BCrypt.Net-Next": "3.2.0",
           "Microsoft.AspNetCore.Http.Abstractions": "2.3.9",
           "Microsoft.EntityFrameworkCore": "9.0.9",
@@ -19,6 +20,25 @@
         },
         "runtime": {
           "SistemaDigitalizacionPolizas.Infrastructure.dll": {}
+        }
+      },
+      "AWSSDK.Core/4.0.3.8": {
+        "runtime": {
+          "lib/net8.0/AWSSDK.Core.dll": {
+            "assemblyVersion": "4.0.0.0",
+            "fileVersion": "4.0.3.8"
+          }
+        }
+      },
+      "AWSSDK.S3/4.0.17": {
+        "dependencies": {
+          "AWSSDK.Core": "4.0.3.8"
+        },
+        "runtime": {
+          "lib/net8.0/AWSSDK.S3.dll": {
+            "assemblyVersion": "4.0.0.0",
+            "fileVersion": "4.0.17.0"
+          }
         }
       },
       "Azure.Core/1.38.0": {
@@ -1117,6 +1137,20 @@
       "type": "project",
       "serviceable": false,
       "sha512": ""
+    },
+    "AWSSDK.Core/4.0.3.8": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-nJyNzaz3pcD8c8hZvtJXuziJm1dkd3/BYmZvhf1TPNfMo3G3lsesGFZl1UVyQhGEfmQOS+efT0H8tf00PMmjug==",
+      "path": "awssdk.core/4.0.3.8",
+      "hashPath": "awssdk.core.4.0.3.8.nupkg.sha512"
+    },
+    "AWSSDK.S3/4.0.17": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-bW61dnzr1nRUWiuswge2Nq7mMmJXODrvokt1VaqqKfy9QRKBiC9qt4ogh3HV6crQRikP5mdncIWymRSxihK2Mw==",
+      "path": "awssdk.s3/4.0.17",
+      "hashPath": "awssdk.s3.4.0.17.nupkg.sha512"
     },
     "Azure.Core/1.38.0": {
       "type": "package",

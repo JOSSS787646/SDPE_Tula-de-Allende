@@ -139,6 +139,22 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Configurations
             builder.Property(b => b.ModifiedAt)
                 .HasColumnName("fechaModificacion")
                 .IsRequired(false);
+
+            builder.Property(b => b.idCommunity)
+            .HasColumnName("idComunidad")
+             .IsRequired(false);
+
+
+            // ===============================
+            // Relación con Comunidad (Opcional)
+            // ===============================
+            builder.HasOne(b => b.Community)
+                   .WithMany() // una comunidad puede tener muchos beneficiarios
+                   .HasForeignKey(b => b.idCommunity)
+                   .HasConstraintName("FK_Beneficiarios_Comunidad")
+                   .OnDelete(DeleteBehavior.SetNull) // si borran comunidad → null
+                   .IsRequired(false);
+
         }
     }
 }

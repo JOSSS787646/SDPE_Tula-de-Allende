@@ -1,4 +1,4 @@
-﻿using SistemaDigitalizacionPolizas.Domain.Dtos.Community;
+﻿using SistemaDigitalizacionPolizas.Domain.Dtos.Beneficiary;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Community;
 using System;
 using System.Collections.Generic;

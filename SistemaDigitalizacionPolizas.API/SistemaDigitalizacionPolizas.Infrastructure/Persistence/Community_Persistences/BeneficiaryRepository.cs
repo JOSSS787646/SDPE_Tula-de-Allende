@@ -1,4 +1,5 @@
-﻿using SistemaDigitalizacionPolizas.Domain.Entities.Community_Entities;
+﻿using SistemaDigitalizacionPolizas.Domain.Dtos.Beneficiary;
+using SistemaDigitalizacionPolizas.Domain.Entities.Community_Entities;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Community;
 using System;
 using System.Collections.Generic;
@@ -18,12 +19,35 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Community_Pers
         }
 
         //Obtiene todos los COG
-        public async Task<IEnumerable<Beneficiary>> GetAllAsync()
+public async Task<List<BeneficiaryDto>> GetAllAsync()
+{
+    return await _context.Beneficiaries
+        .AsNoTracking()
+        .Select(b => new BeneficiaryDto
         {
-            return await _context.Beneficiaries
-                .AsNoTracking()
-                .ToListAsync();
-        }
+            IdBeneficiary = b.IdBeneficiary,
+            FirstName = b.FirstName,
+            PaternalLastName = b.PaternalLastName,
+            MaternalLastName = b.MaternalLastName,
+            Street = b.Street,
+            ExternalNumber = b.ExternalNumber,
+            InternalNumber = b.InternalNumber,
+            Neighborhood = b.Neighborhood,
+            PostalCode = b.PostalCode,
+            City = b.City,
+            Municipality = b.Municipality,
+            State = b.State,
+            Country = b.Country,
+            Ine = b.Ine,
+            Curp = b.Curp,
+            Phone = b.Phone,
+            Email = b.Email,
+            Active = b.Active,
+            idCommunity = b.idCommunity,
+            CommunityName = b.Community.Description
+        })
+        .ToListAsync();
+}
 
         // Valida si ya existe un beneficiario con la CURP
         public async Task<bool> ExistsByCurpAsync(string curp)

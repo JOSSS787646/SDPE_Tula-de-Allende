@@ -1,66 +1,82 @@
-﻿using MediatR;
-using SistemaDigitalizacionPolizas.Domain.Dtos.Community;
+﻿using SistemaDigitalizacionPolizas.Application.Services.Beneficiary_Service.Commands.CreateBeneficiary;
 using SistemaDigitalizacionPolizas.Domain.Entities.Community_Entities;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Community;
+using SistemaDigitalizacionPolizas.Domain.Interfaces.Services;
 
-namespace SistemaDigitalizacionPolizas.Application.Services.Beneficiary_Service.Commands.CreateBeneficiary
+public class CreateBeneficiaryCommandHandler
+    : IRequestHandler<CreateBeneficiaryCommand, int>
 {
-    internal class CreateBeneficiaryCommandHandler
-        : IRequestHandler<CreateBeneficiaryCommand, int>
+    private readonly IBeneficiaryRepository _repository;
+    private readonly ICommunityRepository _communityRepository;
+    private readonly ICurrentUserService _currentUser;
+
+    public CreateBeneficiaryCommandHandler(
+        IBeneficiaryRepository repository,
+        ICommunityRepository communityRepository,
+        ICurrentUserService currentUser)
     {
-        private readonly IBeneficiaryRepository _repository;
+        _repository = repository;
+        _communityRepository = communityRepository;
+        _currentUser = currentUser;
+    }
 
-        public CreateBeneficiaryCommandHandler(IBeneficiaryRepository repository)
+    public async Task<int> Handle(
+        CreateBeneficiaryCommand request,
+        CancellationToken cancellationToken)
+    {
+        var dto = request.Beneficiary;
+
+        // Validar CURP
+        if (await _repository.ExistsByCurpAsync(dto.Curp))
+            throw new InvalidOperationException("Ya existe un beneficiario con esa CURP.");
+
+        // Validar INE
+        if (await _repository.ExistsByIneAsync(dto.Ine))
+            throw new InvalidOperationException("Ya existe un beneficiario con ese INE.");
+
+        // Validar comunidad si viene informada
+        if (dto.IdCommunity.HasValue)
         {
-            _repository = repository;
+            var community = await _communityRepository
+                .GetByIdAsync(dto.IdCommunity.Value);
+
+            if (community == null)
+                throw new InvalidOperationException("La comunidad especificada no existe.");
         }
 
-        public async Task<int> Handle(
-            CreateBeneficiaryCommand request,
-            CancellationToken cancellationToken)
+        // 🔥 Mapear DTO → Entidad + Auditoría
+        var entity = new Beneficiary
         {
-            var dto = request.Beneficiary;
+            FirstName = dto.FirstName.Trim(),
+            PaternalLastName = dto.PaternalLastName.Trim(),
+            MaternalLastName = dto.MaternalLastName?.Trim(),
 
-       
-            var existsByCurp = await _repository.ExistsByCurpAsync(dto.Curp);
-            if (existsByCurp)
-                throw new InvalidOperationException("Ya existe un beneficiario con esa CURP.");
+            Street = dto.Street.Trim(),
+            ExternalNumber = dto.ExternalNumber,
+            InternalNumber = dto.InternalNumber,
+            Neighborhood = dto.Neighborhood,
+            PostalCode = dto.PostalCode,
+            City = dto.City,
+            Municipality = dto.Municipality,
+            State = dto.State,
+            Country = dto.Country,
 
-            // 2️⃣ Validar INE única
-            var existsByIne = await _repository.ExistsByIneAsync(dto.Ine);
-            if (existsByIne)
-                throw new InvalidOperationException("Ya existe un beneficiario con ese INE.");
+            Ine = dto.Ine.Trim().ToUpper(),
+            Curp = dto.Curp.Trim().ToUpper(),
 
-            // 3️⃣ Mapear DTO → Entidad
-            var entity = new Beneficiary
-            {
-                IdBeneficiary = dto.IdBeneficiary,  
-                FirstName = dto.FirstName.Trim(),
-                PaternalLastName = dto.PaternalLastName.Trim(),
-                MaternalLastName = dto.MaternalLastName?.Trim(),
-                Street = dto.Street.Trim(),
-                ExternalNumber = dto.ExternalNumber,
-                InternalNumber = dto.InternalNumber,
-                Neighborhood = dto.Neighborhood,
-                PostalCode = dto.PostalCode,
-                City = dto.City,
-                Municipality = dto.Municipality,
-                State = dto.State,
-                Country = dto.Country,
-                Ine = dto.Ine.Trim().ToUpper(),
-                Curp = dto.Curp.Trim().ToUpper(),
-                Phone = dto.Phone,
-                Email = dto.Email,
-                Active = dto.Active
-            };
+            Phone = dto.Phone,
+            Email = dto.Email,
 
-            var beneficiary = await _repository.AddAsync(entity);
+            Active = dto.Active,
+            idCommunity = dto.IdCommunity,
 
-            if (beneficiary is null)
-                throw new InvalidOperationException("No se pudo crear el beneficiario (CURP duplicada).");
+            // 🔥 Auditoría generada en servidor
+            CreatedBy = _currentUser.UserId,
+            CreatedAt = DateTime.UtcNow
+        };
 
-            return beneficiary.IdBeneficiary;
+        var beneficiary = await _repository.AddAsync(entity);
 
-        }
+        return beneficiary.IdBeneficiary;
     }
 }
