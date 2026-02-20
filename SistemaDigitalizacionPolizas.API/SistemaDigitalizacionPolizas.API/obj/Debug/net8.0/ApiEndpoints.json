@@ -376,6 +376,100 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.ApplicationStatusController",
+    "Method": "Create",
+    "RelativePath": "api/ApplicationStatus",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "command",
+        "Type": "SistemaDigitalizacionPolizas.Application.Services.AppliccationStatus_Service.Commands.CreateApplicationStatus.CreateApplicationStatusCommand",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Int32",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.ApplicationStatusController",
+    "Method": "GetAll",
+    "RelativePath": "api/ApplicationStatus",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.ApplicationStatusController",
+    "Method": "Update",
+    "RelativePath": "api/ApplicationStatus/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "command",
+        "Type": "SistemaDigitalizacionPolizas.Application.Services.AppliccationStatus_Service.Commands.UpdateApplicationStatus.UpdateApplicationStatusCommand",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.ApplicationStatusController",
+    "Method": "UpdateState",
+    "RelativePath": "api/ApplicationStatus/{id}/state",
+    "HttpMethod": "PATCH",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "active",
+        "Type": "System.Boolean",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.ApplicationStatusController",
+    "Method": "GetByCode",
+    "RelativePath": "api/ApplicationStatus/by-code/{code}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "code",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.AuthController",
     "Method": "ChangePassword",
     "RelativePath": "api/auth/change-password",

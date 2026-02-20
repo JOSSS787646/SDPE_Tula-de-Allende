@@ -1,5 +1,6 @@
 ﻿using SistemaDigitalizacionPolizas.Domain.Entities.Acquisition_Entities;
 using SistemaDigitalizacionPolizas.Domain.Entities.Actions_Entities;
+using SistemaDigitalizacionPolizas.Domain.Entities.ApplicationStatus;
 using SistemaDigitalizacionPolizas.Domain.Entities.Auth_Entities;
 using SistemaDigitalizacionPolizas.Domain.Entities.Community_Entities;
 using SistemaDigitalizacionPolizas.Domain.Entities.Document_Entities;
@@ -33,6 +34,9 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence
         public DbSet<DocumentType> Documents { get; set; }
         public DbSet<ClasificationDocumentType> ClasificationDocumentTypes { get; set; }
         public DbSet<ExpedientDocument> ExpedientDocuments { get; set; }
+        public DbSet<ApplicationStatus> ApplicationStatuses { get; set; }
+
+
         //Recuperacion de Contraseñas
         public DbSet<PasswordResetToken> PasswordResetTokens { get; set; }
 
