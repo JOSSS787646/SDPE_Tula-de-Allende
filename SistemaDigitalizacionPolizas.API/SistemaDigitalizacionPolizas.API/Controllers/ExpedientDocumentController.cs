@@ -1,4 +1,6 @@
 ﻿using SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Service.Command.CreateExpedientDocument;
+using SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Service.Queries.GetExpedientDocumentsByClassification;
+using SistemaDigitalizacionPolizas.Domain.Dtos.ExpedientDocument;
 
 namespace SistemaDigitalizacionPolizas.API.Controllers
 {
@@ -13,11 +15,10 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
             _mediator = mediator;
         }
 
-
         [HttpPost("upload")]
         [Consumes("multipart/form-data")]
         public async Task<IActionResult> UploadDocument(
-        [FromForm] CreateExpedientDocumentCommand command)
+    [FromForm] CreateExpedientDocumentCommand command)
         {
             if (command.File == null || command.File.Length == 0)
                 return BadRequest("File is required.");
@@ -26,9 +27,29 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
 
             return Ok(new
             {
-                message = "Document uploaded successfully",
+                message = "Documento dubido crrectamente",
                 id = documentId
             });
+        }
+
+        [HttpGet("by-classification")]
+        public async Task<ActionResult<List<ExpedientDocumentDto>>> GetByClassification(
+           [FromQuery] int classificationId,
+           [FromQuery] int page = 1,
+           [FromQuery] int pageSize = 10)
+        {
+            if (page <= 0 || pageSize <= 0)
+                return BadRequest("Page and PageSize must be greater than 0.");
+
+            var query = new GetExpedientDocumentsByClassificationQuery(
+                classificationId,
+                page,
+                pageSize
+            );
+
+            var result = await _mediator.Send(query);
+
+            return Ok(result);
         }
 
     }

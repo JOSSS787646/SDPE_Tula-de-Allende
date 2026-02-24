@@ -17,8 +17,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Services\AcqusitionRequest_Service\Queries\" />
     <Folder Include="Services\Auth_Service\Feature\CRUD\Queries\" />
-    <Folder Include="Services\ExpedientDocument_Service\Queries\" />
   </ItemGroup>
 
   <ItemGroup>

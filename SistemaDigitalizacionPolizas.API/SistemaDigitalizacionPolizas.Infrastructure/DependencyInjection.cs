@@ -86,7 +86,9 @@ namespace SistemaDigitalizacionPolizas.Infrastructure
             //Document Status Repository
             services.AddScoped<IDocumentStatusRepository, DocumentStatusRepository>();
 
+            services.AddScoped<IAcquisitionRequest, AcquisitionRequestRepository>();
 
+            //Application Status Repository
             services.AddScoped<IApplicationStatusRepository, ApplicationStatusRepository>();
             //Servicio de Email
             services.AddScoped<IEmailService, EmailService>();

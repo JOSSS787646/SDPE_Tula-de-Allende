@@ -12,5 +12,10 @@ namespace SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Document
         Task<ExpedientDocument> AddAsync(ExpedientDocument entity);
 
         Task SaveChangesAsync();
+
+
+        Task<(List<ExpedientDocument> Items, int Total)>
+             GetByClassificationAsync(int classificationId, int page, int pageSize);
+
     }
 }

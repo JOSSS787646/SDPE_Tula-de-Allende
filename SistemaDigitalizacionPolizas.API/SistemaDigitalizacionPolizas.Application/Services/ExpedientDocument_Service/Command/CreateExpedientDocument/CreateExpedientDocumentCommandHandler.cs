@@ -1,12 +1,9 @@
-﻿using SistemaDigitalizacionPolizas.Domain.Entities.Document_Entities;
+﻿using MediatR;
+using SistemaDigitalizacionPolizas.Domain.Entities.Document_Entities;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Document;
+using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.StatusRequest;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Services;
 using SistemaDigitalizacionPolizas.Infrastructure.Persistence.Services.UploatFile;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Service.Command.CreateExpedientDocument
 {
@@ -14,15 +11,18 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
        : IRequestHandler<CreateExpedientDocumentCommand, int>
     {
         private readonly IDocumentExpedientRepository _repository;
+        private readonly IDocumentStatusRepository _documentStatusRepository;
         private readonly IFileStorageService _fileStorageService;
         private readonly ICurrentUserService _currentUserService;
 
         public CreateExpedientDocumentCommandHandler(
             IDocumentExpedientRepository repository,
+            IDocumentStatusRepository documentStatusRepository,
             IFileStorageService fileStorageService,
             ICurrentUserService currentUserService)
         {
             _repository = repository;
+            _documentStatusRepository = documentStatusRepository;
             _fileStorageService = fileStorageService;
             _currentUserService = currentUserService;
         }
@@ -47,21 +47,36 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
                     "expedientes"
                 );
 
-                var userId = _currentUserService.UserId; // 👈 clave
+                var userId = _currentUserService.UserId;
 
                 // ================================
-                // 2️⃣ Crear entidad con auditoría
+                // 2️⃣ Resolver estado de documento
+                // ================================
+                int? idEstadoDocumento = request.IdDocumentStatus;
+
+                if (idEstadoDocumento == null)
+                {
+                    // Ejemplo: Code = 1 => PENDIENTE o CARGADO
+                    var defaultStatus = await _documentStatusRepository.GetByCodeAsync(1);
+                    if (defaultStatus == null)
+                        throw new InvalidOperationException("No existe un estado de documento por defecto (Code = 1).");
+
+                    idEstadoDocumento = defaultStatus.idDocumentStatus;
+                }
+
+                // ================================
+                // 3️⃣ Crear entidad
                 // ================================
                 var entity = new ExpedientDocument
                 {
                     RequestId = request.RequestId,
                     DocumentTypeId = request.DocumentTypeId,
+                    IdDocumentStatus = idEstadoDocumento,
 
                     FileName = request.File.FileName,
                     FilePath = filePath,
                     UploadDate = DateTime.UtcNow,
 
-                    DocumentStatus = request.DocumentStatus ?? "CARGADO",
                     Observations = request.Observations,
 
                     UploadedBy = userId,
@@ -78,6 +93,7 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
             }
             catch
             {
+                // 🔥 Rollback del archivo si falla la BD
                 if (!string.IsNullOrEmpty(filePath))
                 {
                     await _fileStorageService.DeleteAsync(filePath);

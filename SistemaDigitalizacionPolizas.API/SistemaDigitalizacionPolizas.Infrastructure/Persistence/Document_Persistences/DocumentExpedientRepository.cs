@@ -27,5 +27,31 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Document_Persi
         {
             await _context.SaveChangesAsync();
         }
+
+
+
+
+        public async Task<(List<ExpedientDocument> Items, int Total)>
+     GetByClassificationAsync(int classificationId, int page, int pageSize)
+        {
+            var query = _context.ExpedientDocuments
+                .AsNoTracking()
+                .Include(x => x.DocumentType)
+                .Include(x => x.DocumentStatus) // 🔥 CLAVE: cargar el estado del documento
+                .Where(x =>
+                    x.DocumentType.Classifications
+                        .Any(c => c.ClassificationAcquisitionId == classificationId)
+                );
+
+            var total = await query.CountAsync();
+
+            var items = await query
+                .OrderByDescending(x => x.CreatedAt)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            return (items, total);
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SistemaDigitalizacionPolizas.Domain.Entities.Document_Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,6 +19,12 @@ namespace SistemaDigitalizacionPolizas.Domain.Entities.ApplicationStatus
         public DateTime? CreatedAt { get; set; }
         public int? UpdatedBy { get; set; }
         public DateTime? UpdatedAt { get; set; }
+
+        // 🔥 Aquí sí va la colección
+        public ICollection<ExpedientDocument> ExpedientDocuments { get; set; }
+            = new List<ExpedientDocument>();
+
+
 
     }
 }

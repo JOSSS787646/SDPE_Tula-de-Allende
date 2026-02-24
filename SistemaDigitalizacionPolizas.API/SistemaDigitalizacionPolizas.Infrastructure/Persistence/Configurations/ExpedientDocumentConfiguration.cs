@@ -51,12 +51,9 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Configurations
                 .HasColumnName("fechaCarga")
                 .HasColumnType("date");
 
-            // ============================================
-            // Estado de negocio
-            // ============================================
-            builder.Property(x => x.DocumentStatus)
-                .HasColumnName("estatusDocumento")
-                .HasMaxLength(45);
+            // ✅ FK a EstadoDocumento
+            builder.Property(x => x.IdDocumentStatus)
+                .HasColumnName("idEstadoDocumento");
 
             builder.Property(x => x.Observations)
                 .HasColumnName("observaciones")
@@ -101,6 +98,16 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Configurations
                 .HasForeignKey(x => x.DocumentTypeId)
                 .HasConstraintName("FK_Documento_Tipo")
                 .OnDelete(DeleteBehavior.Restrict);
+
+
+
+            builder.HasOne(x => x.DocumentStatus)
+       .WithMany(x => x.ExpedientDocuments)
+       .HasForeignKey(x => x.IdDocumentStatus)
+       .HasConstraintName("FK_Documento_EstadoDocumento")
+       .OnDelete(DeleteBehavior.Restrict);
+
+
 
         }
     }

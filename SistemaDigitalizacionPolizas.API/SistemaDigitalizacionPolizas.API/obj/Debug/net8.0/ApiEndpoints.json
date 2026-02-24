@@ -1057,6 +1057,42 @@
   },
   {
     "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.ExpedientDocumentController",
+    "Method": "GetByClassification",
+    "RelativePath": "api/ExpedientDocument/by-classification",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "classificationId",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "page",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "pageSize",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.List\u00601[[SistemaDigitalizacionPolizas.Domain.Dtos.ExpedientDocument.ExpedientDocumentDto, SistemaDigitalizacionPolizas.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.ExpedientDocumentController",
     "Method": "UploadDocument",
     "RelativePath": "api/ExpedientDocument/upload",
     "HttpMethod": "POST",
@@ -1074,13 +1110,13 @@
         "IsRequired": false
       },
       {
-        "Name": "File",
-        "Type": "Microsoft.AspNetCore.Http.IFormFile",
+        "Name": "IdDocumentStatus",
+        "Type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
         "IsRequired": false
       },
       {
-        "Name": "DocumentStatus",
-        "Type": "System.String",
+        "Name": "File",
+        "Type": "Microsoft.AspNetCore.Http.IFormFile",
         "IsRequired": false
       },
       {

@@ -8,7 +8,7 @@ using SistemaDigitalizacionPolizas.Application.Services.DocumentStatus_Service.Q
 namespace SistemaDigitalizacionPolizas.API.Controllers
 {
 
-   // [Authorize]
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class DocumentStatusController : ControllerBase
