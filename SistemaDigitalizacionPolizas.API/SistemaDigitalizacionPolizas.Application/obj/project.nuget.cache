@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "OHM7fW+kE7g=",
+  "dgSpecHash": "i3xCC800y5A=",
   "success": true,
-  "projectFilePath": "C:\\Estadia Ingenieria\\Febrero\\Back\\Sprint4\\SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.Application\\SistemaDigitalizacionPolizas.Application.csproj",
+  "projectFilePath": "C:\\Estadia Ingenieria\\Febrero\\Back\\Sprint5\\SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.Application\\SistemaDigitalizacionPolizas.Application.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\josea\\.nuget\\packages\\automapper\\10.0.0\\automapper.10.0.0.nupkg.sha512",
     "C:\\Users\\josea\\.nuget\\packages\\bcrypt.net-next\\3.2.0\\bcrypt.net-next.3.2.0.nupkg.sha512",

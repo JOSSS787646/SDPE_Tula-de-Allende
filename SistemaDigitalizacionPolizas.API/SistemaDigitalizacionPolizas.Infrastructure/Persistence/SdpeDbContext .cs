@@ -35,6 +35,7 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence
         public DbSet<ClasificationDocumentType> ClasificationDocumentTypes { get; set; }
         public DbSet<ExpedientDocument> ExpedientDocuments { get; set; }
         public DbSet<ApplicationStatus> ApplicationStatuses { get; set; }
+        public DbSet<DocumentStatus> DocumentStatuses { get; set; }
 
 
         //Recuperacion de Contraseñas

@@ -434,27 +434,6 @@
   },
   {
     "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.ApplicationStatusController",
-    "Method": "UpdateState",
-    "RelativePath": "api/ApplicationStatus/{id}/state",
-    "HttpMethod": "PATCH",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "id",
-        "Type": "System.Int32",
-        "IsRequired": true
-      },
-      {
-        "Name": "active",
-        "Type": "System.Boolean",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.ApplicationStatusController",
     "Method": "GetByCode",
     "RelativePath": "api/ApplicationStatus/by-code/{code}",
     "HttpMethod": "GET",
@@ -464,6 +443,27 @@
       {
         "Name": "code",
         "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.ApplicationStatusController",
+    "Method": "UpdateStateByCode",
+    "RelativePath": "api/ApplicationStatus/code/{code}/state",
+    "HttpMethod": "PATCH",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "code",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "active",
+        "Type": "System.Boolean",
         "IsRequired": true
       }
     ],
@@ -871,6 +871,90 @@
       {
         "Name": "command",
         "Type": "SistemaDigitalizacionPolizas.Application.Services.Community_Service.Commands.UpdateCommunity.UpdateCommunityCommand",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.DocumentStatusController",
+    "Method": "Create",
+    "RelativePath": "api/DocumentStatus",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "command",
+        "Type": "SistemaDigitalizacionPolizas.Application.Services.DocumentStatus_Service.Commands.CreateDocumentStatus.CreateDocumentStatusCommand",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.DocumentStatusController",
+    "Method": "GetAll",
+    "RelativePath": "api/DocumentStatus",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.DocumentStatusController",
+    "Method": "PatchActive",
+    "RelativePath": "api/DocumentStatus/{code}/active",
+    "HttpMethod": "PATCH",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "code",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "active",
+        "Type": "System.Boolean",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.DocumentStatusController",
+    "Method": "Update",
+    "RelativePath": "api/DocumentStatus/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "command",
+        "Type": "SistemaDigitalizacionPolizas.Application.Services.DocumentStatus_Service.Commands.UpdateDocumentStatus.UpdateDocumentStatusCommand",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.DocumentStatusController",
+    "Method": "GetByCode",
+    "RelativePath": "api/DocumentStatus/code/{code}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "code",
+        "Type": "System.Int32",
         "IsRequired": true
       }
     ],

@@ -21,6 +21,7 @@ using SistemaDigitalizacionPolizas.Infrastructure.Persistence.RequestingAdminist
 using SistemaDigitalizacionPolizas.Infrastructure.Persistence.Services.Auditory;
 using SistemaDigitalizacionPolizas.Infrastructure.Persistence.Services.UploatFile;
 using SistemaDigitalizacionPolizas.Infrastructure.Persistence.Supplier_Persistence;
+using SSistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.StatusRequest;
 
 
 namespace SistemaDigitalizacionPolizas.Infrastructure
@@ -82,6 +83,8 @@ namespace SistemaDigitalizacionPolizas.Infrastructure
             services.AddScoped<IClasificationDocumentTypeRepository, ClasificationDocumentTypeRepository>();
             //Expedient Document Repository
             services.AddScoped<IDocumentExpedientRepository, DocumentExpedientRepository>();
+            //Document Status Repository
+            services.AddScoped<IDocumentStatusRepository, DocumentStatusRepository>();
 
 
             services.AddScoped<IApplicationStatusRepository, ApplicationStatusRepository>();
