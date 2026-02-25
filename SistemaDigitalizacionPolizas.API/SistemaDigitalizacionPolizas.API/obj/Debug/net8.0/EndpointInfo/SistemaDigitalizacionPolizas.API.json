@@ -173,6 +173,77 @@
         }
       }
     },
+    "/api/AcquisitionRequest": {
+      "post": {
+        "tags": [
+          "AcquisitionRequest"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAcquisitionRequestDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAcquisitionRequestDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAcquisitionRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/AcquisitionRequest/{id}": {
+      "get": {
+        "tags": [
+          "AcquisitionRequest"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/AcquisitionRequestDetailDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AcquisitionRequestDetailDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AcquisitionRequestDetailDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/AcquisitionType": {
       "post": {
         "tags": [
@@ -2016,6 +2087,55 @@
         }
       }
     },
+    "/api/ExpedientDocument/{id}/documents-checklist": {
+      "get": {
+        "tags": [
+          "ExpedientDocument"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RequestDocumentChecklistDto"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RequestDocumentChecklistDto"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RequestDocumentChecklistDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/FundingSource": {
       "post": {
         "tags": [
@@ -3068,6 +3188,71 @@
   },
   "components": {
     "schemas": {
+      "AcquisitionRequestDetailDto": {
+        "type": "object",
+        "properties": {
+          "idRequest": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "requestNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "requestDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "justification": {
+            "type": "string",
+            "nullable": true
+          },
+          "authorizationDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "observations": {
+            "type": "string",
+            "nullable": true
+          },
+          "currentRequestStatus": {
+            "$ref": "#/components/schemas/SimpleCatalogDto"
+          },
+          "administrativeUnit": {
+            "$ref": "#/components/schemas/SimpleCatalogDto"
+          },
+          "proyect": {
+            "$ref": "#/components/schemas/SimpleCatalogDto"
+          },
+          "acquisitionType": {
+            "$ref": "#/components/schemas/SimpleCatalogDto"
+          },
+          "supplier": {
+            "$ref": "#/components/schemas/SimpleCatalogDto"
+          },
+          "applicationStatus": {
+            "$ref": "#/components/schemas/SimpleCatalogDto"
+          },
+          "fundingSource": {
+            "$ref": "#/components/schemas/SimpleCatalogDto"
+          },
+          "acquisitionClassification": {
+            "$ref": "#/components/schemas/SimpleCatalogDto"
+          },
+          "program": {
+            "$ref": "#/components/schemas/SimpleCatalogDto"
+          },
+          "community": {
+            "$ref": "#/components/schemas/SimpleCatalogDto"
+          },
+          "beneficiary": {
+            "$ref": "#/components/schemas/SimpleCatalogDto"
+          }
+        },
+        "additionalProperties": false
+      },
       "AddAcquisitionClassificationCmd": {
         "type": "object",
         "properties": {
@@ -3256,6 +3441,84 @@
           },
           "active": {
             "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreateAcquisitionRequestDto": {
+        "type": "object",
+        "properties": {
+          "requestNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "requestDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "justification": {
+            "type": "string",
+            "nullable": true
+          },
+          "authorizationDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "observations": {
+            "type": "string",
+            "nullable": true
+          },
+          "idAdministrativeUnit": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "idProject": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "idAcquisitionType": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "idSupplier": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "idApplicationStatus": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "idFundingSource": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "idAcquisitionClassification": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "idProgram": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "idCommunity": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "idBeneficiary": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -3486,9 +3749,6 @@
           "description": {
             "type": "string",
             "nullable": true
-          },
-          "isRequired": {
-            "type": "boolean"
           },
           "active": {
             "type": "boolean"
@@ -3817,6 +4077,37 @@
         },
         "additionalProperties": false
       },
+      "RequestDocumentChecklistDto": {
+        "type": "object",
+        "properties": {
+          "documentTypeId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "documentName": {
+            "type": "string",
+            "nullable": true
+          },
+          "requiredByRule": {
+            "type": "boolean"
+          },
+          "noApplies": {
+            "type": "boolean"
+          },
+          "uploaded": {
+            "type": "boolean"
+          },
+          "fileName": {
+            "type": "string",
+            "nullable": true
+          },
+          "fileUrl": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "RequestPasswordResetCommand": {
         "type": "object",
         "properties": {
@@ -3839,6 +4130,20 @@
             "nullable": true
           },
           "newPassword": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "SimpleCatalogDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
             "type": "string",
             "nullable": true
           }
@@ -4092,9 +4397,6 @@
           "description": {
             "type": "string",
             "nullable": true
-          },
-          "isRequired": {
-            "type": "boolean"
           },
           "active": {
             "type": "boolean"

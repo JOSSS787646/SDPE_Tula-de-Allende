@@ -94,6 +94,48 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.AcquisitionRequestController",
+    "Method": "Create",
+    "RelativePath": "api/AcquisitionRequest",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "SistemaDigitalizacionPolizas.Domain.Dtos.AcquisitionRequest.CreateAcquisitionRequestDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.AcquisitionRequestController",
+    "Method": "GetDetail",
+    "RelativePath": "api/AcquisitionRequest/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "SistemaDigitalizacionPolizas.Domain.Dtos.AcquisitionRequest.AcquisitionRequestDetailDto",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
     "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.AcquisitionTypeController",
     "Method": "Create",
     "RelativePath": "api/AcquisitionType",
@@ -1054,6 +1096,32 @@
       }
     ],
     "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.ExpedientDocumentController",
+    "Method": "GetDocumentsChecklist",
+    "RelativePath": "api/ExpedientDocument/{id}/documents-checklist",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.List\u00601[[SistemaDigitalizacionPolizas.Domain.Dtos.AcquisitionRequest.RequestDocumentChecklistDto, SistemaDigitalizacionPolizas.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
   },
   {
     "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.ExpedientDocumentController",

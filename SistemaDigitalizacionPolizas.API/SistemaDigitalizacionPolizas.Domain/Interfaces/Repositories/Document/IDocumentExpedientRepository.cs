@@ -1,4 +1,5 @@
-﻿using SistemaDigitalizacionPolizas.Domain.Entities.Document_Entities;
+﻿using SistemaDigitalizacionPolizas.Domain.Dtos.AcquisitionRequest;
+using SistemaDigitalizacionPolizas.Domain.Entities.Document_Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +17,8 @@ namespace SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Document
 
         Task<(List<ExpedientDocument> Items, int Total)>
              GetByClassificationAsync(int classificationId, int page, int pageSize);
+
+        Task<List<RequestDocumentChecklistDto>> GetChecklistByRequestAsync(int requestId);
 
     }
 }

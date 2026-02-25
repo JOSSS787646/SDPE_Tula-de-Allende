@@ -36,7 +36,6 @@ namespace SistemaDigitalizacionPolizas.Application.Services.DocumentType_Service
             // 2️⃣ Modificar propiedades
             documentType.DocumentName = request.DocumentName;
             documentType.Description = request.Description;
-            documentType.IsRequired = request.IsRequired;
             documentType.Active = request.Active;
             documentType.ModifiedBy = _currentUser.UserId;
             documentType.ModifiedAt = DateTime.UtcNow;

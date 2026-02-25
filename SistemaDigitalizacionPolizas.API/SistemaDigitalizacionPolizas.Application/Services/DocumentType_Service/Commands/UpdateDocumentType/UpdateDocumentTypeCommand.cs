@@ -10,7 +10,6 @@ namespace SistemaDigitalizacionPolizas.Application.Services.DocumentType_Service
      int IdDocumentType,
      string DocumentName,
      string Description,
-     bool IsRequired,
      bool Active
  ) : IRequest<bool>;
 }

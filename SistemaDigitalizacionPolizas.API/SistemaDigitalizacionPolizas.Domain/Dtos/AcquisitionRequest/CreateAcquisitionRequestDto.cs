@@ -16,7 +16,6 @@ namespace SistemaDigitalizacionPolizas.Domain.Dtos.AcquisitionRequest
         public DateTime? RequestDate { get; set; }
 
         public string? Justification { get; set; }
-        public string? FileStatus { get; set; }
         public DateTime? AuthorizationDate { get; set; }
 
         public string? Observations { get; set; }

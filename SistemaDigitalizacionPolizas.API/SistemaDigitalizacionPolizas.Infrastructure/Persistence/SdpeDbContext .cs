@@ -39,6 +39,7 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence
         public DbSet<ApplicationStatus> ApplicationStatuses { get; set; }
         public DbSet<DocumentStatus> DocumentStatuses { get; set; }
         public DbSet<AcquisitionRequest> AcquisitionRequests { get; set; }
+        public DbSet<RequestDocumentException> RequestDocumentExceptions { get; set; }
 
 
         //Recuperacion de Contraseñas

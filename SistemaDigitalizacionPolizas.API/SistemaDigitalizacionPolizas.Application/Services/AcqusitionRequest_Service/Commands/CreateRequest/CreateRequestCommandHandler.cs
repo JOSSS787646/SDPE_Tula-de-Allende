@@ -39,7 +39,6 @@ namespace SistemaDigitalizacionPolizas.Application.Services.AcqusitionRequest_Se
                 RequestNumber = dto.RequestNumber,
                 RequestDate = dto.RequestDate,
                 Justification = dto.Justification,
-                FileStatus = dto.FileStatus,
                 AuthorizationDate = dto.AuthorizationDate,
                 Observations = dto.Observations,
 

@@ -30,7 +30,6 @@ namespace SistemaDigitalizacionPolizas.Application.Services.DocumentType_Service
                 IdDocumentType = request.IdDocumentType,
                 DocumentName = request.DocumentName,
                 Description = request.Description,
-                IsRequired = request.IsRequired,
                 Active = request.Active,
                 CreatedBy = _currentUserService.UserId,
                 CreatedAt = DateTime.UtcNow

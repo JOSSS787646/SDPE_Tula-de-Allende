@@ -1,6 +1,7 @@
 ﻿using SistemaDigitalizacionPolizas.Domain.Entities.Acquisition_Entities;
 using SistemaDigitalizacionPolizas.Domain.Entities.Areas_Entities;
 using SistemaDigitalizacionPolizas.Domain.Entities.Community_Entities;
+using SistemaDigitalizacionPolizas.Domain.Entities.Document_Entities;
 using SistemaDigitalizacionPolizas.Domain.Entities.RequestingAdministration_Entities;
 using SistemaDigitalizacionPolizas.Domain.Entities.Supplier_Entities;
 using System;
@@ -23,7 +24,6 @@ namespace SistemaDigitalizacionPolizas.Domain.Entities.AcquisitionRequest_Entiti
         public DateTime? RequestDate { get; set; }
 
         public string? Justification { get; set; }
-        public string? FileStatus { get; set; }
         public DateTime? AuthorizationDate { get; set; }
 
         public string? Observations { get; set; }
@@ -48,7 +48,7 @@ namespace SistemaDigitalizacionPolizas.Domain.Entities.AcquisitionRequest_Entiti
         // ===============================
 
         public AdministrativeUnit? AdministrativeUnit { get; set; }
-        public Prog? Project { get; set; }
+        public Proyect? Project { get; set; }
         public AcquisitionType? AcquisitionType { get; set; }
         public Supplier? Supplier { get; set; }
         public SistemaDigitalizacionPolizas.Domain.Entities.ApplicationStatus.ApplicationStatus? ApplicationStatus { get; set; } 
@@ -58,8 +58,11 @@ namespace SistemaDigitalizacionPolizas.Domain.Entities.AcquisitionRequest_Entiti
         public Community? Community { get; set; }
         public Beneficiary? Beneficiary { get; set; }
 
+        public ICollection<RequestDocumentException> DocumentExceptions { get; set; }
+    = new List<RequestDocumentException>();
+
         // 🔥 Historial (cuando lo actives)
-        // public ICollection<RequestState> RequestStates { get; set; } = new List<RequestState>();
+       // public ICollection<ApplicationStatus> RequestStates { get; set; } = new List<RequestState>();
 
         // ===============================
         // Auditoría

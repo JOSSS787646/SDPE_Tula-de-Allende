@@ -1,5 +1,7 @@
-﻿using SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Service.Command.CreateExpedientDocument;
+﻿using SistemaDigitalizacionPolizas.Application.Services.AcqusitionRequest_Service.Queries.GetDocumentsChecklistByRequest;
+using SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Service.Command.CreateExpedientDocument;
 using SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Service.Queries.GetExpedientDocumentsByClassification;
+using SistemaDigitalizacionPolizas.Domain.Dtos.AcquisitionRequest;
 using SistemaDigitalizacionPolizas.Domain.Dtos.ExpedientDocument;
 
 namespace SistemaDigitalizacionPolizas.API.Controllers
@@ -49,6 +51,13 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
 
             var result = await _mediator.Send(query);
 
+            return Ok(result);
+        }
+
+        [HttpGet("{id}/documents-checklist")]
+        public async Task<ActionResult<List<RequestDocumentChecklistDto>>> GetDocumentsChecklist(int id)
+        {
+            var result = await _mediator.Send(new GetDocumentsChecklistByRequestQuery(id));
             return Ok(result);
         }
 

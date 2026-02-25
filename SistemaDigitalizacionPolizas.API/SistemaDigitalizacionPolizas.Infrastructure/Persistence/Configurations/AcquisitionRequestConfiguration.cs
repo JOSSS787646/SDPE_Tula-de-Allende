@@ -46,9 +46,7 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Configurations
                    .HasColumnName("justificacion")
                    .HasMaxLength(5000);
 
-            builder.Property(x => x.FileStatus)
-                   .HasColumnName("estatusExpediente")
-                   .HasMaxLength(45);
+       
 
             builder.Property(x => x.AuthorizationDate)
                    .HasColumnName("fechaAutorizacion")
