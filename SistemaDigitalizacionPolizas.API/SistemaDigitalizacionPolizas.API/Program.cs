@@ -1,9 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using SistemaDigitalizacionPolizas.Application;
 using SistemaDigitalizacionPolizas.Infrastructure;
 using System.Text;
+
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +14,12 @@ var builder = WebApplication.CreateBuilder(args);
 // Controllers
 // =======================
 builder.Services.AddControllers();
+
+
+builder.Services.Configure<FormOptions>(options =>
+{
+    options.MultipartBodyLengthLimit = 524288000; // 500 MB total por request
+});
 
 // 🔥 NECESARIO para CurrentUserService
 builder.Services.AddHttpContextAccessor();
@@ -103,7 +112,10 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 
-
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.Limits.MaxRequestBodySize = 524288000; // 500 MB
+});
 
 // =======================
 // Authorization

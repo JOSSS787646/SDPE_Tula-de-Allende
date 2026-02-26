@@ -1,4 +1,5 @@
 ﻿using SistemaDigitalizacionPolizas.Domain.Dtos.AcquisitionRequest;
+using SistemaDigitalizacionPolizas.Domain.Dtos.ExpedientDocument;
 using SistemaDigitalizacionPolizas.Domain.Entities.Document_Entities;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Document;
 using System;
@@ -29,7 +30,49 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Document_Persi
             await _context.SaveChangesAsync();
         }
 
+        public async Task AddRangeAsync(List<ExpedientDocument> entities)
+        {
+            await _context.ExpedientDocuments.AddRangeAsync(entities);
+        }
 
+
+        public async Task<ExpedientDocument?> GetByIdAsync(int id)
+        {
+            return await _context.ExpedientDocuments
+                .FirstOrDefaultAsync(x => x.Id == id);
+        }
+
+        public void Update(ExpedientDocument entity)
+        {
+            _context.ExpedientDocuments.Update(entity);
+        }
+
+
+
+        public async Task<List<ExpedientDocumentSearchDto>>
+    SearchByNameAsync(int requestId, string fileName)
+        {
+            return await _context.ExpedientDocuments
+                .AsNoTracking()
+                .Include(x => x.DocumentStatus)
+                .Where(x =>
+                    x.RequestId == requestId &&
+                    x.Active == true &&
+                    EF.Functions.Like(x.FileName, $"%{fileName}%")
+                )
+                .OrderByDescending(x => x.CreatedAt)
+                .Select(x => new ExpedientDocumentSearchDto
+                {
+                    Id = x.Id,
+                    FileName = x.FileName,
+                    FilePath = x.FilePath,
+                    UploadDate = x.UploadDate,
+                    Observations = x.Observations,
+                    IdDocumentStatus = x.IdDocumentStatus,
+                    DocumentStatusName = x.DocumentStatus.Description
+                })
+                .ToListAsync();
+        }
 
 
         public async Task<(List<ExpedientDocument> Items, int Total)>
@@ -54,8 +97,6 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Document_Persi
 
             return (items, total);
         }
-
-
 
 
         public async Task<List<RequestDocumentChecklistDto>> GetChecklistByRequestAsync(int requestId)
