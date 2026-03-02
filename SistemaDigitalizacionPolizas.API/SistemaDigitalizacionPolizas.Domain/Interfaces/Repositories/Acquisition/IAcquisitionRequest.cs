@@ -13,5 +13,8 @@ namespace SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Acquisitio
 
         Task<AcquisitionRequest?> AddAsync(AcquisitionRequest request);
         Task<AcquisitionRequestDetailDto?> GetDetailAsync(int idRequest);
+
+        Task<AcquisitionRequest?> GetByIdAsync(int id);
+        Task UpdateAsync(AcquisitionRequest entity);
     }
 }

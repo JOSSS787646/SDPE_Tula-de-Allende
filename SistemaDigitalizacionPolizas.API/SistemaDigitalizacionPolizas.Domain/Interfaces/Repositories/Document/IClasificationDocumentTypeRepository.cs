@@ -35,5 +35,8 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Document_Persi
             int acquisitionClassificationId,
             int documentTypeId);
 
+
+        Task<List<ClasificationDocumentType>> GetRequiredByClassification(int classificationId);
+
     }
 }

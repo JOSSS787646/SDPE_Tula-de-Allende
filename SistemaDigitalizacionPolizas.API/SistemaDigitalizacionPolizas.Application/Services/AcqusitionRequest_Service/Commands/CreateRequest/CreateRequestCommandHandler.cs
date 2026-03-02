@@ -1,74 +1,76 @@
-﻿using MediatR;
+﻿using SistemaDigitalizacionPolizas.Application.Services.AcqusitionRequest_Service.Commands.CreateRequest;
 using SistemaDigitalizacionPolizas.Domain.Entities.AcquisitionRequest_Entities;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Acquisition;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using SSistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.StatusRequest;
 
-namespace SistemaDigitalizacionPolizas.Application.Services.AcqusitionRequest_Service.Commands.CreateRequest
+public class CreateRequestCommandHandler
+   : IRequestHandler<CreateRequestCommand, int>
 {
-    public class CreateRequestCommandHandler
-       : IRequestHandler<CreateRequestCommand, int>
+    private readonly IAcquisitionRequest _repository;
+    private readonly IApplicationStatusRepository _statusRepository;
+    private readonly ICurrentUserService _currentUser;
+
+    public CreateRequestCommandHandler(
+        IAcquisitionRequest repository,
+        IApplicationStatusRepository statusRepository,
+        ICurrentUserService currentUser)
     {
-        private readonly IAcquisitionRequest _repository;
-        private readonly ICurrentUserService _currentUser;
+        _repository = repository;
+        _statusRepository = statusRepository;
+        _currentUser = currentUser;
+    }
 
-        public CreateRequestCommandHandler(
-            IAcquisitionRequest repository,
-            ICurrentUserService currentUser)
+    public async Task<int> Handle(
+        CreateRequestCommand request,
+        CancellationToken cancellationToken)
+    {
+        var dto = request.Dto;
+
+        // 🔥 Estado inicial automático (Borrador = clave 1000)
+        var borradorStatus = await _statusRepository.GetByCodeAsync(1);
+
+        if (borradorStatus == null)
+            throw new Exception("No existe estado 'Borrador' configurado.");
+
+        var entity = new AcquisitionRequest
         {
-            _repository = repository;
-            _currentUser = currentUser;
-        }
+            // ===============================
+            // Información del Negocio
+            // ===============================
 
-        public async Task<int> Handle(
-            CreateRequestCommand request,
-            CancellationToken cancellationToken)
-        {
-            var dto = request.Dto;
+            RequestNumber = dto.RequestNumber,
+            RequestDate = dto.RequestDate,
+            Justification = dto.Justification,
+            AuthorizationDate = dto.AuthorizationDate,
+            Observations = dto.Observations,
 
-            var entity = new AcquisitionRequest
-            {
-                // ===============================
-                // Información del Negocio
-                // ===============================
+            // ===============================
+            // Foreign Keys
+            // ===============================
 
-                RequestNumber = dto.RequestNumber,
-                RequestDate = dto.RequestDate,
-                Justification = dto.Justification,
-                AuthorizationDate = dto.AuthorizationDate,
-                Observations = dto.Observations,
+            IdAdministrativeUnit = dto.IdAdministrativeUnit,
+            IdProject = dto.IdProject,
+            IdAcquisitionType = dto.IdAcquisitionType,
+            IdSupplier = dto.IdSupplier,
+            IdApplicationStatus = borradorStatus.IdApplicationStatus, // 🔥 AUTOMÁTICO
+            IdFundingSource = dto.IdFundingSource,
+            IdAcquisitionClassification = dto.IdAcquisitionClassification,
+            IdProgram = dto.IdProgram,
+            IdCommunity = dto.IdCommunity,
+            IdBeneficiary = dto.IdBeneficiary,
 
-                // ===============================
-                // Foreign Keys (Nullable)
-                // ===============================
+            // ===============================
+            // Auditoría
+            // ===============================
 
-                IdAdministrativeUnit = dto.IdAdministrativeUnit,
-                IdProject = dto.IdProject,
-                IdAcquisitionType = dto.IdAcquisitionType,
-                IdSupplier = dto.IdSupplier,
-                IdApplicationStatus = dto.IdApplicationStatus,
-                IdFundingSource = dto.IdFundingSource,
-                IdAcquisitionClassification = dto.IdAcquisitionClassification,
-                IdProgram = dto.IdProgram,
-                IdCommunity = dto.IdCommunity,
-                IdBeneficiary = dto.IdBeneficiary,
+            CreatedBy = _currentUser.UserId,
+            CreatedAt = DateTime.Now,
+            Active = true
+        };
 
-                // ===============================
-                // Auditoría
-                // ===============================
+        var result = await _repository.AddAsync(entity);
 
-                CreatedBy = _currentUser.UserId,
-                CreatedAt = DateTime.Now,
-                Active = true
-            };
-
-            var result = await _repository.AddAsync(entity);
-
-            return result!.IdRequest;
-        }
+        return result!.IdRequest;
     }
 }

@@ -30,5 +30,9 @@ namespace SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Document
         Task<List<ExpedientDocumentSearchDto>>
     SearchByNameAsync(int requestId, string fileName);
 
+
+        Task<List<ExpedientDocument>> GetActiveByRequestId(int requestId);
+      
+
     }
 }

@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Service.Service;
 using SistemaDigitalizacionPolizas.Domain.Entities.Document_Entities;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Document;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.StatusRequest;
@@ -15,19 +16,22 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
         private readonly IFileStorageService _fileStorageService;
         private readonly ICurrentUserService _currentUserService;
         private readonly IUnitOfWorkService _unitOfWork;
+        private readonly IRequestStatusService _requestStatusService;
 
         public CreateMassiveExpedientDocumentCommandHandler(
             IDocumentExpedientRepository repository,
             IDocumentStatusRepository statusRepository,
             IFileStorageService fileStorageService,
             ICurrentUserService currentUserService,
-            IUnitOfWorkService unitOfWork)
+            IUnitOfWorkService unitOfWork,
+            IRequestStatusService requestStatusService)
         {
             _repository = repository;
             _statusRepository = statusRepository;
             _fileStorageService = fileStorageService;
             _currentUserService = currentUserService;
             _unitOfWork = unitOfWork;
+            _requestStatusService = requestStatusService;
         }
 
         public async Task<List<int>> Handle(
@@ -48,10 +52,11 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
 
             try
             {
-                // 🔥 Obtener estado por defecto UNA sola vez
-                var defaultStatus = await _statusRepository.GetByCodeAsync(1);
-                if (defaultStatus == null)
-                    throw new Exception("No existe estado de documento por defecto.");
+                // 🔥 Estado automático = Cargado (clave 1)
+                var cargadoStatus = await _statusRepository.GetByCodeAsync(1);
+
+                if (cargadoStatus == null)
+                    throw new Exception("No existe estado 'Cargado' configurado.");
 
                 foreach (var item in request.Documents)
                 {
@@ -73,7 +78,7 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
                     {
                         RequestId = request.RequestId,
                         DocumentTypeId = item.DocumentTypeId,
-                        IdDocumentStatus = item.IdDocumentStatus ?? defaultStatus.idDocumentStatus,
+                        IdDocumentStatus = cargadoStatus.idDocumentStatus,
 
                         FileName = item.File.FileName,
                         FilePath = filePath,
@@ -87,8 +92,13 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
                     });
                 }
 
+                // 🔥 Insertar documentos
                 await _repository.AddRangeAsync(entities);
 
+                // 🔥 Recalcular estado del expediente (NO hace commit)
+                await _requestStatusService.RecalculateStatus(request.RequestId);
+
+                // 🔥 Commit único al final
                 await _unitOfWork.CommitAsync();
 
                 return entities.Select(x => x.Id).ToList();
@@ -97,7 +107,7 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
             {
                 await _unitOfWork.RollbackAsync();
 
-                // 🔥 Rollback físico en Wasabi
+                // 🔥 Si falla BD, eliminar archivos físicos
                 foreach (var path in uploadedPaths)
                 {
                     await _fileStorageService.DeleteAsync(path);

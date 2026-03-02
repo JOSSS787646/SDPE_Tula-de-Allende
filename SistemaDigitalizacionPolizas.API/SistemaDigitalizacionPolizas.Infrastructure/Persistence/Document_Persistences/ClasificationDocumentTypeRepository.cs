@@ -89,5 +89,16 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Document_Persi
         }
 
 
+        public async Task<List<ClasificationDocumentType>> GetRequiredByClassification(int classificationId)
+        {
+            return await _context.ClasificationDocumentTypes
+                .Where(x =>
+                    x.ClassificationAcquisitionId == classificationId &&
+                    x.IsRequired &&
+                    x.Active)
+                .ToListAsync();
+        }
+
+
     }
 }
