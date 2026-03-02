@@ -37,7 +37,15 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Document_Persi
                     x.IdRequest == requestId &&
                     x.IdDocumentType == documentTypeId);
         }
-
+        public async Task<List<RequestDocumentException>> GetActiveByRequestId(int requestId)
+        {
+            return await _context.RequestDocumentExceptions
+                .Where(x =>
+                    x.IdRequest == requestId &&
+                    x.DoesNotApply &&
+                    x.Active)
+                .ToListAsync();
+        }
 
         public async Task SaveChangesAsync()
         {

@@ -99,6 +99,7 @@ namespace SistemaDigitalizacionPolizas.Infrastructure
             services.AddScoped<IPasswordResetRepository, PasswordResetRepository>();
             services.AddScoped<IEmailService, EmailService>();
             services.AddScoped<IUnitOfWorkService, UnitOfWorkService>();
+  
 
             //Servicio de  Auditoria
             services.AddScoped<ICurrentUserService, CurrentUserService>();

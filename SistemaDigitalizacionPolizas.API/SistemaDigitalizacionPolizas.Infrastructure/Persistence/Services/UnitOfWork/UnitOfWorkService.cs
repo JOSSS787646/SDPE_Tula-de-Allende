@@ -23,22 +23,34 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Services.UnitO
             _transaction = await _context.Database.BeginTransactionAsync();
         }
 
-        public async Task CommitAsync()
-        {
-            await _context.SaveChangesAsync();
-            if (_transaction != null)
-                await _transaction.CommitAsync();
-        }
 
-        public async Task RollbackAsync()
-        {
-            if (_transaction != null)
-                await _transaction.RollbackAsync();
-        }
+  
 
         public async Task SaveChangesAsync()
         {
             await _context.SaveChangesAsync();
+        }
+
+        public async Task CommitAsync()
+        {
+            if (_transaction == null)
+                throw new InvalidOperationException("No hay transacción activa.");
+
+            await _context.SaveChangesAsync();
+            await _transaction.CommitAsync();
+
+            await _transaction.DisposeAsync();
+            _transaction = null; // 🔥 IMPORTANTE
+        }
+
+        public async Task RollbackAsync()
+        {
+            if (_transaction == null)
+                return; // 🔥 NO INTENTAR ROLLBACK SI YA MURIÓ
+
+            await _transaction.RollbackAsync();
+            await _transaction.DisposeAsync();
+            _transaction = null; // 🔥 IMPORTANTE
         }
     }
 }

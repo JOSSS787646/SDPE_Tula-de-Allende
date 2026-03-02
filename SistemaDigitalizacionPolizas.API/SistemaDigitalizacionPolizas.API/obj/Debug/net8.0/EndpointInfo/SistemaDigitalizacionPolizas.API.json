@@ -2055,13 +2055,6 @@
                     "items": {
                       "type": "string"
                     }
-                  },
-                  "idDocumentStatus": {
-                    "type": "array",
-                    "items": {
-                      "type": "integer",
-                      "format": "int32"
-                    }
                   }
                 }
               },
@@ -2076,9 +2069,6 @@
                   "style": "form"
                 },
                 "observations": {
-                  "style": "form"
-                },
-                "idDocumentStatus": {
                   "style": "form"
                 }
               }

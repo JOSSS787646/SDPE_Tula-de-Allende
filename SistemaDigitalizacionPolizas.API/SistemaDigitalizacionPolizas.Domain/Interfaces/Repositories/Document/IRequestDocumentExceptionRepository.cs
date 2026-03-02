@@ -26,5 +26,8 @@ namespace SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Document
 
         Task<RequestDocumentException?>
             GetByRequestAndDocumentTypeAsync(int requestId, int documentTypeId);
+
+
+        Task<List<RequestDocumentException>> GetActiveByRequestId(int requestId);
     }
 }

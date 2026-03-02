@@ -47,6 +47,16 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Document_Persi
             _context.ExpedientDocuments.Update(entity);
         }
 
+        public async Task<List<ExpedientDocument>> GetActiveByRequestId(int requestId)
+        {
+            return await _context.ExpedientDocuments
+                .Where(x =>
+                    x.RequestId == requestId &&
+                    x.IdDocumentStatus == 1 &&
+                    x.Active == true)
+                .ToListAsync();
+        }
+
 
 
         public async Task<List<ExpedientDocumentSearchDto>>

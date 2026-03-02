@@ -45,8 +45,7 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
       [FromForm] int requestId,
       [FromForm] List<IFormFile> files,
       [FromForm] List<int?> documentTypeId,
-      [FromForm] List<string?> observations,
-      [FromForm] List<int?> idDocumentStatus)
+      [FromForm] List<string?> observations)
         {
             if (files == null || !files.Any())
                 return BadRequest("Debe enviar archivos.");
@@ -59,8 +58,7 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
                 {
                     File = files[i],
                     DocumentTypeId = documentTypeId?.ElementAtOrDefault(i),
-                    Observations = observations?.ElementAtOrDefault(i),
-                    IdDocumentStatus = idDocumentStatus?.ElementAtOrDefault(i)
+                    Observations = observations?.ElementAtOrDefault(i)
                 });
             }
 
@@ -75,8 +73,6 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
                 ids = result
             });
         }
-
-
         [HttpGet("search")]
         public async Task<IActionResult> Search(
     [FromQuery] int requestId,
