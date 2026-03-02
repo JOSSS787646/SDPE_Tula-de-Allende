@@ -2908,6 +2908,68 @@
         }
       }
     },
+    "/api/RequestDocumentException": {
+      "post": {
+        "tags": [
+          "RequestDocumentException"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRequestDocumentExceptionCommand"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRequestDocumentExceptionCommand"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRequestDocumentExceptionCommand"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/RequestDocumentException/toggle": {
+      "put": {
+        "tags": [
+          "RequestDocumentException"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ToggleRequestDocumentExceptionCommand"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ToggleRequestDocumentExceptionCommand"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ToggleRequestDocumentExceptionCommand"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Role": {
       "post": {
         "tags": [
@@ -3953,6 +4015,32 @@
         },
         "additionalProperties": false
       },
+      "CreateRequestDocumentExceptionCommand": {
+        "type": "object",
+        "properties": {
+          "idRequest": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idDocumentType": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "doesNotApply": {
+            "type": "boolean"
+          },
+          "justification": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdBy": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "CreateRoleCommand": {
         "type": "object",
         "properties": {
@@ -4382,6 +4470,28 @@
           },
           "active": {
             "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ToggleRequestDocumentExceptionCommand": {
+        "type": "object",
+        "properties": {
+          "idRequest": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idDocumentType": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "doesNotApply": {
+            "type": "boolean"
+          },
+          "updatedBy": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
           }
         },
         "additionalProperties": false

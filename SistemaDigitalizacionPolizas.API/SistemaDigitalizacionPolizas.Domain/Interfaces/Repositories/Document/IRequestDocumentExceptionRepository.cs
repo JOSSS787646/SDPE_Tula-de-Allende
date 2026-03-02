@@ -9,18 +9,22 @@ namespace SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Document
 {
     public interface IRequestDocumentExceptionRepository
     {
-        Task<RequestDocumentException?> GetByIdAsync(int id);
-
-        Task<IEnumerable<RequestDocumentException>> GetByRequestIdAsync(int requestId);
-
+        /// <summary>
+        /// Agrega una nueva excepción de documento.
+        /// </summary>
         Task AddAsync(RequestDocumentException entity);
 
+        /// <summary>
+        /// Actualiza una excepción existente.
+        /// </summary>
         Task UpdateAsync(RequestDocumentException entity);
 
-        Task DeleteAsync(int id); // Soft delete
-
-        Task<bool> ExistsAsync(int requestId, int documentTypeId);
-
+        /// <summary>
+        /// Persiste los cambios en base de datos.
+        /// </summary>
         Task SaveChangesAsync();
+
+        Task<RequestDocumentException?>
+            GetByRequestAndDocumentTypeAsync(int requestId, int documentTypeId);
     }
 }
