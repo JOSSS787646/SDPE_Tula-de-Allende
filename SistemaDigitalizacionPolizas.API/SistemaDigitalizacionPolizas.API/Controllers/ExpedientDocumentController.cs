@@ -1,6 +1,9 @@
 ﻿using SistemaDigitalizacionPolizas.Application.Services.AcqusitionRequest_Service.Queries.GetDocumentsChecklistByRequest;
 using SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Service.Command.CreateExpedientDocument;
+using SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Service.Command.CreateMassiveExpedientDocument;
+using SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Service.Command.UpdateExpedientDocument;
 using SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Service.Queries.GetExpedientDocumentsByClassification;
+using SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Service.Queries.SearchExpedientDocumentByName;
 using SistemaDigitalizacionPolizas.Domain.Dtos.AcquisitionRequest;
 using SistemaDigitalizacionPolizas.Domain.Dtos.ExpedientDocument;
 
@@ -34,6 +37,61 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
             });
         }
 
+
+        [HttpPost("upload-massive")]
+        [Consumes("multipart/form-data")]
+        [RequestSizeLimit(524288000)]
+        public async Task<IActionResult> UploadMassive(
+      [FromForm] int requestId,
+      [FromForm] List<IFormFile> files,
+      [FromForm] List<int?> documentTypeId,
+      [FromForm] List<string?> observations,
+      [FromForm] List<int?> idDocumentStatus)
+        {
+            if (files == null || !files.Any())
+                return BadRequest("Debe enviar archivos.");
+
+            var documents = new List<MassiveExpedientDocumentItem>();
+
+            for (int i = 0; i < files.Count; i++)
+            {
+                documents.Add(new MassiveExpedientDocumentItem
+                {
+                    File = files[i],
+                    DocumentTypeId = documentTypeId?.ElementAtOrDefault(i),
+                    Observations = observations?.ElementAtOrDefault(i),
+                    IdDocumentStatus = idDocumentStatus?.ElementAtOrDefault(i)
+                });
+            }
+
+            var command = new CreateMassiveExpedientDocumentCommand(requestId, documents);
+
+            var result = await _mediator.Send(command);
+
+            return Ok(new
+            {
+                success = true,
+                total = result.Count,
+                ids = result
+            });
+        }
+
+
+        [HttpGet("search")]
+        public async Task<IActionResult> Search(
+    [FromQuery] int requestId,
+    [FromQuery] string fileName)
+        {
+            if (string.IsNullOrWhiteSpace(fileName))
+                return BadRequest("Debe proporcionar un nombre.");
+
+            var result = await _mediator.Send(
+                new SearchExpedientDocumentByNameQuery(requestId, fileName));
+
+            return Ok(result);
+        }
+
+
         [HttpGet("by-classification")]
         public async Task<ActionResult<List<ExpedientDocumentDto>>> GetByClassification(
            [FromQuery] int classificationId,
@@ -59,6 +117,28 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
         {
             var result = await _mediator.Send(new GetDocumentsChecklistByRequestQuery(id));
             return Ok(result);
+        }
+
+
+        [HttpPut("update/{id}")]
+        [Consumes("multipart/form-data")]
+        [RequestSizeLimit(524288000)] // 500MB
+        public async Task<IActionResult> Update(
+           int id,
+           [FromForm] UpdateExpedientDocumentCommand command)
+        {
+            if (id <= 0)
+                return BadRequest("Id inválido.");
+
+            command.Id = id;
+
+            var result = await _mediator.Send(command);
+
+            return Ok(new
+            {
+                success = result,
+                message = "Documento actualizado correctamente."
+            });
         }
 
     }

@@ -19,6 +19,7 @@ using SistemaDigitalizacionPolizas.Infrastructure.Persistence.Community_Persiste
 using SistemaDigitalizacionPolizas.Infrastructure.Persistence.Document_Persistences;
 using SistemaDigitalizacionPolizas.Infrastructure.Persistence.RequestingAdministration_Persistences;
 using SistemaDigitalizacionPolizas.Infrastructure.Persistence.Services.Auditory;
+using SistemaDigitalizacionPolizas.Infrastructure.Persistence.Services.UnitOfWork;
 using SistemaDigitalizacionPolizas.Infrastructure.Persistence.Services.UploatFile;
 using SistemaDigitalizacionPolizas.Infrastructure.Persistence.Supplier_Persistence;
 using SSistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.StatusRequest;
@@ -89,13 +90,15 @@ namespace SistemaDigitalizacionPolizas.Infrastructure
             services.AddScoped<IAcquisitionRequest, AcquisitionRequestRepository>();
 
             services.AddScoped<IAcquisitionRequest, AcquisitionRequestRepository>();
-            
+            services.AddScoped<IRequestDocumentExceptionRepository, RequestDocumentExceptionRepository>();
+
             //Application Status Repository
             services.AddScoped<IApplicationStatusRepository, ApplicationStatusRepository>();
             //Servicio de Email
             services.AddScoped<IEmailService, EmailService>();
             services.AddScoped<IPasswordResetRepository, PasswordResetRepository>();
             services.AddScoped<IEmailService, EmailService>();
+            services.AddScoped<IUnitOfWorkService, UnitOfWorkService>();
 
             //Servicio de  Auditoria
             services.AddScoped<ICurrentUserService, CurrentUserService>();

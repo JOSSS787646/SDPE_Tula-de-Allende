@@ -2021,6 +2021,106 @@
         }
       }
     },
+    "/api/ExpedientDocument/upload-massive": {
+      "post": {
+        "tags": [
+          "ExpedientDocument"
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "requestId": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "files": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "binary"
+                    }
+                  },
+                  "documentTypeId": {
+                    "type": "array",
+                    "items": {
+                      "type": "integer",
+                      "format": "int32"
+                    }
+                  },
+                  "observations": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "idDocumentStatus": {
+                    "type": "array",
+                    "items": {
+                      "type": "integer",
+                      "format": "int32"
+                    }
+                  }
+                }
+              },
+              "encoding": {
+                "requestId": {
+                  "style": "form"
+                },
+                "files": {
+                  "style": "form"
+                },
+                "documentTypeId": {
+                  "style": "form"
+                },
+                "observations": {
+                  "style": "form"
+                },
+                "idDocumentStatus": {
+                  "style": "form"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/ExpedientDocument/search": {
+      "get": {
+        "tags": [
+          "ExpedientDocument"
+        ],
+        "parameters": [
+          {
+            "name": "requestId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "fileName",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/ExpedientDocument/by-classification": {
       "get": {
         "tags": [
@@ -2132,6 +2232,69 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/api/ExpedientDocument/update/{id}": {
+      "put": {
+        "tags": [
+          "ExpedientDocument"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "Id": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "Observations": {
+                    "type": "string"
+                  },
+                  "IdDocumentStatus": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "NewFile": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              },
+              "encoding": {
+                "Id": {
+                  "style": "form"
+                },
+                "Observations": {
+                  "style": "form"
+                },
+                "IdDocumentStatus": {
+                  "style": "form"
+                },
+                "NewFile": {
+                  "style": "form"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
           }
         }
       }
@@ -2734,6 +2897,68 @@
             "application/*+json": {
               "schema": {
                 "type": "boolean"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/RequestDocumentException": {
+      "post": {
+        "tags": [
+          "RequestDocumentException"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRequestDocumentExceptionCommand"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRequestDocumentExceptionCommand"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRequestDocumentExceptionCommand"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/RequestDocumentException/toggle": {
+      "put": {
+        "tags": [
+          "RequestDocumentException"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ToggleRequestDocumentExceptionCommand"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ToggleRequestDocumentExceptionCommand"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ToggleRequestDocumentExceptionCommand"
               }
             }
           }
@@ -3790,6 +4015,32 @@
         },
         "additionalProperties": false
       },
+      "CreateRequestDocumentExceptionCommand": {
+        "type": "object",
+        "properties": {
+          "idRequest": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idDocumentType": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "doesNotApply": {
+            "type": "boolean"
+          },
+          "justification": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdBy": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "CreateRoleCommand": {
         "type": "object",
         "properties": {
@@ -4219,6 +4470,28 @@
           },
           "active": {
             "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ToggleRequestDocumentExceptionCommand": {
+        "type": "object",
+        "properties": {
+          "idRequest": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idDocumentType": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "doesNotApply": {
+            "type": "boolean"
+          },
+          "updatedBy": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
           }
         },
         "additionalProperties": false
