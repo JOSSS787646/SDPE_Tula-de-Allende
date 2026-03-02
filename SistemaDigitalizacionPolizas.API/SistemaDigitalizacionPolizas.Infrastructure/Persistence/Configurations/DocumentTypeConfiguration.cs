@@ -40,10 +40,7 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Configurations
                 .HasMaxLength(250)
                 .IsRequired();
 
-            builder.Property(x => x.IsRequired)
-                .HasColumnName("obligatorio")
-                .IsRequired();
-
+        
             // =====================================
             // Audit Fields
             // =====================================

@@ -1,4 +1,5 @@
-﻿using SistemaDigitalizacionPolizas.Domain.Entities.Document_Entities;
+﻿using SistemaDigitalizacionPolizas.Domain.Dtos.AcquisitionRequest;
+using SistemaDigitalizacionPolizas.Domain.Entities.Document_Entities;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Document;
 using System;
 using System.Collections.Generic;
@@ -26,6 +27,87 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Document_Persi
         public async Task SaveChangesAsync()
         {
             await _context.SaveChangesAsync();
+        }
+
+
+
+
+        public async Task<(List<ExpedientDocument> Items, int Total)>
+     GetByClassificationAsync(int classificationId, int page, int pageSize)
+        {
+            var query = _context.ExpedientDocuments
+                .AsNoTracking()
+                .Include(x => x.DocumentType)
+                .Include(x => x.DocumentStatus) // 🔥 CLAVE: cargar el estado del documento
+                .Where(x =>
+                    x.DocumentType.Classifications
+                        .Any(c => c.ClassificationAcquisitionId == classificationId)
+                );
+
+            var total = await query.CountAsync();
+
+            var items = await query
+                .OrderByDescending(x => x.CreatedAt)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            return (items, total);
+        }
+
+
+
+
+        public async Task<List<RequestDocumentChecklistDto>> GetChecklistByRequestAsync(int requestId)
+        {
+            var classificationId = await _context.AcquisitionRequests
+                .Where(x => x.IdRequest == requestId)
+                .Select(x => x.IdAcquisitionClassification)
+                .FirstOrDefaultAsync();
+
+            if (classificationId == 0)
+                return new List<RequestDocumentChecklistDto>();
+
+            var result = await (
+                from tcd in _context.ClasificationDocumentTypes
+                join td in _context.Documents
+                    on tcd.DocumentTypeId equals td.IdDocumentType
+                where tcd.ClassificationAcquisitionId == classificationId
+                   && tcd.Active == true
+                   && td.Active == true
+                select new RequestDocumentChecklistDto
+                {
+                    DocumentTypeId = td.IdDocumentType,
+                    DocumentName = td.DocumentName,
+                    RequiredByRule = tcd.IsRequired,
+
+                    NoApplies = _context.RequestDocumentExceptions
+                        .Any(x => x.IdRequest == requestId
+                               && x.IdDocumentType == td.IdDocumentType
+                               && x.DoesNotApply == true),
+
+                    Uploaded = _context.ExpedientDocuments
+                        .Any(x => x.RequestId == requestId
+                               && x.DocumentTypeId == td.IdDocumentType
+                               && x.Active == true),
+
+                    FileName = _context.ExpedientDocuments
+                        .Where(x => x.RequestId == requestId
+                                 && x.DocumentTypeId == td.IdDocumentType
+                                 && x.Active == true)
+                        .Select(x => x.FileName)
+                        .FirstOrDefault(),
+
+                    FileUrl = _context.ExpedientDocuments
+                        .Where(x => x.RequestId == requestId
+                                 && x.DocumentTypeId == td.IdDocumentType
+                                 && x.Active == true)
+                        .Select(x => x.FilePath)
+                        .FirstOrDefault()
+                }
+            ).ToListAsync();
+
+            return result;
         }
     }
 }

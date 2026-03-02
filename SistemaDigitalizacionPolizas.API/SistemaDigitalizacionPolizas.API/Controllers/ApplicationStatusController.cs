@@ -20,7 +20,7 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
     /// - Devuelve la respuesta correspondiente
     /// </summary>
 
-    // [Authorize] // 🔐 Se puede habilitar para proteger los endpoints con JWT
+    [Authorize] // 🔐 Se puede habilitar para proteger los endpoints con JWT
     [ApiController]
     [Route("api/[controller]")]
     public class ApplicationStatusController : ControllerBase

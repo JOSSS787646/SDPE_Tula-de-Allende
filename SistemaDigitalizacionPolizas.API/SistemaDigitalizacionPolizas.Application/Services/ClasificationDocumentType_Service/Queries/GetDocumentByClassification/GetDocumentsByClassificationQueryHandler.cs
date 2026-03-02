@@ -31,8 +31,7 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ClasificationDocumen
             {
                 DocumentTypeId = x.DocumentTypeId,
                 DocumentName = x.DocumentType.DocumentName,
-                IsRequired = x.IsRequired,
-                Active = x.Active
+                IsRequired = x.IsRequired
             }).ToList();
 
             return result;

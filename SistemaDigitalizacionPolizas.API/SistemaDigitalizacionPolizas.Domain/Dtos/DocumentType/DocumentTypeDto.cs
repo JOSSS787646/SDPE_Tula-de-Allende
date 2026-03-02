@@ -13,7 +13,6 @@ namespace SistemaDigitalizacionPolizas.Domain.Dtos.DocumentType
 
         public string DocumentName { get; set; } = null!;
         public string Description { get; set; } = null!;
-        public bool IsRequired { get; set; }
         public bool Active { get; set; } = true;
     }
 }

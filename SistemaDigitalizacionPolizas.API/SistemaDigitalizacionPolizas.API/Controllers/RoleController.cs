@@ -9,7 +9,7 @@ using SistemaDigitalizacionPolizas.Application.Services.Role_Service.Queries.Get
 namespace SistemaDigitalizacionPolizas.API.Controllers
 {
 
-    [Authorize]
+   // [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class RoleController : ControllerBase

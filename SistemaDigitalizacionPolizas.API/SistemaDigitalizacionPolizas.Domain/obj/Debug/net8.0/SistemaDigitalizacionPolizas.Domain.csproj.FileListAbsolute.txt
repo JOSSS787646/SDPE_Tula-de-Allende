@@ -57,3 +57,15 @@ C:\Estadia Ingenieria\Febrero\Back\Sprint4\SistemaDigitalizacionPolizas.API\Sist
 C:\Estadia Ingenieria\Febrero\Back\Sprint4\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Domain\obj\Debug\net8.0\refint\SistemaDigitalizacionPolizas.Domain.dll
 C:\Estadia Ingenieria\Febrero\Back\Sprint4\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Domain\obj\Debug\net8.0\SistemaDigitalizacionPolizas.Domain.pdb
 C:\Estadia Ingenieria\Febrero\Back\Sprint4\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Domain\obj\Debug\net8.0\ref\SistemaDigitalizacionPolizas.Domain.dll
+C:\Estadia Ingenieria\Febrero\Back\Sprint5\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Domain\bin\Debug\net8.0\SistemaDigitalizacionPolizas.Domain.deps.json
+C:\Estadia Ingenieria\Febrero\Back\Sprint5\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Domain\bin\Debug\net8.0\SistemaDigitalizacionPolizas.Domain.dll
+C:\Estadia Ingenieria\Febrero\Back\Sprint5\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Domain\bin\Debug\net8.0\SistemaDigitalizacionPolizas.Domain.pdb
+C:\Estadia Ingenieria\Febrero\Back\Sprint5\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Domain\obj\Debug\net8.0\SistemaDigitalizacionPolizas.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Estadia Ingenieria\Febrero\Back\Sprint5\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Domain\obj\Debug\net8.0\SistemaDigitalizacionPolizas.Domain.AssemblyInfoInputs.cache
+C:\Estadia Ingenieria\Febrero\Back\Sprint5\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Domain\obj\Debug\net8.0\SistemaDigitalizacionPolizas.Domain.AssemblyInfo.cs
+C:\Estadia Ingenieria\Febrero\Back\Sprint5\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Domain\obj\Debug\net8.0\SistemaDigitalizacionPolizas.Domain.csproj.CoreCompileInputs.cache
+C:\Estadia Ingenieria\Febrero\Back\Sprint5\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Domain\obj\Debug\net8.0\SistemaDigitalizacionPolizas.Domain.sourcelink.json
+C:\Estadia Ingenieria\Febrero\Back\Sprint5\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Domain\obj\Debug\net8.0\SistemaDigitalizacionPolizas.Domain.dll
+C:\Estadia Ingenieria\Febrero\Back\Sprint5\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Domain\obj\Debug\net8.0\refint\SistemaDigitalizacionPolizas.Domain.dll
+C:\Estadia Ingenieria\Febrero\Back\Sprint5\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Domain\obj\Debug\net8.0\SistemaDigitalizacionPolizas.Domain.pdb
+C:\Estadia Ingenieria\Febrero\Back\Sprint5\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Domain\obj\Debug\net8.0\ref\SistemaDigitalizacionPolizas.Domain.dll

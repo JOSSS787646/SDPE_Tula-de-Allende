@@ -1,6 +1,7 @@
 ﻿using SistemaDigitalizacionPolizas.Domain.Entities.ApplicationStatus;
 using SistemaDigitalizacionPolizas.Domain.Entities.RequestingAdministration_Entities;
-using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.StatusRequest;
+
+using SSistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.StatusRequest;
 using System;
 using System.Collections.Generic;
 using System.Linq;
