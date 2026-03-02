@@ -18,7 +18,6 @@
 
   <ItemGroup>
     <Folder Include="Services\Auth_Service\Feature\CRUD\Queries\" />
-    <Folder Include="Services\ExpedientDocument_Service\Queries\" />
   </ItemGroup>
 
   <ItemGroup>

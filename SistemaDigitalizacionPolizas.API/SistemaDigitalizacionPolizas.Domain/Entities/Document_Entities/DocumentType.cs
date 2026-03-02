@@ -14,7 +14,7 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Document_Persi
         // 🔹 Business Data
         public string DocumentName { get; set; } = null!;
         public string Description { get; set; } = null!;
-        public bool IsRequired { get; set; }
+ 
 
         // 🔹 Audit Fields
         public int CreatedBy { get; set; } = 1;
@@ -32,6 +32,10 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Document_Persi
         // 🔹 NUEVA navegación
         public ICollection<ExpedientDocument> ExpedientDocuments { get; set; }
             = new List<ExpedientDocument>();
+
+
+        public ICollection<RequestDocumentException> RequestDocumentExceptions { get; set; }
+    = new List<RequestDocumentException>();
 
     }
 }

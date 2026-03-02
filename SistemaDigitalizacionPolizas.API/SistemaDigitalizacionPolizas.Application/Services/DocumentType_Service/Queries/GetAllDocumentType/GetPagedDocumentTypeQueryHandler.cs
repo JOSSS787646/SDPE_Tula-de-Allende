@@ -33,7 +33,6 @@ namespace SistemaDigitalizacionPolizas.Application.Services.DocumentType_Service
                 IdDocumentType = d.IdDocumentType,
                 DocumentName = d.DocumentName,
                 Description = d.Description,
-                IsRequired = d.IsRequired,
                 Active = d.Active
             });
         }

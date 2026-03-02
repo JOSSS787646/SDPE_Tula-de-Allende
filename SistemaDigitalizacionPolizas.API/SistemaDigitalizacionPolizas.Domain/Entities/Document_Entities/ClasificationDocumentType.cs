@@ -18,9 +18,8 @@ namespace SistemaDigitalizacionPolizas.Domain.Entities.Document_Entities
 
         // 🔹 Business Rules
         public bool IsRequired { get; set; }
-        public bool Active { get; set; }
-
         // 🔹 Navigation Properties (opcional)
+        public bool Active { get; set; } = true;
         public AcquisitionClassification ClassificationAcquisition { get; set; } = null!;
         public DocumentType DocumentType { get; set; } = null!;
     }

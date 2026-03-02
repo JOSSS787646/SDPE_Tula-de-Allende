@@ -1,4 +1,5 @@
-﻿using SistemaDigitalizacionPolizas.Infrastructure.Persistence.Document_Persistences;
+﻿using SistemaDigitalizacionPolizas.Domain.Entities.ApplicationStatus;
+using SistemaDigitalizacionPolizas.Infrastructure.Persistence.Document_Persistences;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,6 +21,9 @@ namespace SistemaDigitalizacionPolizas.Domain.Entities.Document_Entities
         public int? RequestId { get; set; }
         public int? DocumentTypeId { get; set; }
 
+        // 🔥 FK a EstadoDocumento
+        public int? IdDocumentStatus { get; set; }
+
         // ================================
         // File Information
         // ================================
@@ -28,9 +32,8 @@ namespace SistemaDigitalizacionPolizas.Domain.Entities.Document_Entities
         public DateTime? UploadDate { get; set; }
 
         // ================================
-        // Business Status
+        // Business
         // ================================
-        public string? DocumentStatus { get; set; }
         public string? Observations { get; set; }
 
         // ================================
@@ -47,11 +50,12 @@ namespace SistemaDigitalizacionPolizas.Domain.Entities.Document_Entities
         // ================================
         public bool? Active { get; set; }
 
-
         // ================================
         // Navigation
         // ================================
         public DocumentType? DocumentType { get; set; }
+
+        public DocumentStatus? DocumentStatus { get; set; }
 
         // ⚠ Comentado hasta crear entidad Solicitud en dominio
         // public Solicitud? Request { get; set; }

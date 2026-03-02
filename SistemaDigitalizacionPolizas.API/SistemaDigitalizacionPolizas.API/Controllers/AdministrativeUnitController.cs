@@ -9,7 +9,7 @@ using SistemaDigitalizacionPolizas.Domain.Dtos.AdministrativeUnit;
 
 namespace SistemaDigitalizacionPolizas.API.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class AdministrativeUnitController : ControllerBase

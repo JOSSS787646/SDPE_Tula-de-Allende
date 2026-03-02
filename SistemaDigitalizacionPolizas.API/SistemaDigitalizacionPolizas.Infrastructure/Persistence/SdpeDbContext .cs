@@ -1,4 +1,6 @@
-﻿using SistemaDigitalizacionPolizas.Domain.Entities.Acquisition_Entities;
+﻿using Azure.Core;
+using SistemaDigitalizacionPolizas.Domain.Entities.Acquisition_Entities;
+using SistemaDigitalizacionPolizas.Domain.Entities.AcquisitionRequest_Entities;
 using SistemaDigitalizacionPolizas.Domain.Entities.Actions_Entities;
 using SistemaDigitalizacionPolizas.Domain.Entities.ApplicationStatus;
 using SistemaDigitalizacionPolizas.Domain.Entities.Auth_Entities;
@@ -35,6 +37,9 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence
         public DbSet<ClasificationDocumentType> ClasificationDocumentTypes { get; set; }
         public DbSet<ExpedientDocument> ExpedientDocuments { get; set; }
         public DbSet<ApplicationStatus> ApplicationStatuses { get; set; }
+        public DbSet<DocumentStatus> DocumentStatuses { get; set; }
+        public DbSet<AcquisitionRequest> AcquisitionRequests { get; set; }
+        public DbSet<RequestDocumentException> RequestDocumentExceptions { get; set; }
 
 
         //Recuperacion de Contraseñas

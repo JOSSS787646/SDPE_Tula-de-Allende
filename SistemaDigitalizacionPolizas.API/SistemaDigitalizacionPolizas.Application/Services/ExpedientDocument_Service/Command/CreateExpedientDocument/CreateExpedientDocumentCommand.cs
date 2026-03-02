@@ -12,9 +12,12 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
         public int? RequestId { get; set; }
         public int? DocumentTypeId { get; set; }
 
+        // 🔥 FK al catálogo EstadoDocumento
+        public int? IdDocumentStatus { get; set; }
+
+        // 📎 Archivo
         public IFormFile File { get; set; } = null!;
 
-        public string? DocumentStatus { get; set; }
         public string? Observations { get; set; }
     }
 }
