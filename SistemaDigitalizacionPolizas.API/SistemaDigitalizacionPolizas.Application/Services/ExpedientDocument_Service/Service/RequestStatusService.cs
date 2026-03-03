@@ -60,10 +60,18 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
                 .ToList();
 
             bool allCompleted = requiredWithoutExceptions.All(req =>
-                uploadedDocs.Any(u =>
-                    u.DocumentTypeId == req.DocumentTypeId &&
-                    u.IdDocumentStatus == 1 &&
-                    u.Active == true));
+    uploadedDocs.Any(u =>
+        u.DocumentTypeId == req.DocumentTypeId &&
+        u.IdDocumentStatus == 1 &&
+        u.Active == true));
+
+            Console.WriteLine("====================================");
+            Console.WriteLine($"RequestId: {requestId}");
+            Console.WriteLine($"RequiredDocs TOTAL: {requiredDocs.Count}");
+            Console.WriteLine($"RequiredWithoutExceptions: {requiredWithoutExceptions.Count}");
+            Console.WriteLine($"UploadedDocs TOTAL: {uploadedDocs.Count}");
+            Console.WriteLine($"AllCompleted: {allCompleted}");
+            Console.WriteLine("====================================");
 
             var incompleteStatus = await _statusRepository.GetByCodeAsync(1);
             var completeStatus = await _statusRepository.GetByCodeAsync(2);
@@ -74,7 +82,7 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
 
             await _requestRepository.UpdateAsync(request);
 
-            // ❌ NO COMMIT AQUÍ
+            
         }
     }
 }
