@@ -1671,31 +1671,15 @@
   },
   {
     "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.RequestDocumentExceptionController",
-    "Method": "Create",
-    "RelativePath": "api/RequestDocumentException",
+    "Method": "Upsert",
+    "RelativePath": "api/RequestDocumentException/upsert",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
         "Name": "command",
-        "Type": "SistemaDigitalizacionPolizas.Application.Services.RequestDocumentException_Service.Commands.CreateRequestDocumentExceptionCommand",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.RequestDocumentExceptionController",
-    "Method": "Toggle",
-    "RelativePath": "api/RequestDocumentException/toggle",
-    "HttpMethod": "PUT",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "command",
-        "Type": "SistemaDigitalizacionPolizas.Application.Services.RequestDocumentException_Service.Commands.ToggleRequestDocumentException.ToggleRequestDocumentExceptionCommand",
+        "Type": "SistemaDigitalizacionPolizas.Application.Services.RequestDocumentException_Service.Commands.UpsertRequestDocumentException.UpsertRequestDocumentExceptionCommand",
         "IsRequired": true
       }
     ],

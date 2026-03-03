@@ -47,6 +47,26 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Document_Persi
                 .ToListAsync();
         }
 
+        public async Task UpsertAsync(RequestDocumentException entity)
+        {
+            var existing = await _context.RequestDocumentExceptions
+                .FirstOrDefaultAsync(x =>
+                    x.IdRequest == entity.IdRequest &&
+                    x.IdDocumentType == entity.IdDocumentType);
+
+            if (existing == null)
+            {
+                await _context.RequestDocumentExceptions.AddAsync(entity);
+            }
+            else
+            {
+                existing.DoesNotApply = entity.DoesNotApply;
+                existing.Active = entity.Active;
+            }
+
+            await _context.SaveChangesAsync();
+        }
+
         public async Task SaveChangesAsync()
         {
             await _context.SaveChangesAsync();

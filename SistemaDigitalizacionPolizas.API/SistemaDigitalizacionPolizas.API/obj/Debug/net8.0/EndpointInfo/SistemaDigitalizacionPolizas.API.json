@@ -2968,7 +2968,7 @@
         }
       }
     },
-    "/api/RequestDocumentException": {
+    "/api/RequestDocumentException/upsert": {
       "post": {
         "tags": [
           "RequestDocumentException"
@@ -2977,48 +2977,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateRequestDocumentExceptionCommand"
+                "$ref": "#/components/schemas/UpsertRequestDocumentExceptionCommand"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateRequestDocumentExceptionCommand"
+                "$ref": "#/components/schemas/UpsertRequestDocumentExceptionCommand"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateRequestDocumentExceptionCommand"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/RequestDocumentException/toggle": {
-      "put": {
-        "tags": [
-          "RequestDocumentException"
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ToggleRequestDocumentExceptionCommand"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ToggleRequestDocumentExceptionCommand"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/ToggleRequestDocumentExceptionCommand"
+                "$ref": "#/components/schemas/UpsertRequestDocumentExceptionCommand"
               }
             }
           }
@@ -4075,32 +4044,6 @@
         },
         "additionalProperties": false
       },
-      "CreateRequestDocumentExceptionCommand": {
-        "type": "object",
-        "properties": {
-          "idRequest": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "idDocumentType": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "doesNotApply": {
-            "type": "boolean"
-          },
-          "justification": {
-            "type": "string",
-            "nullable": true
-          },
-          "createdBy": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
       "CreateRoleCommand": {
         "type": "object",
         "properties": {
@@ -4534,28 +4477,6 @@
         },
         "additionalProperties": false
       },
-      "ToggleRequestDocumentExceptionCommand": {
-        "type": "object",
-        "properties": {
-          "idRequest": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "idDocumentType": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "doesNotApply": {
-            "type": "boolean"
-          },
-          "updatedBy": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
       "UpdateAcqClassificationCmd": {
         "type": "object",
         "properties": {
@@ -4947,6 +4868,32 @@
           },
           "asset": {
             "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "UpsertRequestDocumentExceptionCommand": {
+        "type": "object",
+        "properties": {
+          "idRequest": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idDocumentType": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "doesNotApply": {
+            "type": "boolean"
+          },
+          "justification": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdBy": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
           }
         },
         "additionalProperties": false
