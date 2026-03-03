@@ -111,6 +111,27 @@
   },
   {
     "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.AcquisitionRequestController",
+    "Method": "GetAll",
+    "RelativePath": "api/AcquisitionRequest",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "pageNumber",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "pageSize",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.AcquisitionRequestController",
     "Method": "GetDetail",
     "RelativePath": "api/AcquisitionRequest/{id}",
     "HttpMethod": "GET",
