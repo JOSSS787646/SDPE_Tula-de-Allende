@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Acquisition_Persistences
 {
-    public class AcquisitionRequestRepository: IAcquisitionRequest
+    public class AcquisitionRequestRepository : IAcquisitionRequest
     {
         private readonly SdpeDbContext _context;
 
@@ -30,13 +30,12 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Acquisition_Pe
         public async Task<AcquisitionRequest?> GetByIdAsync(int id)
         {
             return await _context.AcquisitionRequests
-                .FirstOrDefaultAsync(x => x.IdRequest == id && x.Active);
+                .FirstOrDefaultAsync(x => x.IdRequest == id);
         }
 
         public async Task UpdateAsync(AcquisitionRequest entity)
         {
-            _context.AcquisitionRequests.Update(entity);
-            await Task.CompletedTask;
+            await _context.SaveChangesAsync();
         }
 
         public async Task<AcquisitionRequestDetailDto?> GetDetailAsync(int idRequest)
@@ -122,5 +121,42 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Acquisition_Pe
                 })
                 .FirstOrDefaultAsync();
         }
+    
+
+
+    public async Task<(IEnumerable<AcquisitionRequestPolizaDto> Data, int TotalRecords)>
+            GetAllPolizaInfoPaginatedAsync(int pageNumber, int pageSize)
+        {
+            var query = _context.AcquisitionRequests
+                .AsNoTracking(); // 🔥 solo lectura = más rápido
+
+            var totalRecords = await query.CountAsync();
+
+            var data = await query
+                .OrderByDescending(r => r.CreatedAt) // opcional pero recomendable
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .Select(r => new AcquisitionRequestPolizaDto
+                {
+                    Folio = r.RequestNumber,
+                    IdRequest = r.IdRequest,
+                    AcquisitionClassification = r.AcquisitionClassification != null
+                        ? r.AcquisitionClassification.Description
+                        : "Sin clasificación",
+
+                    RequestDate = r.RequestDate,
+
+                    Status = r.ApplicationStatus != null
+                    ? r.ApplicationStatus.Description
+                    : "Sin estatus",
+
+                    PolicyNumber = null // aún no existe póliza
+                })
+                .ToListAsync();
+
+            return (data, totalRecords);
+        }
+
     }
-}
+
+    }

@@ -4,7 +4,7 @@ using SistemaDigitalizacionPolizas.Application.Services.RequestDocumentException
 
 namespace SistemaDigitalizacionPolizas.API.Controllers
 {
-   // [Authorize]
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class RequestDocumentExceptionController: ControllerBase
