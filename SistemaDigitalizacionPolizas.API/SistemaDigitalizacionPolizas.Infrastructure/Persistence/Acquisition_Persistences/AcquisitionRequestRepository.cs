@@ -30,13 +30,12 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Acquisition_Pe
         public async Task<AcquisitionRequest?> GetByIdAsync(int id)
         {
             return await _context.AcquisitionRequests
-                .FirstOrDefaultAsync(x => x.IdRequest == id && x.Active);
+                .FirstOrDefaultAsync(x => x.IdRequest == id);
         }
 
         public async Task UpdateAsync(AcquisitionRequest entity)
         {
-            _context.AcquisitionRequests.Update(entity);
-            await Task.CompletedTask;
+            await _context.SaveChangesAsync();
         }
 
         public async Task<AcquisitionRequestDetailDto?> GetDetailAsync(int idRequest)

@@ -272,6 +272,46 @@
             }
           }
         }
+      },
+      "put": {
+        "tags": [
+          "AcquisitionRequest"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateAcquisitionRequestDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateAcquisitionRequestDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateAcquisitionRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
       }
     },
     "/api/AcquisitionType": {
@@ -4533,6 +4573,83 @@
           },
           "active": {
             "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "UpdateAcquisitionRequestDto": {
+        "type": "object",
+        "properties": {
+          "idRequest": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "requestNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "requestDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "justification": {
+            "type": "string",
+            "nullable": true
+          },
+          "authorizationDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "observations": {
+            "type": "string",
+            "nullable": true
+          },
+          "idAdministrativeUnit": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "idProject": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "idAcquisitionType": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "idSupplier": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "idFundingSource": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "idAcquisitionClassification": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "idProgram": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "idCommunity": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "idBeneficiary": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
           }
         },
         "additionalProperties": false

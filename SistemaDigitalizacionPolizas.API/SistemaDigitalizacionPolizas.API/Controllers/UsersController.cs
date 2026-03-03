@@ -1,4 +1,5 @@
-﻿using SistemaDigitalizacionPolizas.Application.Services.User_Service.Feature.CRUD.Command.CreatedUser;
+﻿using Microsoft.AspNetCore.Authorization;
+using SistemaDigitalizacionPolizas.Application.Services.User_Service.Feature.CRUD.Command.CreatedUser;
 using SistemaDigitalizacionPolizas.Application.Services.User_Service.Feature.CRUD.Command.UpdateStatusUser;
 using SistemaDigitalizacionPolizas.Application.Services.User_Service.Feature.CRUD.Command.UpdateUserData;
 using SistemaDigitalizacionPolizas.Application.Services.User_Service.Feature.CRUD.Queries.GetAllUser;
@@ -6,6 +7,7 @@ using SistemaDigitalizacionPolizas.Domain.Dtos.User;
 
 namespace SistemaDigitalizacionPolizas.API.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/users")]
     public class UsersController : ControllerBase

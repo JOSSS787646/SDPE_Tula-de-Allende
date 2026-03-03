@@ -157,6 +157,27 @@
     ]
   },
   {
+    "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.AcquisitionRequestController",
+    "Method": "Update",
+    "RelativePath": "api/AcquisitionRequest/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "dto",
+        "Type": "SistemaDigitalizacionPolizas.Domain.Dtos.AcquisitionRequest.UpdateAcquisitionRequestDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.AcquisitionTypeController",
     "Method": "Create",
     "RelativePath": "api/AcquisitionType",

@@ -1,4 +1,5 @@
-﻿using SistemaDigitalizacionPolizas.Application.Services.AcqusitionRequest_Service.Queries.GetDocumentsChecklistByRequest;
+﻿using Microsoft.AspNetCore.Authorization;
+using SistemaDigitalizacionPolizas.Application.Services.AcqusitionRequest_Service.Queries.GetDocumentsChecklistByRequest;
 using SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Service.Command.CreateExpedientDocument;
 using SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Service.Command.CreateMassiveExpedientDocument;
 using SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Service.Command.UpdateExpedientDocument;
@@ -9,6 +10,7 @@ using SistemaDigitalizacionPolizas.Domain.Dtos.ExpedientDocument;
 
 namespace SistemaDigitalizacionPolizas.API.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class ExpedientDocumentController: ControllerBase
