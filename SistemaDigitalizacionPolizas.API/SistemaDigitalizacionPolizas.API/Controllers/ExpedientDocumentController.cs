@@ -22,22 +22,22 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
             _mediator = mediator;
         }
 
-        [HttpPost("upload")]
-        [Consumes("multipart/form-data")]
-        public async Task<IActionResult> UploadDocument(
-    [FromForm] CreateExpedientDocumentCommand command)
-        {
-            if (command.File == null || command.File.Length == 0)
-                return BadRequest("File is required.");
+    //    [HttpPost("upload")]
+    //    [Consumes("multipart/form-data")]
+    //    public async Task<IActionResult> UploadDocument(
+    //[FromForm] CreateExpedientDocumentCommand command)
+    //    {
+    //        if (command.File == null || command.File.Length == 0)
+    //            return BadRequest("File is required.");
 
-            var documentId = await _mediator.Send(command);
+    //        var documentId = await _mediator.Send(command);
 
-            return Ok(new
-            {
-                message = "Documento dubido crrectamente",
-                id = documentId
-            });
-        }
+    //        return Ok(new
+    //        {
+    //            message = "Documento dubido crrectamente",
+    //            id = documentId
+    //        });
+    //    }
 
 
         [HttpPost("upload-massive")]
