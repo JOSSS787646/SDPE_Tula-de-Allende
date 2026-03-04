@@ -13,7 +13,6 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
 
         public string? Observations { get; set; }
 
-        public int? IdDocumentStatus { get; set; }
 
         // 🔥 Opcional: solo si quiere reemplazar archivo
         public IFormFile? NewFile { get; set; }
