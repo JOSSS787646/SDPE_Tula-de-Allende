@@ -76,5 +76,16 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Services.Uploa
 
             return _s3Client.GetPreSignedURL(request);
         }
+
+        public async Task<GetObjectResponse> GetFileAsync(string filePath)
+        {
+            var request = new GetObjectRequest
+            {
+                BucketName = _bucketName,
+                Key = filePath
+            };
+
+            return await _s3Client.GetObjectAsync(request);
+        }
     }
 }

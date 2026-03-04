@@ -3,6 +3,7 @@ using SistemaDigitalizacionPolizas.Application.Services.AcqusitionRequest_Servic
 using SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Service.Command.CreateExpedientDocument;
 using SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Service.Command.CreateMassiveExpedientDocument;
 using SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Service.Command.UpdateExpedientDocument;
+using SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Service.Queries.DownloadDocument;
 using SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Service.Queries.GetExpedientDocumentsByClassification;
 using SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Service.Queries.GetRequiredDocumentsByRequest;
 using SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Service.Queries.SearchExpedientDocumentByName;
@@ -147,6 +148,13 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
                 success = result,
                 message = "Documento actualizado correctamente."
             });
+        }
+        [HttpGet("download/{expedientDocumentId}")]
+        public async Task<IActionResult> DownloadDocument(int expedientDocumentId)
+        {
+            var file = await _mediator.Send(new DownloadDocumentQuery(expedientDocumentId));
+
+            return File(file.FileStream, file.ContentType, file.FileName);
         }
 
     }
