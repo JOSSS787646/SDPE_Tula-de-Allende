@@ -15,7 +15,8 @@ namespace SistemaDigitalizacionPolizas.Domain.Dtos.ExpedientDocument
 
         public bool? Active { get; set; }
 
-        // Relaciones “aplanadas” para la API
+        public string? Observations { get; set; }
+
         public int? DocumentTypeId { get; set; }
         public string? DocumentTypeName { get; set; }
 

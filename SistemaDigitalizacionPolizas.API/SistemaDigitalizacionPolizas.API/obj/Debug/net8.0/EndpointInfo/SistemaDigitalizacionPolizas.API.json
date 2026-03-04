@@ -4217,6 +4217,10 @@
             "type": "boolean",
             "nullable": true
           },
+          "observations": {
+            "type": "string",
+            "nullable": true
+          },
           "documentTypeId": {
             "type": "integer",
             "format": "int32",
@@ -4232,6 +4236,10 @@
             "nullable": true
           },
           "documentStatusDescription": {
+            "type": "string",
+            "nullable": true
+          },
+          "previewUrl": {
             "type": "string",
             "nullable": true
           }
@@ -4419,11 +4427,19 @@
           "uploaded": {
             "type": "boolean"
           },
+          "observations": {
+            "type": "string",
+            "nullable": true
+          },
           "fileName": {
             "type": "string",
             "nullable": true
           },
           "fileUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "previewUrl": {
             "type": "string",
             "nullable": true
           }

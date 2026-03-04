@@ -15,5 +15,7 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Services.Uploa
             string folder);
 
         Task DeleteAsync(string filePath);
+
+        string GetPresignedUrl(string filePath, int minutes =60);
     }
 }

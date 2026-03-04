@@ -64,5 +64,17 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Services.Uploa
 
             await _s3Client.DeleteObjectAsync(request);
         }
+
+        public string GetPresignedUrl(string filePath, int minutes = 60)
+        {
+            var request = new GetPreSignedUrlRequest
+            {
+                BucketName = _bucketName,
+                Key = filePath,
+                Expires = DateTime.UtcNow.AddMinutes(minutes)
+            };
+
+            return _s3Client.GetPreSignedURL(request);
+        }
     }
 }

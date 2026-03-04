@@ -6,7 +6,7 @@ using SistemaDigitalizacionPolizas.Application.Services.CreateRequestManager_Ser
 namespace SistemaDigitalizacionPolizas.API.Controllers
 {
 
-   // [Authorize]
+   [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class RequestManagerController: ControllerBase
