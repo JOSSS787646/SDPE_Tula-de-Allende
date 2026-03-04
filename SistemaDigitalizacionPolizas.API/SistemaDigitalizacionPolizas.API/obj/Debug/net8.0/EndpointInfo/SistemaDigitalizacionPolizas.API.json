@@ -2289,10 +2289,6 @@
                   "Observations": {
                     "type": "string"
                   },
-                  "IdDocumentStatus": {
-                    "type": "integer",
-                    "format": "int32"
-                  },
                   "NewFile": {
                     "type": "string",
                     "format": "binary"
@@ -2304,9 +2300,6 @@
                   "style": "form"
                 },
                 "Observations": {
-                  "style": "form"
-                },
-                "IdDocumentStatus": {
                   "style": "form"
                 },
                 "NewFile": {

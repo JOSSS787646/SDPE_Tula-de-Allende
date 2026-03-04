@@ -1,11 +1,7 @@
-﻿using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Document;
+﻿using SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Service.Service;
+using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Document;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Services;
 using SistemaDigitalizacionPolizas.Infrastructure.Persistence.Services.UploatFile;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Service.Command.UpdateExpedientDocument
 {
@@ -14,21 +10,24 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
     {
         private readonly IDocumentExpedientRepository _repository;
         private readonly IFileStorageService _fileStorageService;
+        private readonly IRequestStatusService _requestStatusService;
         private readonly IUnitOfWorkService _unitOfWork;
 
         public UpdateExpedientDocumentCommandHandler(
             IDocumentExpedientRepository repository,
             IFileStorageService fileStorageService,
+            IRequestStatusService requestStatusService,
             IUnitOfWorkService unitOfWork)
         {
             _repository = repository;
             _fileStorageService = fileStorageService;
+            _requestStatusService = requestStatusService;
             _unitOfWork = unitOfWork;
         }
 
         public async Task<bool> Handle(
-            UpdateExpedientDocumentCommand request,
-            CancellationToken cancellationToken)
+    UpdateExpedientDocumentCommand request,
+    CancellationToken cancellationToken)
         {
             var entity = await _repository.GetByIdAsync(request.Id);
 
@@ -36,42 +35,61 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
                 throw new Exception("Documento no encontrado.");
 
             string? oldFilePath = entity.FilePath;
+            string? newFilePath = null;
 
-            // 🔥 Si viene nuevo archivo
-            if (request.NewFile != null)
+            await _unitOfWork.BeginTransactionAsync();
+
+            try
             {
-                await using var stream = request.NewFile.OpenReadStream();
+                // 🔥 Si viene nuevo archivo
+                if (request.NewFile != null)
+                {
+                    await using var stream = request.NewFile.OpenReadStream();
 
-                var newPath = await _fileStorageService.UploadAsync(
-                    stream,
-                    request.NewFile.FileName,
-                    request.NewFile.ContentType,
-                    "expedientes"
-                );
+                    newFilePath = await _fileStorageService.UploadAsync(
+                        stream,
+                        request.NewFile.FileName,
+                        request.NewFile.ContentType,
+                        "expedientes"
+                    );
 
-                entity.FileName = request.NewFile.FileName;
-                entity.FilePath = newPath;
-                entity.UploadDate = DateTime.UtcNow;
+                    entity.FileName = request.NewFile.FileName;
+                    entity.FilePath = newFilePath;
+                    entity.UploadDate = DateTime.UtcNow;
+
+                    // estado cargado automáticamente
+                    entity.IdDocumentStatus = 1;
+                }
+
+                // 🔥 actualizar observaciones
+                if (request.Observations != null)
+                    entity.Observations = request.Observations;
+
+                _repository.Update(entity);
+
+                // 🔥 recalcular estado de la solicitud
+                if (entity.RequestId.HasValue)
+                    await _requestStatusService.RecalculateStatus(entity.RequestId.Value);
+
+                // 🔥 commit único
+                await _unitOfWork.CommitAsync();
+
+                // 🔥 eliminar archivo viejo si todo salió bien
+                if (newFilePath != null && !string.IsNullOrEmpty(oldFilePath))
+                    await _fileStorageService.DeleteAsync(oldFilePath);
+
+                return true;
             }
-
-            // 🔥 Actualizar solo campos permitidos
-            if (request.Observations != null)
-                entity.Observations = request.Observations;
-
-            if (request.IdDocumentStatus.HasValue)
-                entity.IdDocumentStatus = request.IdDocumentStatus.Value;
-
-            _repository.Update(entity);
-
-            await _unitOfWork.CommitAsync();
-
-            // 🔥 Eliminar archivo viejo SOLO si todo salió bien
-            if (request.NewFile != null && !string.IsNullOrEmpty(oldFilePath))
+            catch
             {
-                await _fileStorageService.DeleteAsync(oldFilePath);
-            }
+                await _unitOfWork.RollbackAsync();
 
-            return true;
+                // si falló BD eliminar archivo nuevo
+                if (newFilePath != null)
+                    await _fileStorageService.DeleteAsync(newFilePath);
+
+                throw;
+            }
         }
     }
 }

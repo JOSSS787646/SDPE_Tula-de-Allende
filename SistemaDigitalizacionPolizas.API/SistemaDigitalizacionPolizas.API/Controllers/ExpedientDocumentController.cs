@@ -131,24 +131,38 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
 
         [HttpPut("update/{id}")]
         [Consumes("multipart/form-data")]
-        [RequestSizeLimit(524288000)] // 500MB
-        public async Task<IActionResult> Update(
-           int id,
-           [FromForm] UpdateExpedientDocumentCommand command)
+        [RequestSizeLimit(524288000)] // 500 MB
+        public async Task<IActionResult> UpdateDocument(
+      [FromRoute] int id,
+      [FromForm] UpdateExpedientDocumentCommand command)
         {
             if (id <= 0)
-                return BadRequest("Id inválido.");
+                return BadRequest(new
+                {
+                    success = false,
+                    message = "El id del documento es inválido."
+                });
 
+            // asegurar que el command use el id de la ruta
             command.Id = id;
 
             var result = await _mediator.Send(command);
 
+            if (!result)
+                return BadRequest(new
+                {
+                    success = false,
+                    message = "No se pudo actualizar el documento."
+                });
+
             return Ok(new
             {
-                success = result,
+                success = true,
                 message = "Documento actualizado correctamente."
             });
         }
+
+
         [HttpGet("download/{expedientDocumentId}")]
         public async Task<IActionResult> DownloadDocument(int expedientDocumentId)
         {
