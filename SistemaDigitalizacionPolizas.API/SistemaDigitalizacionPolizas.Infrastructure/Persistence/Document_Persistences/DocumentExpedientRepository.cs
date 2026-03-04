@@ -149,12 +149,21 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Document_Persi
                         .Select(x => x.FileName)
                         .FirstOrDefault(),
 
+
+
                     FileUrl = _context.ExpedientDocuments
                         .Where(x => x.RequestId == requestId
                                  && x.DocumentTypeId == td.IdDocumentType
                                  && x.Active == true)
                         .Select(x => x.FilePath)
-                        .FirstOrDefault()
+                        .FirstOrDefault(),
+
+                            Observations = _context.ExpedientDocuments
+                .Where(x => x.RequestId == requestId
+                         && x.DocumentTypeId == td.IdDocumentType
+                         && x.Active == true)
+                .Select(x => x.Observations)
+                .FirstOrDefault()
                 }
             ).ToListAsync();
 
