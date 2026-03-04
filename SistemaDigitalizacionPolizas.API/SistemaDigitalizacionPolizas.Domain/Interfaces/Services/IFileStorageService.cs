@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Amazon.S3.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,5 +18,6 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Services.Uploa
         Task DeleteAsync(string filePath);
 
         string GetPresignedUrl(string filePath, int minutes =60);
+        Task<GetObjectResponse> GetFileAsync(string filePath);
     }
 }

@@ -81,3 +81,4 @@ C:\Estadia Ingenieria\Febrero\Back\Sprint6O\SistemaDigitalizacionPolizas.API\Sis
 C:\Estadia Ingenieria\Febrero\Back\Sprint6O\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Domain\obj\Debug\net8.0\refint\SistemaDigitalizacionPolizas.Domain.dll
 C:\Estadia Ingenieria\Febrero\Back\Sprint6O\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Domain\obj\Debug\net8.0\SistemaDigitalizacionPolizas.Domain.pdb
 C:\Estadia Ingenieria\Febrero\Back\Sprint6O\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Domain\obj\Debug\net8.0\ref\SistemaDigitalizacionPolizas.Domain.dll
+C:\Estadia Ingenieria\Febrero\Back\Sprint6O\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Domain\obj\Debug\net8.0\SistemaDigitalizacionPolizas.Domain.csproj.AssemblyReference.cache

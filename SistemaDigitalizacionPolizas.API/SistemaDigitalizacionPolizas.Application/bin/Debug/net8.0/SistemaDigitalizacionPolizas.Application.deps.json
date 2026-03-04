@@ -32,6 +32,25 @@
           }
         }
       },
+      "AWSSDK.Core/4.0.3.8": {
+        "runtime": {
+          "lib/net8.0/AWSSDK.Core.dll": {
+            "assemblyVersion": "4.0.0.0",
+            "fileVersion": "4.0.3.8"
+          }
+        }
+      },
+      "AWSSDK.S3/4.0.17": {
+        "dependencies": {
+          "AWSSDK.Core": "4.0.3.8"
+        },
+        "runtime": {
+          "lib/net8.0/AWSSDK.S3.dll": {
+            "assemblyVersion": "4.0.0.0",
+            "fileVersion": "4.0.17.0"
+          }
+        }
+      },
       "BCrypt.Net-Next/3.2.0": {
         "runtime": {
           "lib/netstandard2.1/BCrypt.Net-Next.dll": {
@@ -111,6 +130,9 @@
       "System.Reflection.Emit/4.7.0": {},
       "System.Text.Encodings.Web/8.0.0": {},
       "SistemaDigitalizacionPolizas.Domain/1.0.0": {
+        "dependencies": {
+          "AWSSDK.S3": "4.0.17"
+        },
         "runtime": {
           "SistemaDigitalizacionPolizas.Domain.dll": {
             "assemblyVersion": "1.0.0.0",
@@ -132,6 +154,20 @@
       "sha512": "sha512-T09NoqMZBqw0/JEauXulxnmmerl0Zj03e0r6VCcJ0LURWBIaYxZPPoiDv8bHf5Y4x2xcXJp4JPXoCaeOMJfHEA==",
       "path": "automapper/10.0.0",
       "hashPath": "automapper.10.0.0.nupkg.sha512"
+    },
+    "AWSSDK.Core/4.0.3.8": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-nJyNzaz3pcD8c8hZvtJXuziJm1dkd3/BYmZvhf1TPNfMo3G3lsesGFZl1UVyQhGEfmQOS+efT0H8tf00PMmjug==",
+      "path": "awssdk.core/4.0.3.8",
+      "hashPath": "awssdk.core.4.0.3.8.nupkg.sha512"
+    },
+    "AWSSDK.S3/4.0.17": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-bW61dnzr1nRUWiuswge2Nq7mMmJXODrvokt1VaqqKfy9QRKBiC9qt4ogh3HV6crQRikP5mdncIWymRSxihK2Mw==",
+      "path": "awssdk.s3/4.0.17",
+      "hashPath": "awssdk.s3.4.0.17.nupkg.sha512"
     },
     "BCrypt.Net-Next/3.2.0": {
       "type": "package",

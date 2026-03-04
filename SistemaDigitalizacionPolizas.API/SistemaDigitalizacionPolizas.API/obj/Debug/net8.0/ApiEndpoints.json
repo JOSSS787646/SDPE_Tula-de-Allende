@@ -1219,6 +1219,22 @@
   },
   {
     "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.ExpedientDocumentController",
+    "Method": "DownloadDocument",
+    "RelativePath": "api/ExpedientDocument/download/{expedientDocumentId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "expedientDocumentId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.ExpedientDocumentController",
     "Method": "Search",
     "RelativePath": "api/ExpedientDocument/search",
     "HttpMethod": "GET",
