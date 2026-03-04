@@ -3,6 +3,7 @@ using SistemaDigitalizacionPolizas.Domain.Entities.Areas_Entities;
 using SistemaDigitalizacionPolizas.Domain.Entities.Community_Entities;
 using SistemaDigitalizacionPolizas.Domain.Entities.Document_Entities;
 using SistemaDigitalizacionPolizas.Domain.Entities.RequestingAdministration_Entities;
+using SistemaDigitalizacionPolizas.Domain.Entities.RequestManager_Entities;
 using SistemaDigitalizacionPolizas.Domain.Entities.Supplier_Entities;
 using System;
 using System.Collections.Generic;
@@ -61,8 +62,11 @@ namespace SistemaDigitalizacionPolizas.Domain.Entities.AcquisitionRequest_Entiti
         public ICollection<RequestDocumentException> DocumentExceptions { get; set; }
     = new List<RequestDocumentException>();
 
+        public ICollection<RequestManager> RequestManagers { get; set; }
+    = new List<RequestManager>();
+
         // 🔥 Historial (cuando lo actives)
-       // public ICollection<ApplicationStatus> RequestStates { get; set; } = new List<RequestState>();
+        // public ICollection<ApplicationStatus> RequestStates { get; set; } = new List<RequestState>();
 
         // ===============================
         // Auditoría

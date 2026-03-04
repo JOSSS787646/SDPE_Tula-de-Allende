@@ -4,13 +4,14 @@ using SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Servic
 using SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Service.Command.CreateMassiveExpedientDocument;
 using SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Service.Command.UpdateExpedientDocument;
 using SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Service.Queries.GetExpedientDocumentsByClassification;
+using SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Service.Queries.GetRequiredDocumentsByRequest;
 using SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Service.Queries.SearchExpedientDocumentByName;
 using SistemaDigitalizacionPolizas.Domain.Dtos.AcquisitionRequest;
 using SistemaDigitalizacionPolizas.Domain.Dtos.ExpedientDocument;
 
 namespace SistemaDigitalizacionPolizas.API.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class ExpedientDocumentController: ControllerBase
@@ -117,6 +118,15 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
             return Ok(result);
         }
 
+        [HttpGet("classification/{classificationId}")]
+        public async Task<IActionResult> GetDocumentsByClassification(int classificationId)
+        {
+            var result = await _mediator.Send(
+                new GetDocumentsByAcquisitionClassificationQuery(classificationId)
+            );
+
+            return Ok(result);
+        }
 
         [HttpPut("update/{id}")]
         [Consumes("multipart/form-data")]
