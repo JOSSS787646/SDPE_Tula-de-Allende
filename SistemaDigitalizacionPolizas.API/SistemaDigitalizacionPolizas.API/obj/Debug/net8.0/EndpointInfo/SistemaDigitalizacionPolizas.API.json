@@ -2032,65 +2032,6 @@
         }
       }
     },
-    "/api/ExpedientDocument/upload": {
-      "post": {
-        "tags": [
-          "ExpedientDocument"
-        ],
-        "requestBody": {
-          "content": {
-            "multipart/form-data": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "RequestId": {
-                    "type": "integer",
-                    "format": "int32"
-                  },
-                  "DocumentTypeId": {
-                    "type": "integer",
-                    "format": "int32"
-                  },
-                  "IdDocumentStatus": {
-                    "type": "integer",
-                    "format": "int32"
-                  },
-                  "File": {
-                    "type": "string",
-                    "format": "binary"
-                  },
-                  "Observations": {
-                    "type": "string"
-                  }
-                }
-              },
-              "encoding": {
-                "RequestId": {
-                  "style": "form"
-                },
-                "DocumentTypeId": {
-                  "style": "form"
-                },
-                "IdDocumentStatus": {
-                  "style": "form"
-                },
-                "File": {
-                  "style": "form"
-                },
-                "Observations": {
-                  "style": "form"
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
     "/api/ExpedientDocument/upload-massive": {
       "post": {
         "tags": [
@@ -2292,6 +2233,29 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/api/ExpedientDocument/classification/{classificationId}": {
+      "get": {
+        "tags": [
+          "ExpedientDocument"
+        ],
+        "parameters": [
+          {
+            "name": "classificationId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
           }
         }
       }
@@ -2988,6 +2952,76 @@
             "application/*+json": {
               "schema": {
                 "$ref": "#/components/schemas/UpsertRequestDocumentExceptionCommand"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/RequestManager": {
+      "post": {
+        "tags": [
+          "RequestManager"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRequestManagerCommand"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRequestManagerCommand"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRequestManagerCommand"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "RequestManager"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "RequestManager"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateRequestManagerCommand"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateRequestManagerCommand"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateRequestManagerCommand"
               }
             }
           }
@@ -4044,6 +4078,40 @@
         },
         "additionalProperties": false
       },
+      "CreateRequestManagerCommand": {
+        "type": "object",
+        "properties": {
+          "idRequest": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idAdministrativeUnit": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "firstName": {
+            "type": "string",
+            "nullable": true
+          },
+          "lastName": {
+            "type": "string",
+            "nullable": true
+          },
+          "secondLastName": {
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "phone": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "CreateRoleCommand": {
         "type": "object",
         "properties": {
@@ -4812,6 +4880,41 @@
           },
           "active": {
             "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "UpdateRequestManagerCommand": {
+        "type": "object",
+        "properties": {
+          "idRequestManager": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idAdministrativeUnit": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "firstName": {
+            "type": "string",
+            "nullable": true
+          },
+          "lastName": {
+            "type": "string",
+            "nullable": true
+          },
+          "secondLastName": {
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "phone": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false

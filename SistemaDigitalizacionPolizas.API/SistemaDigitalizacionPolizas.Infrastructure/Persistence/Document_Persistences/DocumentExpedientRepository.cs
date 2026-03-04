@@ -160,5 +160,23 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Document_Persi
 
             return result;
         }
+        public async Task<IEnumerable<ExpedientDocumentPreviewDto>> GetDocumentsByClassificationAsync(int classificationId)
+        {
+            return await (
+                from tcd in _context.ClasificationDocumentTypes
+
+                join td in _context.Documents
+                    on tcd.DocumentTypeId equals td.IdDocumentType
+
+                where tcd.ClassificationAcquisitionId == classificationId
+
+                select new ExpedientDocumentPreviewDto
+                {
+                    IdDocument = td.IdDocumentType,
+                    DocumentName = td.DocumentName
+                }
+
+            ).Distinct().ToListAsync();
+        }
     }
 }

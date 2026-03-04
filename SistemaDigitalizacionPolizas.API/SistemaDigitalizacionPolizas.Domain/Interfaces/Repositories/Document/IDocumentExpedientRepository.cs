@@ -32,7 +32,9 @@ namespace SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Document
 
 
         Task<List<ExpedientDocument>> GetActiveByRequestId(int requestId);
-      
+
+        Task<IEnumerable<ExpedientDocumentPreviewDto>> GetDocumentsByClassificationAsync(int classificationId);
+
 
     }
 }
