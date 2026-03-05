@@ -7,7 +7,7 @@ using SistemaDigitalizacionPolizas.Domain.Dtos.AcquisitionRequest;
 
 namespace SistemaDigitalizacionPolizas.API.Controllers
 {
-    [Authorize]
+   // [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class AcquisitionRequestController : ControllerBase
@@ -23,12 +23,16 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
         // CREATE REQUEST
         // ==========================================
         [HttpPost]
-        public async Task<IActionResult> Create(
-            [FromBody] CreateAcquisitionRequestDto dto)
+        public async Task<IActionResult> Create([FromBody] CreateAcquisitionRequestDto dto)
         {
-            await _mediator.Send(new CreateRequestCommand(dto));
+            var idRequest = await _mediator.Send(new CreateRequestCommand(dto));
 
-            return Ok();
+            return Ok(new
+            {
+                success = true,
+                idRequest = idRequest,
+                message = "Solicitud creada correctamente."
+            });
         }
 
         [HttpGet]

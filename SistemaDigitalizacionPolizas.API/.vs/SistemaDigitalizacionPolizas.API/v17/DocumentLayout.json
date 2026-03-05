@@ -3,12 +3,32 @@
   "WorkspaceRootPath": "C:\\Estadia Ingenieria\\Febrero\\Back\\Sprint6O\\SistemaDigitalizacionPolizas.API\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{EA0C61D2-016C-466D-9240-735CAC9753F7}|SistemaDigitalizacionPolizas.Application\\SistemaDigitalizacionPolizas.Application.csproj|c:\\estadia ingenieria\\febrero\\back\\sprint6o\\sistemadigitalizacionpolizas.api\\sistemadigitalizacionpolizas.application\\services\\expedientdocument_service\\command\\updateexpedientdocument\\updateexpedientdocumentcommand.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EA0C61D2-016C-466D-9240-735CAC9753F7}|SistemaDigitalizacionPolizas.Application\\SistemaDigitalizacionPolizas.Application.csproj|solutionrelative:sistemadigitalizacionpolizas.application\\services\\expedientdocument_service\\command\\updateexpedientdocument\\updateexpedientdocumentcommand.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{106E20C3-F20D-41C9-8C22-9151FB2CA0CE}|SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.API.csproj|c:\\estadia ingenieria\\febrero\\back\\sprint6o\\sistemadigitalizacionpolizas.api\\sistemadigitalizacionpolizas.api\\middleware\\exceptionmiddleware.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{106E20C3-F20D-41C9-8C22-9151FB2CA0CE}|SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.API.csproj|solutionrelative:sistemadigitalizacionpolizas.api\\middleware\\exceptionmiddleware.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{106E20C3-F20D-41C9-8C22-9151FB2CA0CE}|SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.API.csproj|c:\\estadia ingenieria\\febrero\\back\\sprint6o\\sistemadigitalizacionpolizas.api\\sistemadigitalizacionpolizas.api\\controllers\\acquisitionrequestcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{106E20C3-F20D-41C9-8C22-9151FB2CA0CE}|SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.API.csproj|solutionrelative:sistemadigitalizacionpolizas.api\\controllers\\acquisitionrequestcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EA0C61D2-016C-466D-9240-735CAC9753F7}|SistemaDigitalizacionPolizas.Application\\SistemaDigitalizacionPolizas.Application.csproj|c:\\estadia ingenieria\\febrero\\back\\sprint6o\\sistemadigitalizacionpolizas.api\\sistemadigitalizacionpolizas.application\\services\\acqusitionrequest_service\\commands\\createrequest\\createrequestcommandhandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EA0C61D2-016C-466D-9240-735CAC9753F7}|SistemaDigitalizacionPolizas.Application\\SistemaDigitalizacionPolizas.Application.csproj|solutionrelative:sistemadigitalizacionpolizas.application\\services\\acqusitionrequest_service\\commands\\createrequest\\createrequestcommandhandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EA0C61D2-016C-466D-9240-735CAC9753F7}|SistemaDigitalizacionPolizas.Application\\SistemaDigitalizacionPolizas.Application.csproj|c:\\estadia ingenieria\\febrero\\back\\sprint6o\\sistemadigitalizacionpolizas.api\\sistemadigitalizacionpolizas.application\\services\\acqusitionrequest_service\\commands\\createrequest\\createrequestcommand.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EA0C61D2-016C-466D-9240-735CAC9753F7}|SistemaDigitalizacionPolizas.Application\\SistemaDigitalizacionPolizas.Application.csproj|solutionrelative:sistemadigitalizacionpolizas.application\\services\\acqusitionrequest_service\\commands\\createrequest\\createrequestcommand.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{106E20C3-F20D-41C9-8C22-9151FB2CA0CE}|SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.API.csproj|c:\\estadia ingenieria\\febrero\\back\\sprint6o\\sistemadigitalizacionpolizas.api\\sistemadigitalizacionpolizas.api\\controllers\\administrativeunitcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{106E20C3-F20D-41C9-8C22-9151FB2CA0CE}|SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.API.csproj|solutionrelative:sistemadigitalizacionpolizas.api\\controllers\\administrativeunitcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{106E20C3-F20D-41C9-8C22-9151FB2CA0CE}|SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.API.csproj|c:\\estadia ingenieria\\febrero\\back\\sprint6o\\sistemadigitalizacionpolizas.api\\sistemadigitalizacionpolizas.api\\controllers\\expedientdocumentcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{106E20C3-F20D-41C9-8C22-9151FB2CA0CE}|SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.API.csproj|solutionrelative:sistemadigitalizacionpolizas.api\\controllers\\expedientdocumentcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EA0C61D2-016C-466D-9240-735CAC9753F7}|SistemaDigitalizacionPolizas.Application\\SistemaDigitalizacionPolizas.Application.csproj|c:\\estadia ingenieria\\febrero\\back\\sprint6o\\sistemadigitalizacionpolizas.api\\sistemadigitalizacionpolizas.application\\services\\expedientdocument_service\\command\\updateexpedientdocument\\updateexpedientdocumentcommand.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EA0C61D2-016C-466D-9240-735CAC9753F7}|SistemaDigitalizacionPolizas.Application\\SistemaDigitalizacionPolizas.Application.csproj|solutionrelative:sistemadigitalizacionpolizas.application\\services\\expedientdocument_service\\command\\updateexpedientdocument\\updateexpedientdocumentcommand.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{EA0C61D2-016C-466D-9240-735CAC9753F7}|SistemaDigitalizacionPolizas.Application\\SistemaDigitalizacionPolizas.Application.csproj|c:\\estadia ingenieria\\febrero\\back\\sprint6o\\sistemadigitalizacionpolizas.api\\sistemadigitalizacionpolizas.application\\services\\expedientdocument_service\\command\\updateexpedientdocument\\updateexpedientdocumentcommandhandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -34,11 +54,76 @@
       "DocumentGroups": [
         {
           "DockedHeight": 200,
-          "SelectedChildIndex": 5,
+          "SelectedChildIndex": 0,
           "Children": [
             {
               "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "ExceptionMiddleware.cs",
+              "DocumentMoniker": "C:\\Estadia Ingenieria\\Febrero\\Back\\Sprint6O\\SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.API\\Middleware\\ExceptionMiddleware.cs",
+              "RelativeDocumentMoniker": "SistemaDigitalizacionPolizas.API\\Middleware\\ExceptionMiddleware.cs",
+              "ToolTip": "C:\\Estadia Ingenieria\\Febrero\\Back\\Sprint6O\\SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.API\\Middleware\\ExceptionMiddleware.cs",
+              "RelativeToolTip": "SistemaDigitalizacionPolizas.API\\Middleware\\ExceptionMiddleware.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACEAAAARAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-05T01:15:16.742Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "CreateRequestCommandHandler.cs",
+              "DocumentMoniker": "C:\\Estadia Ingenieria\\Febrero\\Back\\Sprint6O\\SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.Application\\Services\\AcqusitionRequest_Service\\Commands\\CreateRequest\\CreateRequestCommandHandler.cs",
+              "RelativeDocumentMoniker": "SistemaDigitalizacionPolizas.Application\\Services\\AcqusitionRequest_Service\\Commands\\CreateRequest\\CreateRequestCommandHandler.cs",
+              "ToolTip": "C:\\Estadia Ingenieria\\Febrero\\Back\\Sprint6O\\SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.Application\\Services\\AcqusitionRequest_Service\\Commands\\CreateRequest\\CreateRequestCommandHandler.cs",
+              "RelativeToolTip": "SistemaDigitalizacionPolizas.Application\\Services\\AcqusitionRequest_Service\\Commands\\CreateRequest\\CreateRequestCommandHandler.cs",
+              "ViewState": "AgIAADkAAAAAAAAAAAAYwE8AAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-04T21:56:17.749Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 3,
+              "Title": "CreateRequestCommand.cs",
+              "DocumentMoniker": "C:\\Estadia Ingenieria\\Febrero\\Back\\Sprint6O\\SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.Application\\Services\\AcqusitionRequest_Service\\Commands\\CreateRequest\\CreateRequestCommand.cs",
+              "RelativeDocumentMoniker": "SistemaDigitalizacionPolizas.Application\\Services\\AcqusitionRequest_Service\\Commands\\CreateRequest\\CreateRequestCommand.cs",
+              "ToolTip": "C:\\Estadia Ingenieria\\Febrero\\Back\\Sprint6O\\SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.Application\\Services\\AcqusitionRequest_Service\\Commands\\CreateRequest\\CreateRequestCommand.cs",
+              "RelativeToolTip": "SistemaDigitalizacionPolizas.Application\\Services\\AcqusitionRequest_Service\\Commands\\CreateRequest\\CreateRequestCommand.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-04T21:56:09.781Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "AcquisitionRequestController.cs",
+              "DocumentMoniker": "C:\\Estadia Ingenieria\\Febrero\\Back\\Sprint6O\\SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.API\\Controllers\\AcquisitionRequestController.cs",
+              "RelativeDocumentMoniker": "SistemaDigitalizacionPolizas.API\\Controllers\\AcquisitionRequestController.cs",
+              "ToolTip": "C:\\Estadia Ingenieria\\Febrero\\Back\\Sprint6O\\SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.API\\Controllers\\AcquisitionRequestController.cs",
+              "RelativeToolTip": "SistemaDigitalizacionPolizas.API\\Controllers\\AcquisitionRequestController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-04T21:55:17.843Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "AdministrativeUnitController.cs",
+              "DocumentMoniker": "C:\\Estadia Ingenieria\\Febrero\\Back\\Sprint6O\\SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.API\\Controllers\\AdministrativeUnitController.cs",
+              "RelativeDocumentMoniker": "SistemaDigitalizacionPolizas.API\\Controllers\\AdministrativeUnitController.cs",
+              "ToolTip": "C:\\Estadia Ingenieria\\Febrero\\Back\\Sprint6O\\SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.API\\Controllers\\AdministrativeUnitController.cs",
+              "RelativeToolTip": "SistemaDigitalizacionPolizas.API\\Controllers\\AdministrativeUnitController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-04T21:55:13.906Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
               "Title": "CreateMassiveExpedientDocumentCommandHandler.cs",
               "DocumentMoniker": "C:\\Estadia Ingenieria\\Febrero\\Back\\Sprint6O\\SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.Application\\Services\\ExpedientDocument_Service\\Command\\CreateMassiveExpedientDocument\\CreateMassiveExpedientDocumentCommandHandler.cs",
               "RelativeDocumentMoniker": "SistemaDigitalizacionPolizas.Application\\Services\\ExpedientDocument_Service\\Command\\CreateMassiveExpedientDocument\\CreateMassiveExpedientDocumentCommandHandler.cs",
@@ -46,25 +131,24 @@
               "RelativeToolTip": "SistemaDigitalizacionPolizas.Application\\Services\\ExpedientDocument_Service\\Command\\CreateMassiveExpedientDocument\\CreateMassiveExpedientDocumentCommandHandler.cs",
               "ViewState": "AgIAAB4AAAAAAAAAAAAkwCcAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-04T20:23:24.901Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-04T20:23:24.901Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 5,
               "Title": "ExpedientDocumentController.cs",
               "DocumentMoniker": "C:\\Estadia Ingenieria\\Febrero\\Back\\Sprint6O\\SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.API\\Controllers\\ExpedientDocumentController.cs",
               "RelativeDocumentMoniker": "SistemaDigitalizacionPolizas.API\\Controllers\\ExpedientDocumentController.cs",
               "ToolTip": "C:\\Estadia Ingenieria\\Febrero\\Back\\Sprint6O\\SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.API\\Controllers\\ExpedientDocumentController.cs",
               "RelativeToolTip": "SistemaDigitalizacionPolizas.API\\Controllers\\ExpedientDocumentController.cs",
-              "ViewState": "AgIAAHQAAAAAAAAAAAAgwJgAAAARAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAJgAAAARAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-03-04T20:15:04.783Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 9,
               "Title": "RequestDocumentExceptionController.cs",
               "DocumentMoniker": "C:\\Estadia Ingenieria\\Febrero\\Back\\Sprint6O\\SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.API\\Controllers\\RequestDocumentExceptionController.cs",
               "RelativeDocumentMoniker": "SistemaDigitalizacionPolizas.API\\Controllers\\RequestDocumentExceptionController.cs",
@@ -72,12 +156,11 @@
               "RelativeToolTip": "SistemaDigitalizacionPolizas.API\\Controllers\\RequestDocumentExceptionController.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-04T20:15:01.384Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-04T20:15:01.384Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 10,
               "Title": "RequestStatusService.cs",
               "DocumentMoniker": "C:\\Estadia Ingenieria\\Febrero\\Back\\Sprint6O\\SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.Application\\Services\\ExpedientDocument_Service\\Service\\RequestStatusService.cs",
               "RelativeDocumentMoniker": "SistemaDigitalizacionPolizas.Application\\Services\\ExpedientDocument_Service\\Service\\RequestStatusService.cs",
@@ -85,12 +168,11 @@
               "RelativeToolTip": "SistemaDigitalizacionPolizas.Application\\Services\\ExpedientDocument_Service\\Service\\RequestStatusService.cs",
               "ViewState": "AgIAADEAAAAAAAAAAAAwwFgAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-04T20:12:03.475Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-04T20:12:03.475Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 7,
               "Title": "UpdateExpedientDocumentCommandHandler.cs",
               "DocumentMoniker": "C:\\Estadia Ingenieria\\Febrero\\Back\\Sprint6O\\SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.Application\\Services\\ExpedientDocument_Service\\Command\\UpdateExpedientDocument\\UpdateExpedientDocumentCommandHandler.cs",
               "RelativeDocumentMoniker": "SistemaDigitalizacionPolizas.Application\\Services\\ExpedientDocument_Service\\Command\\UpdateExpedientDocument\\UpdateExpedientDocumentCommandHandler.cs",
@@ -98,18 +180,17 @@
               "RelativeToolTip": "SistemaDigitalizacionPolizas.Application\\Services\\ExpedientDocument_Service\\Command\\UpdateExpedientDocument\\UpdateExpedientDocumentCommandHandler.cs",
               "ViewState": "AgIAAF4AAAAAAAAAAAAAAFUAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-04T20:11:48.518Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-04T20:11:48.518Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 6,
               "Title": "UpdateExpedientDocumentCommand.cs",
               "DocumentMoniker": "C:\\Estadia Ingenieria\\Febrero\\Back\\Sprint6O\\SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.Application\\Services\\ExpedientDocument_Service\\Command\\UpdateExpedientDocument\\UpdateExpedientDocumentCommand.cs",
               "RelativeDocumentMoniker": "SistemaDigitalizacionPolizas.Application\\Services\\ExpedientDocument_Service\\Command\\UpdateExpedientDocument\\UpdateExpedientDocumentCommand.cs",
               "ToolTip": "C:\\Estadia Ingenieria\\Febrero\\Back\\Sprint6O\\SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.Application\\Services\\ExpedientDocument_Service\\Command\\UpdateExpedientDocument\\UpdateExpedientDocumentCommand.cs",
               "RelativeToolTip": "SistemaDigitalizacionPolizas.Application\\Services\\ExpedientDocument_Service\\Command\\UpdateExpedientDocument\\UpdateExpedientDocumentCommand.cs",
-              "ViewState": "AgIAAAYAAAAAAAAAAAAAABQAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-03-04T20:11:03.714Z",
               "EditorCaption": ""
