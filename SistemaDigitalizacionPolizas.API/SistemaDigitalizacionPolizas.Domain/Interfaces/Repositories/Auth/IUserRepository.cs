@@ -22,5 +22,6 @@ namespace SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Auth
 
         //Actualiza los datos del usuario
         Task<bool> UpdateUserDataAsync(int idUser, string email, int idRole, int idAdministrativeUnit);
+       
     }
 }

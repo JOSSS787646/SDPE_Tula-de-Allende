@@ -19,5 +19,6 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Services.Uploa
 
         string GetPresignedUrl(string filePath, int minutes =60);
         Task<GetObjectResponse> GetFileAsync(string filePath);
+        Task DeleteFileAsync(string filePath);
     }
 }

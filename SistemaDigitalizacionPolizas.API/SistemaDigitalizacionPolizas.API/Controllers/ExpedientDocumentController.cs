@@ -12,7 +12,7 @@ using SistemaDigitalizacionPolizas.Domain.Dtos.ExpedientDocument;
 
 namespace SistemaDigitalizacionPolizas.API.Controllers
 {
-    //[Authorize]
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class ExpedientDocumentController: ControllerBase

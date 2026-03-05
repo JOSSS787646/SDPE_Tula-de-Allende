@@ -20,5 +20,6 @@ namespace SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Acquisitio
             GetAllPolizaInfoPaginatedAsync(int pageNumber, int pageSize);
 
         Task UpdateAsync(AcquisitionRequest entity);
+        Task DeleteCascadeAsync(int solicitudId);
     }
 }
