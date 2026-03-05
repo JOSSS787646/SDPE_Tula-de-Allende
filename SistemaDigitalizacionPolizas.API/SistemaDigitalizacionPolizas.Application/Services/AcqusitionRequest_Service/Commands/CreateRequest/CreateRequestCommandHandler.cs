@@ -10,15 +10,18 @@ public class CreateRequestCommandHandler
     private readonly IAcquisitionRequest _repository;
     private readonly IApplicationStatusRepository _statusRepository;
     private readonly ICurrentUserService _currentUser;
+    private readonly IUnitOfWorkService _unitOfWork;
 
     public CreateRequestCommandHandler(
         IAcquisitionRequest repository,
         IApplicationStatusRepository statusRepository,
-        ICurrentUserService currentUser)
+        ICurrentUserService currentUser,
+        IUnitOfWorkService unitOfWork)
     {
         _repository = repository;
         _statusRepository = statusRepository;
         _currentUser = currentUser;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<int> Handle(
@@ -27,7 +30,7 @@ public class CreateRequestCommandHandler
     {
         var dto = request.Dto;
 
-        // 🔥 Estado inicial automático (Borrador = clave 1000)
+        // 🔥 Estado inicial automático (Borrador)
         var borradorStatus = await _statusRepository.GetByCodeAsync(1);
 
         if (borradorStatus == null)
@@ -53,7 +56,7 @@ public class CreateRequestCommandHandler
             IdProject = dto.IdProject,
             IdAcquisitionType = dto.IdAcquisitionType,
             IdSupplier = dto.IdSupplier,
-            IdApplicationStatus = borradorStatus.IdApplicationStatus, // 🔥 AUTOMÁTICO
+            IdApplicationStatus = borradorStatus.IdApplicationStatus,
             IdFundingSource = dto.IdFundingSource,
             IdAcquisitionClassification = dto.IdAcquisitionClassification,
             IdProgram = dto.IdProgram,
@@ -65,12 +68,14 @@ public class CreateRequestCommandHandler
             // ===============================
 
             CreatedBy = _currentUser.UserId,
-            CreatedAt = DateTime.Now,
+            CreatedAt = DateTime.UtcNow,
             Active = true
         };
 
-        var result = await _repository.AddAsync(entity);
+        await _repository.AddAsync(entity);
 
-        return result!.IdRequest;
+       
+
+        return entity.IdRequest;
     }
 }
