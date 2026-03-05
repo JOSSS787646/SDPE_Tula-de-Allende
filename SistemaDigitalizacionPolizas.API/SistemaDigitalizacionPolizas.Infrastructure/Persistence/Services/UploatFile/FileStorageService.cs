@@ -87,5 +87,15 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Services.Uploa
 
             return await _s3Client.GetObjectAsync(request);
         }
+
+        public async Task DeleteFileAsync(string filePath)
+        {
+            if (File.Exists(filePath))
+            {
+                File.Delete(filePath);
+            }
+
+            await Task.CompletedTask;
+        }
     }
 }

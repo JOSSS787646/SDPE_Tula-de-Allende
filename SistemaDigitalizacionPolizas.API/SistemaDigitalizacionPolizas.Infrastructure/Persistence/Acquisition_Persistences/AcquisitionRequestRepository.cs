@@ -121,11 +121,11 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Acquisition_Pe
                 })
                 .FirstOrDefaultAsync();
         }
-    
 
 
-    public async Task<(IEnumerable<AcquisitionRequestPolizaDto> Data, int TotalRecords)>
-            GetAllPolizaInfoPaginatedAsync(int pageNumber, int pageSize)
+
+        public async Task<(IEnumerable<AcquisitionRequestPolizaDto> Data, int TotalRecords)>
+                GetAllPolizaInfoPaginatedAsync(int pageNumber, int pageSize)
         {
             var query = _context.AcquisitionRequests
                 .AsNoTracking(); // 🔥 solo lectura = más rápido
@@ -157,6 +157,37 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Acquisition_Pe
             return (data, totalRecords);
         }
 
-    }
+
+        public async Task DeleteCascadeAsync(int solicitudId)
+        {
+            await using var transaction = await _context.Database.BeginTransactionAsync();
+
+            try
+            {
+                await _context.ExpedientDocuments
+                    .Where(x => x.RequestId == solicitudId)
+                    .ExecuteDeleteAsync();
+
+                await _context.RequestManagers
+                    .Where(x => x.IdRequest == solicitudId)
+                    .ExecuteDeleteAsync();
+
+                await _context.RequestDocumentExceptions
+                    .Where(x => x.IdRequest == solicitudId)
+                    .ExecuteDeleteAsync();
+
+                await _context.AcquisitionRequests
+                    .Where(x => x.IdRequest == solicitudId)
+                    .ExecuteDeleteAsync();
+
+                await transaction.CommitAsync();
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+                throw;
+            }
+        }
 
     }
+}
