@@ -1683,6 +1683,22 @@
   },
   {
     "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.RequestDocumentExceptionController",
+    "Method": "ToggleExceptions",
+    "RelativePath": "api/RequestDocumentException/toggle",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "command",
+        "Type": "SistemaDigitalizacionPolizas.Application.Services.RequestDocumentException_Service.Commands.SaveRequestDocumentExceptions.ToggleRequestDocumentExceptionMassCommand",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.RequestDocumentExceptionController",
     "Method": "Upsert",
     "RelativePath": "api/RequestDocumentException/upsert",
     "HttpMethod": "POST",
