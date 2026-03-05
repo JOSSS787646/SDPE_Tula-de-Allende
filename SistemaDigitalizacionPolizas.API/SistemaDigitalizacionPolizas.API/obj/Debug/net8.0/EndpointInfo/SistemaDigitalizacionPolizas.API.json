@@ -3007,6 +3007,37 @@
         }
       }
     },
+    "/api/RequestDocumentException/toggle": {
+      "post": {
+        "tags": [
+          "RequestDocumentException"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ToggleRequestDocumentExceptionMassCommand"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ToggleRequestDocumentExceptionMassCommand"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ToggleRequestDocumentExceptionMassCommand"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/RequestManager": {
       "post": {
         "tags": [
@@ -4486,6 +4517,23 @@
         },
         "additionalProperties": false
       },
+      "RequestDocumentExceptionItem": {
+        "type": "object",
+        "properties": {
+          "idDocumentType": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "doesNotApply": {
+            "type": "boolean"
+          },
+          "justification": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "RequestPasswordResetCommand": {
         "type": "object",
         "properties": {
@@ -4597,6 +4645,23 @@
           },
           "active": {
             "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ToggleRequestDocumentExceptionMassCommand": {
+        "type": "object",
+        "properties": {
+          "idRequest": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "documents": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RequestDocumentExceptionItem"
+            },
+            "nullable": true
           }
         },
         "additionalProperties": false

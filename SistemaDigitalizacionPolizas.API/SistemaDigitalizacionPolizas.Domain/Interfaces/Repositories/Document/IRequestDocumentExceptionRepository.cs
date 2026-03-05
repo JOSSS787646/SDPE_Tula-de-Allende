@@ -30,5 +30,6 @@ namespace SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Document
 
         Task<List<RequestDocumentException>> GetActiveByRequestId(int requestId);
         Task UpsertAsync(RequestDocumentException entity);
+        Task UpsertRangeAsync(List<RequestDocumentException> entities);
     }
 }
