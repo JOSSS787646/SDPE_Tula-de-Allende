@@ -1468,16 +1468,6 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.PaymentPolicyController",
-    "Method": "GetAllPolicies",
-    "RelativePath": "api/PaymentPolicy/policies",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": []
-  },
-  {
     "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.PermissionsController",
     "Method": "GetPermissionsByRole",
     "RelativePath": "api/Permissions/{idRol}",

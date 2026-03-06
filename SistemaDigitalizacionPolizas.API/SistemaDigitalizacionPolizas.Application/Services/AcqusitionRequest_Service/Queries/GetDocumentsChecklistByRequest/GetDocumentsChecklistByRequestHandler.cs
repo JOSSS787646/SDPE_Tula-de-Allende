@@ -21,18 +21,22 @@ namespace SistemaDigitalizacionPolizas.Application.Services.AcqusitionRequest_Se
         }
 
         public async Task<List<RequestDocumentChecklistDto>> Handle(
-     GetDocumentsChecklistByRequestQuery request,
-     CancellationToken cancellationToken)
+            GetDocumentsChecklistByRequestQuery request,
+            CancellationToken cancellationToken)
         {
             var result = await _repository.GetChecklistByRequestAsync(request.RequestId);
 
-            foreach (var doc in result)
+            foreach (var document in result)
             {
-                if (doc.FileUrls != null && doc.FileUrls.Any())
+                if (document.FileUrls != null && document.FileUrls.Any())
                 {
-                    doc.PreviewUrls = doc.FileUrls
-                        .Select(x => _fileStorageService.GetPresignedUrl(x, 10))
+                    document.PreviewUrls = document.FileUrls
+                        .Select(url => _fileStorageService.GetPresignedUrl(url, 10))
                         .ToList();
+                }
+                else
+                {
+                    document.PreviewUrls = new List<string>();
                 }
             }
 
