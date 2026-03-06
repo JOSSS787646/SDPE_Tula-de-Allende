@@ -33,12 +33,14 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
             });
         }
 
-        [HttpGet("policies")]
-        public async Task<IActionResult> GetAllPolicies()
-        {
-            var result = await _mediator.Send(new GetAllPaymentPoliciesQuery());
 
-            return Ok(result);
-        }
+
+        //[HttpGet("policies")]
+        //public async Task<IActionResult> GetAllPolicies()
+        //{
+        //    var result = await _mediator.Send(new GetAllPaymentPoliciesQuery());
+
+        //    return Ok(result);
+        //}
     }
 }
