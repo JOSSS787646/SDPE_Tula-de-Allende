@@ -44,6 +44,7 @@ namespace SistemaDigitalizacionPolizas.Application.Services.AcqusitionRequest_Se
             entity.IdProgram = dto.IdProgram;
             entity.IdCommunity = dto.IdCommunity;
             entity.IdBeneficiary = dto.IdBeneficiary;
+            entity.IdPaymentPolicy = dto.IdPolicy;
 
             entity.UpdatedAt = DateTime.UtcNow;
 

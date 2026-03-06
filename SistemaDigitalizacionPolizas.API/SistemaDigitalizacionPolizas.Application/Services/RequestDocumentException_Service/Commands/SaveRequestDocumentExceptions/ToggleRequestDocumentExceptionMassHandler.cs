@@ -19,6 +19,7 @@ namespace SistemaDigitalizacionPolizas.Application.Services.RequestDocumentExcep
             _currentService = currentUserService;
         }
 
+
         public async Task<bool> Handle(
             ToggleRequestDocumentExceptionMassCommand request,
             CancellationToken cancellationToken)

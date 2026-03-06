@@ -12,6 +12,10 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Acquisition_Pe
     public class AcquisitionRepository : IAcquisitionRepository
     {
 
+
+        /// <summary>
+        /// ///no sivr etes en lo asboulduooooo eliminar
+        /// </summary>
         private readonly SdpeDbContext _context;
 
         public AcquisitionRepository(SdpeDbContext context)

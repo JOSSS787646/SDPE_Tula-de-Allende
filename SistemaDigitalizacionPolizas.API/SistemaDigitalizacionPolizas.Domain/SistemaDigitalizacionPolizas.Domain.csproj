@@ -7,10 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Dtos\NewFolder\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="AWSSDK.S3" Version="4.0.17" />
   </ItemGroup>
 

@@ -1442,6 +1442,42 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.PaymentPolicyController",
+    "Method": "CreatePaymentPolicy",
+    "RelativePath": "api/PaymentPolicy",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "PolicyCode",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "Description",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "File",
+        "Type": "Microsoft.AspNetCore.Http.IFormFile",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.PaymentPolicyController",
+    "Method": "GetAllPolicies",
+    "RelativePath": "api/PaymentPolicy/policies",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.PermissionsController",
     "Method": "GetPermissionsByRole",
     "RelativePath": "api/Permissions/{idRol}",

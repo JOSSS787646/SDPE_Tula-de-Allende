@@ -5,6 +5,7 @@ using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Actions;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.AdministrtiveUnit;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Community;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Document;
+using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.IPaymentPolicy;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Permissions;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.RequestingAdministration;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.RequestManager;
@@ -18,6 +19,7 @@ using SistemaDigitalizacionPolizas.Infrastructure.Persistence.AdministrativeUnit
 using SistemaDigitalizacionPolizas.Infrastructure.Persistence.ApplicationStatus_Persistences;
 using SistemaDigitalizacionPolizas.Infrastructure.Persistence.Community_Persistences;
 using SistemaDigitalizacionPolizas.Infrastructure.Persistence.Document_Persistences;
+using SistemaDigitalizacionPolizas.Infrastructure.Persistence.PaymentPolicy_Persistences;
 using SistemaDigitalizacionPolizas.Infrastructure.Persistence.RequestingAdministration_Persistences;
 using SistemaDigitalizacionPolizas.Infrastructure.Persistence.RequestManager_Persistences;
 using SistemaDigitalizacionPolizas.Infrastructure.Persistence.Services.Auditory;
@@ -88,11 +90,15 @@ namespace SistemaDigitalizacionPolizas.Infrastructure
             services.AddScoped<IDocumentExpedientRepository, DocumentExpedientRepository>();
             //Document Status Repository
             services.AddScoped<IDocumentStatusRepository, DocumentStatusRepository>();
+            services.AddScoped<IDocumentStatusRepository, DocumentStatusRepository>();
 
             services.AddScoped<IAcquisitionRequest, AcquisitionRequestRepository>();
             services.AddScoped<IRequestDocumentExceptionRepository, RequestDocumentExceptionRepository>();
             services.AddScoped<IRequestManagerRepository, RequestManagerRepository>();
+            services.AddScoped<IPaymentPolicyRepository, PaymentPolicyRepository>();
 
+
+            
 
             //Application Status Repository
             services.AddScoped<IApplicationStatusRepository, ApplicationStatusRepository>();

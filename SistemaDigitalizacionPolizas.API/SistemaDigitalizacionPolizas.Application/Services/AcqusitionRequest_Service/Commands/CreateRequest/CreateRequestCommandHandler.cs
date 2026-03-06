@@ -62,6 +62,7 @@ public class CreateRequestCommandHandler
             IdProgram = dto.IdProgram,
             IdCommunity = dto.IdCommunity,
             IdBeneficiary = dto.IdBeneficiary,
+            IdPaymentPolicy=dto.IdPayementPolicy,
 
             // ===============================
             // Auditoría

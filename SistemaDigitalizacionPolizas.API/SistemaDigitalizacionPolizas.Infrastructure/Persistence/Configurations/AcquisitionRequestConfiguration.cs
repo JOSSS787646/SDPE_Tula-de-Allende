@@ -89,6 +89,8 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Configurations
 
             builder.Property(x => x.IdBeneficiary)
                    .HasColumnName("idBeneficiario");
+            builder.Property(x => x.IdPaymentPolicy)
+       .HasColumnName("idPolizaPago");
 
             // =====================================================
             // RELATIONSHIPS
@@ -143,6 +145,12 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Configurations
                    .WithMany()
                    .HasForeignKey(x => x.IdBeneficiary)
                    .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasOne(x => x.PaymentPolicy)
+       .WithMany(x => x.Requests)
+       .HasForeignKey(x => x.IdPaymentPolicy)
+       .OnDelete(DeleteBehavior.Restrict);
+
 
             // =====================================================
             // AUDIT FIELDS
