@@ -2552,6 +2552,62 @@
         }
       }
     },
+    "/api/PaymentPolicy": {
+      "post": {
+        "tags": [
+          "PaymentPolicy"
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "PolicyCode": {
+                    "type": "string"
+                  },
+                  "Description": {
+                    "type": "string"
+                  },
+                  "File": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              },
+              "encoding": {
+                "PolicyCode": {
+                  "style": "form"
+                },
+                "Description": {
+                  "style": "form"
+                },
+                "File": {
+                  "style": "form"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/PaymentPolicy/policies": {
+      "get": {
+        "tags": [
+          "PaymentPolicy"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Permissions/update": {
       "post": {
         "tags": [
@@ -3882,6 +3938,11 @@
             "type": "integer",
             "format": "int32",
             "nullable": true
+          },
+          "idPayementPolicy": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -4757,6 +4818,11 @@
             "nullable": true
           },
           "idBeneficiary": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "idPolicy": {
             "type": "integer",
             "format": "int32",
             "nullable": true

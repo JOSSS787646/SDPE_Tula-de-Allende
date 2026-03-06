@@ -164,6 +164,13 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Acquisition_Pe
 
             try
             {
+
+                // 1️⃣ Obtener la póliza asociada
+                var policyId = await _context.AcquisitionRequests
+                    .Where(x => x.IdRequest == solicitudId)
+                    .Select(x => x.IdPaymentPolicy)
+                    .FirstOrDefaultAsync();
+
                 await _context.ExpedientDocuments
                     .Where(x => x.RequestId == solicitudId)
                     .ExecuteDeleteAsync();

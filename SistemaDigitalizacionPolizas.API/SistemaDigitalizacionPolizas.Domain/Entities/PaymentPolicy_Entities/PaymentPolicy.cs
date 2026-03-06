@@ -1,4 +1,5 @@
-﻿using SistemaDigitalizacionPolizas.Domain.Entities.AcquisitionRequest_Entities;
+﻿using Amazon.Runtime.Internal;
+using SistemaDigitalizacionPolizas.Domain.Entities.AcquisitionRequest_Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace SistemaDigitalizacionPolizas.Domain.Entities.PaymentPolicy_Entities
 {
     public class PaymentPolicy
     {
-        public int Id { get; set; }
+        public int IdPaymentPolicy { get; set; }
 
         public string PolicyCode { get; set; } = null!;
 
@@ -23,7 +24,7 @@ namespace SistemaDigitalizacionPolizas.Domain.Entities.PaymentPolicy_Entities
 
         public bool IsActive { get; set; } = true;
 
-        // Navigation (inverse optional)
-        public AcquisitionRequest? Request { get; set; }
+        // SOLO ESTA
+        public ICollection<AcquisitionRequest> Requests { get; set; } = new List<AcquisitionRequest>();
     }
 }

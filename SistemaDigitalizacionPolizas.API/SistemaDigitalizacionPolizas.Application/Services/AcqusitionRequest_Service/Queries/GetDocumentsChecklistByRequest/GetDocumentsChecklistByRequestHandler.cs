@@ -21,17 +21,18 @@ namespace SistemaDigitalizacionPolizas.Application.Services.AcqusitionRequest_Se
         }
 
         public async Task<List<RequestDocumentChecklistDto>> Handle(
-            GetDocumentsChecklistByRequestQuery request,
-            CancellationToken cancellationToken)
+     GetDocumentsChecklistByRequestQuery request,
+     CancellationToken cancellationToken)
         {
             var result = await _repository.GetChecklistByRequestAsync(request.RequestId);
 
             foreach (var doc in result)
             {
-                if (!string.IsNullOrEmpty(doc.FileUrl))
+                if (doc.FileUrls != null && doc.FileUrls.Any())
                 {
-                    // 🔥 genera preview temporal desde Wasabi
-                    doc.PreviewUrl = _fileStorageService.GetPresignedUrl(doc.FileUrl, 10);
+                    doc.PreviewUrls = doc.FileUrls
+                        .Select(x => _fileStorageService.GetPresignedUrl(x, 10))
+                        .ToList();
                 }
             }
 

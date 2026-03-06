@@ -34,5 +34,6 @@ namespace SistemaDigitalizacionPolizas.Domain.Dtos.AcquisitionRequest
         public int? IdProgram { get; set; }
         public int? IdCommunity { get; set; }
         public int? IdBeneficiary { get; set; }
+        public int? IdPayementPolicy { get; set; }
     }
 }

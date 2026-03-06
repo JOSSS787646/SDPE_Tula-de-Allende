@@ -142,28 +142,26 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Document_Persi
                                && x.DocumentTypeId == td.IdDocumentType
                                && x.Active == true),
 
-                    FileName = _context.ExpedientDocuments
+                    FileNames = _context.ExpedientDocuments
                         .Where(x => x.RequestId == requestId
                                  && x.DocumentTypeId == td.IdDocumentType
                                  && x.Active == true)
                         .Select(x => x.FileName)
-                        .FirstOrDefault(),
+                        .ToList(),
 
-
-
-                    FileUrl = _context.ExpedientDocuments
+                    FileUrls = _context.ExpedientDocuments
                         .Where(x => x.RequestId == requestId
                                  && x.DocumentTypeId == td.IdDocumentType
                                  && x.Active == true)
                         .Select(x => x.FilePath)
-                        .FirstOrDefault(),
+                        .ToList(),
 
-                            Observations = _context.ExpedientDocuments
-                .Where(x => x.RequestId == requestId
-                         && x.DocumentTypeId == td.IdDocumentType
-                         && x.Active == true)
-                .Select(x => x.Observations)
-                .FirstOrDefault()
+                    Observations = _context.ExpedientDocuments
+                        .Where(x => x.RequestId == requestId
+                                 && x.DocumentTypeId == td.IdDocumentType
+                                 && x.Active == true)
+                        .Select(x => x.Observations)
+                        .FirstOrDefault()
                 }
             ).ToListAsync();
 
