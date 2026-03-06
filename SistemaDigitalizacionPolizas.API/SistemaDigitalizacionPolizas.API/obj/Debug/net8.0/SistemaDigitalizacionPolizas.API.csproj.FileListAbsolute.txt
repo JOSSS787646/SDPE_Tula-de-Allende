@@ -732,7 +732,6 @@ C:\Estadia Ingenieria\Febrero\Back\Sprint6O\SistemaDigitalizacionPolizas.API\Sis
 C:\Estadia Ingenieria\Febrero\Back\Sprint6O\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.API\obj\Debug\net8.0\SistemaDigitalizacionPolizas.API.AssemblyInfoInputs.cache
 C:\Estadia Ingenieria\Febrero\Back\Sprint6O\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.API\obj\Debug\net8.0\SistemaDigitalizacionPolizas.API.AssemblyInfo.cs
 C:\Estadia Ingenieria\Febrero\Back\Sprint6O\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.API\obj\Debug\net8.0\SistemaDigitalizacionPolizas.API.csproj.CoreCompileInputs.cache
-C:\Estadia Ingenieria\Febrero\Back\Sprint6O\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.API\obj\Debug\net8.0\SistemaDigitalizacionPolizas.API.MvcApplicationPartsAssemblyInfo.cs
 C:\Estadia Ingenieria\Febrero\Back\Sprint6O\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.API\obj\Debug\net8.0\SistemaDigitalizacionPolizas.API.MvcApplicationPartsAssemblyInfo.cache
 C:\Estadia Ingenieria\Febrero\Back\Sprint6O\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.API\obj\Debug\net8.0\SistemaDigitalizacionPolizas.API.sourcelink.json
 C:\Estadia Ingenieria\Febrero\Back\Sprint6O\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.API\obj\Debug\net8.0\scopedcss\bundle\SistemaDigitalizacionPolizas.API.styles.css

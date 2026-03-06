@@ -116,54 +116,74 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Document_Persi
                 .Select(x => x.IdAcquisitionClassification)
                 .FirstOrDefaultAsync();
 
-            if (classificationId == 0)
+            if (classificationId == null)
                 return new List<RequestDocumentChecklistDto>();
 
-            var result = await (
+            // 1️⃣ Traer documentos del expediente UNA vez
+            var expedientDocs = await _context.ExpedientDocuments
+                .Where(x => x.RequestId == requestId && x.Active == true)
+                .AsNoTracking()
+                .ToListAsync();
+
+            // 2️⃣ Traer excepciones UNA vez
+            var exceptions = await _context.RequestDocumentExceptions
+                .Where(x => x.IdRequest == requestId)
+                .AsNoTracking()
+                .ToListAsync();
+
+            // 3️⃣ Reglas de documentos por clasificación
+            var documentRules = await (
                 from tcd in _context.ClasificationDocumentTypes
                 join td in _context.Documents
                     on tcd.DocumentTypeId equals td.IdDocumentType
                 where tcd.ClassificationAcquisitionId == classificationId
                    && tcd.Active == true
                    && td.Active == true
-                select new RequestDocumentChecklistDto
+                select new
                 {
-                    DocumentTypeId = td.IdDocumentType,
-                    DocumentName = td.DocumentName,
-                    RequiredByRule = tcd.IsRequired,
+                    td.IdDocumentType,
+                    td.DocumentName,
+                    tcd.IsRequired
+                }
+            )
+            .AsNoTracking()
+               .ToListAsync();
 
-                    NoApplies = _context.RequestDocumentExceptions
-                        .Any(x => x.IdRequest == requestId
-                               && x.IdDocumentType == td.IdDocumentType
-                               && x.DoesNotApply == true),
+            // 4️⃣ Construir DTO respetando tu modelo
+            var result = documentRules.Select(rule =>
+            {
+                var docs = expedientDocs
+                    .Where(x => x.DocumentTypeId == rule.IdDocumentType)
+                    .ToList();
 
-                    Uploaded = _context.ExpedientDocuments
-                        .Any(x => x.RequestId == requestId
-                               && x.DocumentTypeId == td.IdDocumentType
-                               && x.Active == true),
+                return new RequestDocumentChecklistDto
+                {
+                    DocumentTypeId = rule.IdDocumentType,
+                    DocumentName = rule.DocumentName,
+                    RequiredByRule = rule.IsRequired,
 
-                    FileNames = _context.ExpedientDocuments
-                        .Where(x => x.RequestId == requestId
-                                 && x.DocumentTypeId == td.IdDocumentType
-                                 && x.Active == true)
+                    NoApplies = exceptions.Any(x =>
+                        x.IdDocumentType == rule.IdDocumentType &&
+                        x.DoesNotApply == true),
+
+                    Uploaded = docs.Any(),
+
+                    Observations = docs
+                        .Select(x => x.Observations)
+                        .FirstOrDefault(),
+
+                    FileNames = docs
                         .Select(x => x.FileName)
                         .ToList(),
 
-                    FileUrls = _context.ExpedientDocuments
-                        .Where(x => x.RequestId == requestId
-                                 && x.DocumentTypeId == td.IdDocumentType
-                                 && x.Active == true)
+                    FileUrls = docs
                         .Select(x => x.FilePath)
                         .ToList(),
 
-                    Observations = _context.ExpedientDocuments
-                        .Where(x => x.RequestId == requestId
-                                 && x.DocumentTypeId == td.IdDocumentType
-                                 && x.Active == true)
-                        .Select(x => x.Observations)
-                        .FirstOrDefault()
-                }
-            ).ToListAsync();
+                    // Se llena en el handler con URLs firmadas
+                    PreviewUrls = null
+                };
+            }).ToList();
 
             return result;
         }
