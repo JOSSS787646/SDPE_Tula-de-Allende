@@ -13,5 +13,13 @@ namespace SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Acquisitio
 
         Task<AcquisitionRequest?> AddAsync(AcquisitionRequest request);
         Task<AcquisitionRequestDetailDto?> GetDetailAsync(int idRequest);
+
+        Task<AcquisitionRequest?> GetByIdAsync(int id);
+
+        Task<(IEnumerable<AcquisitionRequestPolizaDto> Data, int TotalRecords)>
+            GetAllPolizaInfoPaginatedAsync(int pageNumber, int pageSize);
+
+        Task UpdateAsync(AcquisitionRequest entity);
+        Task DeleteCascadeAsync(int solicitudId);
     }
 }

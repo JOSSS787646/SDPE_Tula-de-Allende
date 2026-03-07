@@ -2,7 +2,9 @@
 using SistemaDigitalizacionPolizas.Domain.Entities.Areas_Entities;
 using SistemaDigitalizacionPolizas.Domain.Entities.Community_Entities;
 using SistemaDigitalizacionPolizas.Domain.Entities.Document_Entities;
+using SistemaDigitalizacionPolizas.Domain.Entities.PaymentPolicy_Entities;
 using SistemaDigitalizacionPolizas.Domain.Entities.RequestingAdministration_Entities;
+using SistemaDigitalizacionPolizas.Domain.Entities.RequestManager_Entities;
 using SistemaDigitalizacionPolizas.Domain.Entities.Supplier_Entities;
 using System;
 using System.Collections.Generic;
@@ -42,6 +44,7 @@ namespace SistemaDigitalizacionPolizas.Domain.Entities.AcquisitionRequest_Entiti
         public int? IdProgram { get; set; }
         public int? IdCommunity { get; set; }
         public int? IdBeneficiary { get; set; }
+        public int? IdPaymentPolicy { get; set; }
 
         // ===============================
         // Navigation Properties
@@ -57,12 +60,21 @@ namespace SistemaDigitalizacionPolizas.Domain.Entities.AcquisitionRequest_Entiti
         public Prog? Program { get; set; }
         public Community? Community { get; set; }
         public Beneficiary? Beneficiary { get; set; }
+        public PaymentPolicy? PaymentPolicy { get; set; }
 
         public ICollection<RequestDocumentException> DocumentExceptions { get; set; }
     = new List<RequestDocumentException>();
 
+        public ICollection<RequestManager> RequestManagers { get; set; }
+    = new List<RequestManager>();
+
+     
+
+
+
+
         // 🔥 Historial (cuando lo actives)
-       // public ICollection<ApplicationStatus> RequestStates { get; set; } = new List<RequestState>();
+        // public ICollection<ApplicationStatus> RequestStates { get; set; } = new List<RequestState>();
 
         // ===============================
         // Auditoría
@@ -75,6 +87,7 @@ namespace SistemaDigitalizacionPolizas.Domain.Entities.AcquisitionRequest_Entiti
         public DateTime? UpdatedAt { get; set; }
 
         public bool Active { get; set; }
+    
     }
 }
 

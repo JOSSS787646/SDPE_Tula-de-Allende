@@ -38,6 +38,7 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
                 FilePath = doc.FilePath,
                 UploadDate = doc.UploadDate,
                 Active = doc.Active,
+                Observations = doc.Observations,
 
                 DocumentTypeId = doc.DocumentTypeId,
                 DocumentTypeName = doc.DocumentType?.DocumentName,

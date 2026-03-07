@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Acquisition_Persistences
 {
-    public class AcquisitionRequestRepository: IAcquisitionRequest
+    public class AcquisitionRequestRepository : IAcquisitionRequest
     {
         private readonly SdpeDbContext _context;
 
@@ -25,6 +25,17 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Acquisition_Pe
             await _context.SaveChangesAsync();
 
             return request;
+        }
+
+        public async Task<AcquisitionRequest?> GetByIdAsync(int id)
+        {
+            return await _context.AcquisitionRequests
+                .FirstOrDefaultAsync(x => x.IdRequest == id);
+        }
+
+        public async Task UpdateAsync(AcquisitionRequest entity)
+        {
+            await _context.SaveChangesAsync();
         }
 
         public async Task<AcquisitionRequestDetailDto?> GetDetailAsync(int idRequest)
@@ -110,5 +121,80 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Acquisition_Pe
                 })
                 .FirstOrDefaultAsync();
         }
+
+
+
+        public async Task<(IEnumerable<AcquisitionRequestPolizaDto> Data, int TotalRecords)>
+                GetAllPolizaInfoPaginatedAsync(int pageNumber, int pageSize)
+        {
+            var query = _context.AcquisitionRequests
+                .AsNoTracking(); // 🔥 solo lectura = más rápido
+
+            var totalRecords = await query.CountAsync();
+
+            var data = await query
+                .OrderByDescending(r => r.CreatedAt) // opcional pero recomendable
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .Select(r => new AcquisitionRequestPolizaDto
+                {
+                    Folio = r.RequestNumber,
+                    IdRequest = r.IdRequest,
+                    AcquisitionClassification = r.AcquisitionClassification != null
+                        ? r.AcquisitionClassification.Description
+                        : "Sin clasificación",
+
+                    RequestDate = r.RequestDate,
+
+                    Status = r.ApplicationStatus != null
+                    ? r.ApplicationStatus.Description
+                    : "Sin estatus",
+
+                    PolicyNumber = null // aún no existe póliza
+                })
+                .ToListAsync();
+
+            return (data, totalRecords);
+        }
+
+
+        public async Task DeleteCascadeAsync(int solicitudId)
+        {
+            await using var transaction = await _context.Database.BeginTransactionAsync();
+
+            try
+            {
+
+                // 1️⃣ Obtener la póliza asociada
+                var policyId = await _context.AcquisitionRequests
+                    .Where(x => x.IdRequest == solicitudId)
+                    .Select(x => x.IdPaymentPolicy)
+                    .FirstOrDefaultAsync();
+
+                await _context.ExpedientDocuments
+                    .Where(x => x.RequestId == solicitudId)
+                    .ExecuteDeleteAsync();
+
+                await _context.RequestManagers
+                    .Where(x => x.IdRequest == solicitudId)
+                    .ExecuteDeleteAsync();
+
+                await _context.RequestDocumentExceptions
+                    .Where(x => x.IdRequest == solicitudId)
+                    .ExecuteDeleteAsync();
+
+                await _context.AcquisitionRequests
+                    .Where(x => x.IdRequest == solicitudId)
+                    .ExecuteDeleteAsync();
+
+                await transaction.CommitAsync();
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+                throw;
+            }
+        }
+
     }
 }

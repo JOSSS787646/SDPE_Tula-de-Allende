@@ -1,4 +1,5 @@
-﻿using SistemaDigitalizacionPolizas.Application.Services.RequestingAdministration_Service.Prog.Queries.GetAllProg;
+﻿using SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Service.Service;
+using SistemaDigitalizacionPolizas.Application.Services.RequestingAdministration_Service.Prog.Queries.GetAllProg;
 using SistemaDigitalizacionPolizas.Domain.Entities.RequestingAdministration_Entities;
 
 namespace SistemaDigitalizacionPolizas.Application
@@ -16,6 +17,7 @@ namespace SistemaDigitalizacionPolizas.Application
                 typeof(IPipelineBehavior<,>),
                 typeof(ValidationBehaviour<,>)
             );
+            services.AddScoped<IRequestStatusService, RequestStatusService>();
 
             return services;
         }

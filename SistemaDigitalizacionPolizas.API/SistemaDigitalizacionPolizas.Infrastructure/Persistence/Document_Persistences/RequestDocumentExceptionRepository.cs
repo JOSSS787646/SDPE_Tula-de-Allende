@@ -37,7 +37,58 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Document_Persi
                     x.IdRequest == requestId &&
                     x.IdDocumentType == documentTypeId);
         }
+        public async Task<List<RequestDocumentException>> GetActiveByRequestId(int requestId)
+        {
+            return await _context.RequestDocumentExceptions
+                .Where(x =>
+                    x.IdRequest == requestId &&
+                    x.DoesNotApply &&
+                    x.Active)
+                .ToListAsync();
+        }
 
+        public async Task UpsertAsync(RequestDocumentException entity)
+        {
+            var existing = await _context.RequestDocumentExceptions
+                .FirstOrDefaultAsync(x =>
+                    x.IdRequest == entity.IdRequest &&
+                    x.IdDocumentType == entity.IdDocumentType);
+
+            if (existing == null)
+            {
+                await _context.RequestDocumentExceptions.AddAsync(entity);
+            }
+            else
+            {
+                existing.DoesNotApply = entity.DoesNotApply;
+                existing.Active = entity.Active;
+            }
+
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpsertRangeAsync(List<RequestDocumentException> entities)
+        {
+            foreach (var entity in entities)
+            {
+                var existing = await _context.RequestDocumentExceptions
+                    .FirstOrDefaultAsync(x =>
+                        x.IdRequest == entity.IdRequest &&
+                        x.IdDocumentType == entity.IdDocumentType);
+
+                if (existing == null)
+                {
+                    await _context.RequestDocumentExceptions.AddAsync(entity);
+                }
+                else
+                {
+                    existing.DoesNotApply = entity.DoesNotApply;
+                    existing.Active = entity.Active;
+                }
+            }
+
+            await _context.SaveChangesAsync();
+        }
 
         public async Task SaveChangesAsync()
         {
