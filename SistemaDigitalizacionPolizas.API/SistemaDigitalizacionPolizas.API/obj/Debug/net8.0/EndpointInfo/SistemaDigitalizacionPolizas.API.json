@@ -326,15 +326,27 @@
               "type": "integer",
               "format": "int32"
             }
-          },
-          {
-            "name": "password",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeleteRequestRequestDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeleteRequestRequestDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeleteRequestRequestDto"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "OK"
@@ -2060,68 +2072,7 @@
         }
       }
     },
-    "/api/ExpedientDocument/upload-massive": {
-      "post": {
-        "tags": [
-          "ExpedientDocument"
-        ],
-        "requestBody": {
-          "content": {
-            "multipart/form-data": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "requestId": {
-                    "type": "integer",
-                    "format": "int32"
-                  },
-                  "files": {
-                    "type": "array",
-                    "items": {
-                      "type": "string",
-                      "format": "binary"
-                    }
-                  },
-                  "documentTypeId": {
-                    "type": "array",
-                    "items": {
-                      "type": "integer",
-                      "format": "int32"
-                    }
-                  },
-                  "observations": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    }
-                  }
-                }
-              },
-              "encoding": {
-                "requestId": {
-                  "style": "form"
-                },
-                "files": {
-                  "style": "form"
-                },
-                "documentTypeId": {
-                  "style": "form"
-                },
-                "observations": {
-                  "style": "form"
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/ExpedientDocument/search": {
+    "/api/expedient-documents/requests/{requestId}/checklist": {
       "get": {
         "tags": [
           "ExpedientDocument"
@@ -2129,28 +2080,48 @@
         "parameters": [
           {
             "name": "requestId",
-            "in": "query",
+            "in": "path",
+            "required": true,
             "schema": {
               "type": "integer",
               "format": "int32"
-            }
-          },
-          {
-            "name": "fileName",
-            "in": "query",
-            "schema": {
-              "type": "string"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RequestDocumentChecklistDto"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RequestDocumentChecklistDto"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RequestDocumentChecklistDto"
+                  }
+                }
+              }
+            }
           }
         }
       }
     },
-    "/api/ExpedientDocument/by-classification": {
+    "/api/expedient-documents/classification": {
       "get": {
         "tags": [
           "ExpedientDocument"
@@ -2216,63 +2187,43 @@
         }
       }
     },
-    "/api/ExpedientDocument/{id}/documents-checklist": {
+    "/api/expedient-documents/search": {
       "get": {
         "tags": [
           "ExpedientDocument"
         ],
         "parameters": [
           {
-            "name": "id",
-            "in": "path",
-            "required": true,
+            "name": "requestId",
+            "in": "query",
             "schema": {
               "type": "integer",
               "format": "int32"
+            }
+          },
+          {
+            "name": "fileName",
+            "in": "query",
+            "schema": {
+              "type": "string"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/RequestDocumentChecklistDto"
-                  }
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/RequestDocumentChecklistDto"
-                  }
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/RequestDocumentChecklistDto"
-                  }
-                }
-              }
-            }
+            "description": "OK"
           }
         }
       }
     },
-    "/api/ExpedientDocument/classification/{classificationId}": {
+    "/api/expedient-documents/{expedientDocumentId}/download": {
       "get": {
         "tags": [
           "ExpedientDocument"
         ],
         "parameters": [
           {
-            "name": "classificationId",
+            "name": "expedientDocumentId",
             "in": "path",
             "required": true,
             "schema": {
@@ -2288,7 +2239,158 @@
         }
       }
     },
-    "/api/ExpedientDocument/update/{id}": {
+    "/api/expedient-documents/upload-massive": {
+      "post": {
+        "tags": [
+          "ExpedientDocument"
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "requestId": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "files": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "binary"
+                    }
+                  },
+                  "documentTypeId": {
+                    "type": "array",
+                    "items": {
+                      "type": "integer",
+                      "format": "int32"
+                    }
+                  },
+                  "observations": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "encoding": {
+                "requestId": {
+                  "style": "form"
+                },
+                "files": {
+                  "style": "form"
+                },
+                "documentTypeId": {
+                  "style": "form"
+                },
+                "observations": {
+                  "style": "form"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/expedient-documents/requests/{requestId}/documents/{documentTypeId}": {
+      "post": {
+        "tags": [
+          "ExpedientDocument"
+        ],
+        "parameters": [
+          {
+            "name": "requestId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "documentTypeId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "files": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "binary"
+                    }
+                  },
+                  "observations": {
+                    "type": "string"
+                  }
+                }
+              },
+              "encoding": {
+                "files": {
+                  "style": "form"
+                },
+                "observations": {
+                  "style": "form"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "integer",
+                    "format": "int32"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "integer",
+                    "format": "int32"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "integer",
+                    "format": "int32"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/expedient-documents/{id}": {
       "put": {
         "tags": [
           "ExpedientDocument"
@@ -2342,16 +2444,14 @@
             "description": "OK"
           }
         }
-      }
-    },
-    "/api/ExpedientDocument/download/{expedientDocumentId}": {
-      "get": {
+      },
+      "delete": {
         "tags": [
           "ExpedientDocument"
         ],
         "parameters": [
           {
-            "name": "expedientDocumentId",
+            "name": "id",
             "in": "path",
             "required": true,
             "schema": {
@@ -2360,6 +2460,25 @@
             }
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeleteExpedientDocumentRequestDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeleteExpedientDocumentRequestDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeleteExpedientDocumentRequestDto"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "OK"
@@ -4297,6 +4416,26 @@
           },
           "active": {
             "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "DeleteExpedientDocumentRequestDto": {
+        "type": "object",
+        "properties": {
+          "password": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "DeleteRequestRequestDto": {
+        "type": "object",
+        "properties": {
+          "password": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false

@@ -75,9 +75,13 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
 
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id, string password)
+        public async Task<IActionResult> Delete(
+     int id,
+     [FromBody] DeleteRequestRequestDto request)
         {
-            await _mediator.Send(new DeleteRequestCommand(id, password));
+            await _mediator.Send(
+                new DeleteRequestCommand(id, request.Password)
+            );
 
             return NoContent();
         }

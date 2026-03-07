@@ -29,7 +29,7 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ClasificationDocumen
 
             var result = entities.Select(x => new DocumentAssignmentResponseDto
             {
-                DocumentTypeId = x.Id,
+                DocumentTypeId = x.DocumentTypeId,
                 DocumentName = x.DocumentType.DocumentName,
                 IsRequired = x.IsRequired
             }).ToList();

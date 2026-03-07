@@ -57,7 +57,10 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Document_Persi
                 .ToListAsync();
         }
 
-
+        public void Delete(ExpedientDocument entity)
+        {
+            _context.ExpedientDocuments.Remove(entity);
+        }
 
         public async Task<List<ExpedientDocumentSearchDto>>
     SearchByNameAsync(int requestId, string fileName)
