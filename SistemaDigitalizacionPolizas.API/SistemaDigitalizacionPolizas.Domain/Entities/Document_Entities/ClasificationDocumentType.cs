@@ -14,7 +14,7 @@ namespace SistemaDigitalizacionPolizas.Domain.Entities.Document_Entities
 
         // 🔹 Foreign Keys
         public int ClassificationAcquisitionId { get; set; }
-        public int? DocumentTypeId { get; set; }
+        public int DocumentTypeId { get; set; }
 
         // 🔹 Business Rules
         public bool IsRequired { get; set; }
