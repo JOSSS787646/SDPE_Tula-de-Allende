@@ -16,6 +16,5 @@ namespace SistemaDigitalizacionPolizas.Domain.Dtos.PaymentPolicy
 
         public string PreviewUrl { get; set; } = null!;
 
-        public DateTime? CreatedAt { get; set; }
     }
 }

@@ -1,11 +1,12 @@
-﻿using SistemaDigitalizacionPolizas.Application.Services.AcqusitionRequest_Service.Commands.CreateRequest;
+﻿using MediatR;
+using SistemaDigitalizacionPolizas.Application.Services.AcqusitionRequest_Service.Commands.CreateRequest;
 using SistemaDigitalizacionPolizas.Domain.Entities.AcquisitionRequest_Entities;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Acquisition;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Services;
 using SSistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.StatusRequest;
 
 public class CreateRequestCommandHandler
-   : IRequestHandler<CreateRequestCommand, int>
+    : IRequestHandler<CreateRequestCommand, int>
 {
     private readonly IAcquisitionRequest _repository;
     private readonly IApplicationStatusRepository _statusRepository;
@@ -30,16 +31,32 @@ public class CreateRequestCommandHandler
     {
         var dto = request.Dto;
 
-        // 🔥 Estado inicial automático (Borrador)
+        // ==========================================
+        // Validar si el código de adquisición ya existe
+        // ==========================================
+
+        var exists = await _repository.ExistsByRequestNumberAsync(dto.RequestNumber);
+
+        if (exists)
+            throw new Exception($"Ya existe una solicitud con el código '{dto.RequestNumber}'.");
+
+        // ==========================================
+        // Obtener estado inicial (Borrador)
+        // ==========================================
+
         var borradorStatus = await _statusRepository.GetByCodeAsync(1);
 
         if (borradorStatus == null)
             throw new Exception("No existe estado 'Borrador' configurado.");
 
+        // ==========================================
+        // Crear entidad
+        // ==========================================
+
         var entity = new AcquisitionRequest
         {
             // ===============================
-            // Información del Negocio
+            // Información del negocio
             // ===============================
 
             RequestNumber = dto.RequestNumber,
@@ -62,7 +79,7 @@ public class CreateRequestCommandHandler
             IdProgram = dto.IdProgram,
             IdCommunity = dto.IdCommunity,
             IdBeneficiary = dto.IdBeneficiary,
-            IdPaymentPolicy=dto.IdPayementPolicy,
+            IdPaymentPolicy = dto.IdPayementPolicy,
 
             // ===============================
             // Auditoría
@@ -73,9 +90,11 @@ public class CreateRequestCommandHandler
             Active = true
         };
 
-        await _repository.AddAsync(entity);
+        // ==========================================
+        // Guardar
+        // ==========================================
 
-       
+        await _repository.AddAsync(entity);
 
         return entity.IdRequest;
     }

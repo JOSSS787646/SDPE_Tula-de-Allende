@@ -17,5 +17,9 @@ namespace SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.IPaymentPo
         Task<List<PaymentPolicy>> GetPagedAsync(int page, int pageSize);
 
         Task UpdateAsync(PaymentPolicy policy);
+
+        Task<List<PaymentPolicy>> GetAvailablePoliciesAsync();
+
+        Task DeleteAsync(int id);
     }
 }

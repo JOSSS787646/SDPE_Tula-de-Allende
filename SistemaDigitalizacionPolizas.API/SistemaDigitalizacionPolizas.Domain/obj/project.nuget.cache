@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "qKQFu1VgVsY=",
+  "dgSpecHash": "4fHSBB28yHM=",
   "success": true,
-  "projectFilePath": "C:\\Estadia Ingenieria\\Febrero\\Back\\Sprint6O\\SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.Domain\\SistemaDigitalizacionPolizas.Domain.csproj",
+  "projectFilePath": "C:\\Estadia Ingenieria\\Marzo\\Sprint7\\SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.Domain\\SistemaDigitalizacionPolizas.Domain.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\josea\\.nuget\\packages\\awssdk.core\\4.0.3.8\\awssdk.core.4.0.3.8.nupkg.sha512",
     "C:\\Users\\josea\\.nuget\\packages\\awssdk.s3\\4.0.17\\awssdk.s3.4.0.17.nupkg.sha512"

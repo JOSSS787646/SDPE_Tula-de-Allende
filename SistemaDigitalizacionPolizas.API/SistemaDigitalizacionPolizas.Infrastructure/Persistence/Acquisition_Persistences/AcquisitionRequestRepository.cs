@@ -33,10 +33,32 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Acquisition_Pe
                 .FirstOrDefaultAsync(x => x.IdRequest == id);
         }
 
+        public async Task RemovePaymentPolicyFromRequests(int paymentPolicyId)
+        {
+            var requests = await _context.AcquisitionRequests
+                .Where(x => x.IdPaymentPolicy == paymentPolicyId)
+                .ToListAsync();
+
+            foreach (var req in requests)
+            {
+                req.IdPaymentPolicy = null;
+            }
+
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<bool> ExistsByRequestNumberAsync(string requestNumber)
+        {
+            return await _context.AcquisitionRequests
+                .AnyAsync(x => x.RequestNumber == requestNumber);
+        }
+
         public async Task UpdateAsync(AcquisitionRequest entity)
         {
             await _context.SaveChangesAsync();
         }
+
+
 
         public async Task<AcquisitionRequestDetailDto?> GetDetailAsync(int idRequest)
         {

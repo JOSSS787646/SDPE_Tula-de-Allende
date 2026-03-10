@@ -25,6 +25,22 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.PaymentPolicy_
             return policy;
         }
 
+
+
+        public async Task DeleteAsync(int id)
+        {
+            var policy = await _context.PaymentPolicies
+                .FirstOrDefaultAsync(x => x.IdPaymentPolicy == id);
+
+            if (policy == null)
+                throw new Exception("Policy not found");
+
+            _context.PaymentPolicies.Remove(policy);
+
+            await _context.SaveChangesAsync();
+        }
+
+
         public async Task<List<PaymentPolicy>> GetPagedAsync(int page, int pageSize)
         {
             return await _context.PaymentPolicies
@@ -32,6 +48,17 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.PaymentPolicy_
                 .OrderByDescending(x => x.CreatedAt)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
+                .ToListAsync();
+        }
+
+
+        public async Task<List<PaymentPolicy>> GetAvailablePoliciesAsync()
+        {
+            return await _context.PaymentPolicies
+                .Where(p => p.IsActive &&
+                       !_context.AcquisitionRequests
+                           .Any(s => s.IdPaymentPolicy == p.IdPaymentPolicy))
+                .OrderByDescending(p => p.CreatedAt)
                 .ToListAsync();
         }
 
