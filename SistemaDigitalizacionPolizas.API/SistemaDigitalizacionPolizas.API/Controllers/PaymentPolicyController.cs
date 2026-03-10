@@ -1,10 +1,16 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SistemaDigitalizacionPolizas.Application.Services.PaymentPolicy_Service.Commands.CreatePaymentPolicy;
+using SistemaDigitalizacionPolizas.Application.Services.PaymentPolicy_Service.Commands.DeletePaymentPolicy;
+using SistemaDigitalizacionPolizas.Application.Services.PaymentPolicy_Service.Commands.UpdatePaymentPolicy;
+using SistemaDigitalizacionPolizas.Application.Services.PaymentPolicy_Service.Queries.DownloadPaymentPolicy;
 using SistemaDigitalizacionPolizas.Application.Services.PaymentPolicy_Service.Queries.GetAllPaymentPolicies;
+using SistemaDigitalizacionPolizas.Application.Services.PaymentPolicy_Service.Queries.GetAvailablePaymentPolicies;
 
 namespace SistemaDigitalizacionPolizas.API.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class PaymentPolicyController : ControllerBase
@@ -35,12 +41,55 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
 
 
 
-        //[HttpGet("policies")]
-        //public async Task<IActionResult> GetAllPolicies()
-        //{
-        //    var result = await _mediator.Send(new GetAllPaymentPoliciesQuery());
+        [HttpGet("policies")]
+        public async Task<IActionResult> GetAllPolicies(
+     [FromQuery] int page = 1,
+     [FromQuery] int pageSize = 10)
+        {
+            var result = await _mediator.Send(
+                new GetPaymentPoliciesQuery(page, pageSize)
+            );
 
-        //    return Ok(result);
-        //}
+            return Ok(result);
+        }
+
+        [HttpGet("available-policies")]
+        public async Task<IActionResult> GetAvailablePolicies()
+        {
+            var result = await _mediator.Send(new GetAvailablePaymentPoliciesQuery());
+
+            return Ok(result);
+        }
+
+        [HttpPut("payment-policies")]
+        public async Task<IActionResult> UpdatePaymentPolicy(
+    [FromForm] UpdatePaymentPolicyCommand command)
+        {
+            var result = await _mediator.Send(command);
+
+            return Ok(result);
+        }
+
+
+        [HttpDelete("payment-policies")]
+        public async Task<IActionResult> DeletePaymentPolicy(
+    [FromBody] DeletePaymentPolicyCommand command)
+        {
+            var result = await _mediator.Send(command);
+
+            return Ok(result);
+        }
+
+        [HttpGet("payment-policies/{id}/download")]
+        public async Task<IActionResult> DownloadPaymentPolicy(int id)
+        {
+            var result = await _mediator.Send(new DownloadPaymentPolicyQuery(id));
+
+            return File(
+                result.FileStream,
+                result.ContentType,
+                result.FileName
+            );
+        }
     }
 }

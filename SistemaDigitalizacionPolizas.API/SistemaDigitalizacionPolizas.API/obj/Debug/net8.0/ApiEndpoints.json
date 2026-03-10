@@ -1514,6 +1514,84 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.PaymentPolicyController",
+    "Method": "GetAvailablePolicies",
+    "RelativePath": "api/PaymentPolicy/available-policies",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.PaymentPolicyController",
+    "Method": "UpdatePaymentPolicy",
+    "RelativePath": "api/PaymentPolicy/payment-policies",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "IdPaymentPolicy",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "PolicyCode",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "Description",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "File",
+        "Type": "Microsoft.AspNetCore.Http.IFormFile",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.PaymentPolicyController",
+    "Method": "DeletePaymentPolicy",
+    "RelativePath": "api/PaymentPolicy/payment-policies",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "command",
+        "Type": "SistemaDigitalizacionPolizas.Application.Services.PaymentPolicy_Service.Commands.DeletePaymentPolicy.DeletePaymentPolicyCommand",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.PaymentPolicyController",
+    "Method": "GetAllPolicies",
+    "RelativePath": "api/PaymentPolicy/policies",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "page",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "pageSize",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.PermissionsController",
     "Method": "GetPermissionsByRole",
     "RelativePath": "api/Permissions/{idRol}",

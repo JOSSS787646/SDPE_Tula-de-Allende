@@ -22,5 +22,6 @@ namespace SSistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.StatusReq
         //Desactivar un fondo
         Task<bool> DeleteAsync(int code, int userId);
         Task<ApplicationStatus?> GetByIdAsync(int id);
+   
     }
 }

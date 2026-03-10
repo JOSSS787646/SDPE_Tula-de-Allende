@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "3Pe2+R7s+t8=",
+  "dgSpecHash": "U8A9gnXfaHk=",
   "success": true,
-  "projectFilePath": "C:\\Estadia Ingenieria\\Febrero\\Back\\Sprint6O\\SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.Application\\SistemaDigitalizacionPolizas.Application.csproj",
+  "projectFilePath": "C:\\Estadia Ingenieria\\Marzo\\Sprint7\\SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.Application\\SistemaDigitalizacionPolizas.Application.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\josea\\.nuget\\packages\\automapper\\10.0.0\\automapper.10.0.0.nupkg.sha512",
     "C:\\Users\\josea\\.nuget\\packages\\awssdk.core\\4.0.3.8\\awssdk.core.4.0.3.8.nupkg.sha512",

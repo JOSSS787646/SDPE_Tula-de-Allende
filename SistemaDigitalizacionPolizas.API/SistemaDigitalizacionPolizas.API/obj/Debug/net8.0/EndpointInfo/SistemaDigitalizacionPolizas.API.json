@@ -2715,6 +2715,130 @@
         }
       }
     },
+    "/api/PaymentPolicy/policies": {
+      "get": {
+        "tags": [
+          "PaymentPolicy"
+        ],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/PaymentPolicy/available-policies": {
+      "get": {
+        "tags": [
+          "PaymentPolicy"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/PaymentPolicy/payment-policies": {
+      "put": {
+        "tags": [
+          "PaymentPolicy"
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "IdPaymentPolicy": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "PolicyCode": {
+                    "type": "string"
+                  },
+                  "Description": {
+                    "type": "string"
+                  },
+                  "File": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              },
+              "encoding": {
+                "IdPaymentPolicy": {
+                  "style": "form"
+                },
+                "PolicyCode": {
+                  "style": "form"
+                },
+                "Description": {
+                  "style": "form"
+                },
+                "File": {
+                  "style": "form"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "PaymentPolicy"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeletePaymentPolicyCommand"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeletePaymentPolicyCommand"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeletePaymentPolicyCommand"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Permissions/update": {
       "post": {
         "tags": [
@@ -4423,6 +4547,20 @@
       "DeleteExpedientDocumentRequestDto": {
         "type": "object",
         "properties": {
+          "password": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "DeletePaymentPolicyCommand": {
+        "type": "object",
+        "properties": {
+          "idPaymentPolicy": {
+            "type": "integer",
+            "format": "int32"
+          },
           "password": {
             "type": "string",
             "nullable": true
