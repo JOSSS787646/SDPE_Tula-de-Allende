@@ -67,6 +67,7 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
         {
             var result = await _mediator.Send(command);
 
+
             return Ok(result);
         }
 

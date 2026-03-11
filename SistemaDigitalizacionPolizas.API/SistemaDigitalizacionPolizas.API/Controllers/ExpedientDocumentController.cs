@@ -12,6 +12,7 @@ using SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Servic
 using SistemaDigitalizacionPolizas.Domain.Dtos.AcquisitionRequest;
 using SistemaDigitalizacionPolizas.Domain.Dtos.ExpedientDocument;
 using SistemaDigitalizacionPolizas.Domain.Dtos.Auth;
+using SistemaDigitalizacionPolizas.Application.Services.AcqusitionRequest_Service.Commands.ReviewDocument;
 
 namespace SistemaDigitalizacionPolizas.API.Controllers
 {
@@ -19,7 +20,7 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
     /// Controlador para la gestión de documentos del expediente.
     /// Permite consultar, subir, actualizar, eliminar y descargar documentos.
     /// </summary>
-    [Authorize]
+   // [Authorize]
     [ApiController]
     [Route("api/expedient-documents")]
     public class ExpedientDocumentController : ControllerBase
@@ -216,6 +217,25 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
         {
             var result = await _mediator.Send(
                 new DeleteExpedientDocumentCommand(id, request.Password)
+            );
+
+            return Ok(result);
+        }
+
+
+
+
+        [HttpPost("expedient-documents/{id}/review")]
+        public async Task<IActionResult> ReviewDocument(
+    int id,
+    [FromBody] ReviewDocumentRequestDto request)
+        {
+            var result = await _mediator.Send(
+                new ReviewDocumentCommand(
+                    id,
+                    request.DocumentStatusId,
+                    request.Observations
+                )
             );
 
             return Ok(result);

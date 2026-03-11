@@ -2,6 +2,7 @@
 using SistemaDigitalizacionPolizas.Application.Services.AcqusitionRequest_Service.Commands.CreateRequest;
 using SistemaDigitalizacionPolizas.Application.Services.AcqusitionRequest_Service.Commands.DeleteRequest;
 using SistemaDigitalizacionPolizas.Application.Services.AcqusitionRequest_Service.Commands.UpdateAcqusitionRequest;
+using SistemaDigitalizacionPolizas.Application.Services.AcqusitionRequest_Service.Commands.UpdatePaymentPolicy;
 using SistemaDigitalizacionPolizas.Application.Services.AcqusitionRequest_Service.Queries.GetAcquisitionRequestDetail;
 using SistemaDigitalizacionPolizas.Application.Services.AcqusitionRequest_Service.Queries.GetAllAcquisitionRequest;
 using SistemaDigitalizacionPolizas.Domain.Dtos.AcquisitionRequest;
@@ -84,6 +85,19 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
             );
 
             return NoContent();
+        }
+
+
+        [HttpPatch("{id}/payment-policy")]
+        public async Task<IActionResult> UpdatePaymentPolicy(
+    int id,
+    [FromBody] int idPaymentPolicy)
+        {
+            var result = await _mediator.Send(
+                new UpdatePaymentPolicyCommand(id, idPaymentPolicy)
+            );
+
+            return Ok(result);
         }
     }
 }

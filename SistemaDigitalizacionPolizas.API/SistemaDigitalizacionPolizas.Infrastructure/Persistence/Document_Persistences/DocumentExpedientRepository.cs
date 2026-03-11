@@ -36,6 +36,11 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Document_Persi
         }
 
 
+        public async Task UpdateAsync(ExpedientDocument entity)
+        {
+            _context.ExpedientDocuments.Update(entity);
+        }
+
         public async Task<ExpedientDocument?> GetByIdAsync(int id)
         {
             return await _context.ExpedientDocuments
@@ -47,12 +52,13 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Document_Persi
             _context.ExpedientDocuments.Update(entity);
         }
 
+    
+
         public async Task<List<ExpedientDocument>> GetActiveByRequestId(int requestId)
         {
             return await _context.ExpedientDocuments
                 .Where(x =>
                     x.RequestId == requestId &&
-                    x.IdDocumentStatus == 1 &&
                     x.Active == true)
                 .ToListAsync();
         }
