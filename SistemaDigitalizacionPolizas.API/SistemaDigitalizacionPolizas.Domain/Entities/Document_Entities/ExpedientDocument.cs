@@ -18,11 +18,11 @@ namespace SistemaDigitalizacionPolizas.Domain.Entities.Document_Entities
         // ================================
         // Foreign Keys
         // ================================
-        public int? RequestId { get; set; }
+        public int RequestId { get; set; }
         public int? DocumentTypeId { get; set; }
 
         // 🔥 FK a EstadoDocumento
-        public int? IdDocumentStatus { get; set; }
+        public int IdDocumentStatus { get; set; }
 
         // ================================
         // File Information

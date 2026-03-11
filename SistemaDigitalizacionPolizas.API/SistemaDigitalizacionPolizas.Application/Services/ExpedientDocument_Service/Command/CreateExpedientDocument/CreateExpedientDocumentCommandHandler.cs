@@ -8,7 +8,7 @@ using SistemaDigitalizacionPolizas.Infrastructure.Persistence.Services.UploatFil
 namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Service.Command.CreateExpedientDocument
 {
     public class CreateExpedientDocumentCommandHandler
-       : IRequestHandler<CreateExpedientDocumentCommand, int>
+        : IRequestHandler<CreateExpedientDocumentCommand, int>
     {
         private readonly IDocumentExpedientRepository _repository;
         private readonly IDocumentStatusRepository _documentStatusRepository;
@@ -36,7 +36,15 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
             try
             {
                 // ================================
-                // 1️⃣ Subir archivo a Wasabi
+                // 1️⃣ Validar RequestId
+                // ================================
+                if (!request.RequestId.HasValue)
+                    throw new Exception("La solicitud es requerida.");
+
+                int requestId = request.RequestId.Value;
+
+                // ================================
+                // 2️⃣ Subir archivo
                 // ================================
                 using var stream = request.File.OpenReadStream();
 
@@ -50,26 +58,30 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
                 var userId = _currentUserService.UserId;
 
                 // ================================
-                // 2️⃣ Resolver estado de documento
+                // 3️⃣ Resolver estado del documento
                 // ================================
-                int? idEstadoDocumento = request.IdDocumentStatus;
+                int idEstadoDocumento;
 
-                if (idEstadoDocumento == null)
+                if (request.IdDocumentStatus.HasValue)
                 {
-                    // Ejemplo: Code = 1 => PENDIENTE o CARGADO
+                    idEstadoDocumento = request.IdDocumentStatus.Value;
+                }
+                else
+                {
                     var defaultStatus = await _documentStatusRepository.GetByCodeAsync(1);
+
                     if (defaultStatus == null)
-                        throw new InvalidOperationException("No existe un estado de documento por defecto (Code = 1).");
+                        throw new InvalidOperationException("No existe un estado de documento por defecto.");
 
                     idEstadoDocumento = defaultStatus.idDocumentStatus;
                 }
 
                 // ================================
-                // 3️⃣ Crear entidad
+                // 4️⃣ Crear entidad
                 // ================================
                 var entity = new ExpedientDocument
                 {
-                    RequestId = request.RequestId,
+                    RequestId = requestId,
                     DocumentTypeId = request.DocumentTypeId,
                     IdDocumentStatus = idEstadoDocumento,
 
@@ -86,6 +98,9 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
                     Active = true
                 };
 
+                // ================================
+                // 5️⃣ Guardar en BD
+                // ================================
                 await _repository.AddAsync(entity);
                 await _repository.SaveChangesAsync();
 
@@ -93,7 +108,9 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
             }
             catch
             {
-                // 🔥 Rollback del archivo si falla la BD
+                // ================================
+                // 🔥 Rollback del archivo si falla BD
+                // ================================
                 if (!string.IsNullOrEmpty(filePath))
                 {
                     await _fileStorageService.DeleteAsync(filePath);

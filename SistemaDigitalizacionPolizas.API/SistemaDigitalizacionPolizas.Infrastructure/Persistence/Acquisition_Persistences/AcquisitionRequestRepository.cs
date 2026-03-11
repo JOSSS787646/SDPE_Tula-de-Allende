@@ -60,6 +60,8 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Acquisition_Pe
 
 
 
+
+
         public async Task<AcquisitionRequestDetailDto?> GetDetailAsync(int idRequest)
         {
             return await _context.AcquisitionRequests

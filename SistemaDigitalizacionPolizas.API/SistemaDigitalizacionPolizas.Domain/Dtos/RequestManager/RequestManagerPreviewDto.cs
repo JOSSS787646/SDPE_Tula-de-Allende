@@ -13,6 +13,7 @@ namespace SistemaDigitalizacionPolizas.Domain.Dtos.RequestManager
         public string FullName { get; set; } = null!;
 
         public string? RequestNumber { get; set; }
+        public string Email { get; set; } = null!;
 
         public string? AdministrativeUnit { get; set; }
     }

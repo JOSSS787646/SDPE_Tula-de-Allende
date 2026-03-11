@@ -53,7 +53,7 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
             try
             {
                 // 🔥 Estado automático = Cargado (clave 1)
-                var cargadoStatus = await _statusRepository.GetByCodeAsync(1);
+                var cargadoStatus = await _statusRepository.GetByCodeAsync(2);
 
                 if (cargadoStatus == null)
                     throw new Exception("No existe estado 'Cargado' configurado.");

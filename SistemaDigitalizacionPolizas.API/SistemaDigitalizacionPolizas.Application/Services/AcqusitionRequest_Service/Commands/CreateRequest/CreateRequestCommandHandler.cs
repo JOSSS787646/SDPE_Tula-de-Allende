@@ -44,10 +44,11 @@ public class CreateRequestCommandHandler
         // Obtener estado inicial (Borrador)
         // ==========================================
 
-        var borradorStatus = await _statusRepository.GetByCodeAsync(1);
 
-        if (borradorStatus == null)
-            throw new Exception("No existe estado 'Borrador' configurado.");
+        var initialStatus = await _statusRepository.GetByCodeAsync(1);
+
+        if (initialStatus == null)
+            throw new Exception("No existe estado inicial configurado.");
 
         // ==========================================
         // Crear entidad
@@ -73,7 +74,7 @@ public class CreateRequestCommandHandler
             IdProject = dto.IdProject,
             IdAcquisitionType = dto.IdAcquisitionType,
             IdSupplier = dto.IdSupplier,
-            IdApplicationStatus = borradorStatus.IdApplicationStatus,
+            IdApplicationStatus = initialStatus.IdApplicationStatus,
             IdFundingSource = dto.IdFundingSource,
             IdAcquisitionClassification = dto.IdAcquisitionClassification,
             IdProgram = dto.IdProgram,

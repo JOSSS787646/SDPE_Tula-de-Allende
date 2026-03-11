@@ -58,7 +58,7 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
                     entity.UploadDate = DateTime.UtcNow;
 
                     // estado cargado automáticamente
-                    entity.IdDocumentStatus = 1;
+                    entity.IdDocumentStatus = 2;
                 }
 
                 // 🔥 actualizar observaciones
@@ -68,8 +68,7 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
                 _repository.Update(entity);
 
                 // 🔥 recalcular estado de la solicitud
-                if (entity.RequestId.HasValue)
-                    await _requestStatusService.RecalculateStatus(entity.RequestId.Value);
+                await _requestStatusService.RecalculateStatus(entity.RequestId);
 
                 // 🔥 commit único
                 await _unitOfWork.CommitAsync();

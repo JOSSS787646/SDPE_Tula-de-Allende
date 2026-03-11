@@ -7,7 +7,7 @@ using SistemaDigitalizacionPolizas.Domain.Dtos.User;
 
 namespace SistemaDigitalizacionPolizas.API.Controllers
 {
-    [Authorize]
+   // [Authorize]
     [ApiController]
     [Route("api/users")]
     public class UsersController : ControllerBase
