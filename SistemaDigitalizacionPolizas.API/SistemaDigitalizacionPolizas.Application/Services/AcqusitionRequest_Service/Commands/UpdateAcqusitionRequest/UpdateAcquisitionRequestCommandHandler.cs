@@ -34,6 +34,7 @@ namespace SistemaDigitalizacionPolizas.Application.Services.AcqusitionRequest_Se
             entity.Justification = dto.Justification;
             entity.AuthorizationDate = dto.AuthorizationDate;
             entity.Observations = dto.Observations;
+            entity.CFDI = dto.CFDI;
 
             entity.IdAdministrativeUnit = dto.IdAdministrativeUnit;
             entity.IdProject = dto.IdProject;

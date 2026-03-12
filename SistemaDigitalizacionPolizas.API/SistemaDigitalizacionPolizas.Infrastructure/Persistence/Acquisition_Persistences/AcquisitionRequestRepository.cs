@@ -76,6 +76,14 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Acquisition_Pe
                     AuthorizationDate = x.AuthorizationDate,
                     Observations = x.Observations,
 
+                    // 🔹 NUEVO
+                    PolicyNumber = x.PaymentPolicy != null
+                        ? x.PaymentPolicy.PolicyCode
+                        : null,
+
+                    // 🔹 NUEVO
+                    CFDI = x.CFDI,
+
                     AdministrativeUnit = x.AdministrativeUnit == null ? null : new SimpleCatalogDto
                     {
                         Id = x.AdministrativeUnit.IdAdministrativeUnit,
@@ -86,7 +94,6 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Acquisition_Pe
                     {
                         Id = x.Project.idProyect,
                         Name = x.Project.Description
-
                     },
 
                     AcquisitionType = x.AcquisitionType == null ? null : new SimpleCatalogDto
@@ -141,7 +148,7 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Acquisition_Pe
                     {
                         Id = x.ApplicationStatus.IdApplicationStatus,
                         Name = x.ApplicationStatus.Description
-                    },
+                    }
                 })
                 .FirstOrDefaultAsync();
         }
@@ -149,21 +156,23 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Acquisition_Pe
 
 
         public async Task<(IEnumerable<AcquisitionRequestPolizaDto> Data, int TotalRecords)>
-                GetAllPolizaInfoPaginatedAsync(int pageNumber, int pageSize)
+ GetAllPolizaInfoPaginatedAsync(int pageNumber, int pageSize)
         {
             var query = _context.AcquisitionRequests
-                .AsNoTracking(); // 🔥 solo lectura = más rápido
+                .AsNoTracking();
 
             var totalRecords = await query.CountAsync();
 
             var data = await query
-                .OrderByDescending(r => r.CreatedAt) // opcional pero recomendable
+                .OrderByDescending(r => r.CreatedAt)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .Select(r => new AcquisitionRequestPolizaDto
                 {
-                    Folio = r.RequestNumber,
                     IdRequest = r.IdRequest,
+                    Folio = r.RequestNumber,
+                    CFDI=r.CFDI,
+
                     AcquisitionClassification = r.AcquisitionClassification != null
                         ? r.AcquisitionClassification.Description
                         : "Sin clasificación",
@@ -171,16 +180,17 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Acquisition_Pe
                     RequestDate = r.RequestDate,
 
                     Status = r.ApplicationStatus != null
-                    ? r.ApplicationStatus.Description
-                    : "Sin estatus",
+                        ? r.ApplicationStatus.Description
+                        : "Sin estatus",
 
-                    PolicyNumber = null // aún no existe póliza
+                    PolicyNumber = r.PaymentPolicy != null
+                        ? r.PaymentPolicy.PolicyCode
+                        : null
                 })
                 .ToListAsync();
 
             return (data, totalRecords);
         }
-
 
         public async Task DeleteCascadeAsync(int solicitudId)
         {

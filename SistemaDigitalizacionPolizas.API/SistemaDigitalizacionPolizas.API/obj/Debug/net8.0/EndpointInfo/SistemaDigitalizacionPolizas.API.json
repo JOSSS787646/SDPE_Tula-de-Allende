@@ -3977,6 +3977,14 @@
             "type": "string",
             "nullable": true
           },
+          "cfdi": {
+            "type": "string",
+            "nullable": true
+          },
+          "policyNumber": {
+            "type": "string",
+            "nullable": true
+          },
           "currentRequestStatus": {
             "$ref": "#/components/schemas/SimpleCatalogDto"
           },
@@ -4227,6 +4235,10 @@
             "nullable": true
           },
           "observations": {
+            "type": "string",
+            "nullable": true
+          },
+          "cfdi": {
             "type": "string",
             "nullable": true
           },
@@ -5172,6 +5184,10 @@
             "nullable": true
           },
           "observations": {
+            "type": "string",
+            "nullable": true
+          },
+          "cfdi": {
             "type": "string",
             "nullable": true
           },
