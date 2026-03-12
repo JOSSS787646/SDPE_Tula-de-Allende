@@ -15,6 +15,7 @@ namespace SistemaDigitalizacionPolizas.Domain.Dtos.AcquisitionRequest
         public string? Justification { get; set; }
         public DateTime? AuthorizationDate { get; set; }
         public string? Observations { get; set; }
+        public string? CFDI { get; set; }
 
         public int? IdAdministrativeUnit { get; set; }
         public int? IdProject { get; set; }

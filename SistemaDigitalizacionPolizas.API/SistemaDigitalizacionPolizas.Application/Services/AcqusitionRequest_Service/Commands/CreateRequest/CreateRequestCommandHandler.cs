@@ -65,6 +65,7 @@ public class CreateRequestCommandHandler
             Justification = dto.Justification,
             AuthorizationDate = dto.AuthorizationDate,
             Observations = dto.Observations,
+            CFDI = dto.CFDI,
 
             // ===============================
             // Foreign Keys

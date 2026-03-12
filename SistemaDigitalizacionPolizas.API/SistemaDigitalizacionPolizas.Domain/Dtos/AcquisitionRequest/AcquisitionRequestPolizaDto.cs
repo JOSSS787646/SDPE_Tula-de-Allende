@@ -25,5 +25,7 @@ namespace SistemaDigitalizacionPolizas.Domain.Dtos.AcquisitionRequest
 
         // Número de póliza (aún no existe)
         public string? PolicyNumber { get; set; }
+
+        public string? CFDI { get; set; }
     }
 }
