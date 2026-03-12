@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Persistence\Services\Email\Templates\DocumentsUploaded.html" />
     <EmbeddedResource Include="Persistence\Services\Email\Templates\PasswordRecovery.html" />
   </ItemGroup>
 

@@ -3862,6 +3862,37 @@
         }
       }
     },
+    "/api/system-configuration/upsert": {
+      "post": {
+        "tags": [
+          "SystemConfiguration"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpsertSystemConfigurationCommand"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpsertSystemConfigurationCommand"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpsertSystemConfigurationCommand"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/users": {
       "post": {
         "tags": [
@@ -5639,6 +5670,20 @@
           "createdBy": {
             "type": "integer",
             "format": "int32",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "UpsertSystemConfigurationCommand": {
+        "type": "object",
+        "properties": {
+          "emailsEnabled": {
+            "type": "boolean"
+          },
+          "notificationStartDate": {
+            "type": "string",
+            "format": "date-time",
             "nullable": true
           }
         },

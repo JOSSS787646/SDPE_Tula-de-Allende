@@ -82,11 +82,14 @@ public class EmailService : IEmailService
 
 
     public async Task SendDocumentsUploadedAsync(
-    string to,
-    string userName,
-    int requestId,
-    DateTime date
-)
+        string to,
+        string userName,
+        string requestId,
+        string administrativeUnit,
+        string requestDescription,
+        DateTime date,
+        string documentsList
+    )
     {
         ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
@@ -98,7 +101,9 @@ public class EmailService : IEmailService
         using var stream = assembly.GetManifestResourceStream(resourceName);
 
         if (stream == null)
-            throw new Exception("No se encontró el template.");
+            throw new FileNotFoundException(
+                $"No se encontró el template embebido: {resourceName}"
+            );
 
         using var reader = new StreamReader(stream);
 
@@ -107,8 +112,11 @@ public class EmailService : IEmailService
         htmlBody = htmlBody
             .Replace("{{USER}}", userName)
             .Replace("{{REQUEST}}", requestId.ToString())
+            .Replace("{{UNIT}}", administrativeUnit)
+            .Replace("{{DESCRIPTION}}", requestDescription)
             .Replace("{{DATE}}", date.ToString("dd/MM/yyyy"))
-            .Replace("{{TIME}}", date.ToString("HH:mm"));
+            .Replace("{{TIME}}", date.ToString("HH:mm"))
+            .Replace("{{DOCUMENTS}}", documentsList);
 
         var smtp = new SmtpClient
         {
@@ -124,7 +132,7 @@ public class EmailService : IEmailService
         var mail = new MailMessage
         {
             From = new MailAddress(_configuration["Smtp:User"]),
-            Subject = "Documentos cargados para revisión",
+            Subject = $"Documentos cargados para revisión - Solicitud #{requestId}",
             Body = htmlBody,
             IsBodyHtml = true
         };

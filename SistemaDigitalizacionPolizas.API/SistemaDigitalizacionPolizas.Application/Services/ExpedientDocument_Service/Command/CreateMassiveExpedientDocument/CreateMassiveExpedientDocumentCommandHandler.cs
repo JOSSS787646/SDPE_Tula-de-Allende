@@ -1,10 +1,12 @@
 ﻿using MediatR;
 using SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Service.Service;
 using SistemaDigitalizacionPolizas.Domain.Entities.Document_Entities;
+using SistemaDigitalizacionPolizas.Domain.Enums;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Document;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.StatusRequest;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Services;
 using SistemaDigitalizacionPolizas.Infrastructure.Persistence.Services.UploatFile;
+using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.RequestNotification;
 
 namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Service.Command.CreateMassiveExpedientDocument
 {
@@ -13,25 +15,37 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
     {
         private readonly IDocumentExpedientRepository _repository;
         private readonly IDocumentStatusRepository _statusRepository;
+        private readonly IRequestNotificationRepository _notificationRepository;
+        private readonly INotificationPolicyService _notificationPolicyService;
         private readonly IFileStorageService _fileStorageService;
         private readonly ICurrentUserService _currentUserService;
         private readonly IUnitOfWorkService _unitOfWork;
         private readonly IRequestStatusService _requestStatusService;
+        private readonly IEmailService _emailService;
+        private readonly IUserRepository _userRepository;
 
         public CreateMassiveExpedientDocumentCommandHandler(
             IDocumentExpedientRepository repository,
             IDocumentStatusRepository statusRepository,
+            IRequestNotificationRepository notificationRepository,
+            INotificationPolicyService notificationPolicyService,
             IFileStorageService fileStorageService,
             ICurrentUserService currentUserService,
             IUnitOfWorkService unitOfWork,
-            IRequestStatusService requestStatusService)
+            IRequestStatusService requestStatusService,
+            IEmailService emailService,
+            IUserRepository userRepository)
         {
             _repository = repository;
             _statusRepository = statusRepository;
+            _notificationRepository = notificationRepository;
+            _notificationPolicyService = notificationPolicyService;
             _fileStorageService = fileStorageService;
             _currentUserService = currentUserService;
             _unitOfWork = unitOfWork;
             _requestStatusService = requestStatusService;
+            _emailService = emailService;
+            _userRepository = userRepository;
         }
 
         public async Task<List<int>> Handle(
@@ -52,8 +66,8 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
 
             try
             {
-                // 🔥 Estado automático = Cargado (clave 1)
-                var cargadoStatus = await _statusRepository.GetByCodeAsync(2);
+                var cargadoStatus = await _statusRepository
+                    .GetByCodeAsync((int)DocumentStatusEnum.Cargado);
 
                 if (cargadoStatus == null)
                     throw new Exception("No existe estado 'Cargado' configurado.");
@@ -78,13 +92,11 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
                     {
                         RequestId = request.RequestId,
                         DocumentTypeId = item.DocumentTypeId,
-                        IdDocumentStatus = cargadoStatus.idDocumentStatus,
-
+                        IdDocumentStatus = (int)DocumentStatusEnum.Cargado,
                         FileName = item.File.FileName,
                         FilePath = filePath,
                         UploadDate = DateTime.UtcNow,
                         Observations = item.Observations,
-
                         UploadedBy = userId,
                         CreatedBy = userId,
                         CreatedAt = DateTime.UtcNow,
@@ -92,14 +104,48 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
                     });
                 }
 
-                // 🔥 Insertar documentos
                 await _repository.AddRangeAsync(entities);
 
-                // 🔥 Recalcular estado del expediente (NO hace commit)
                 await _requestStatusService.RecalculateStatus(request.RequestId);
 
-                // 🔥 Commit único al final
                 await _unitOfWork.CommitAsync();
+
+                // ============================================
+                // VALIDAR SI SE DEBE ENVIAR NOTIFICACIÓN
+                // ============================================
+
+                var shouldSendNotification = await _notificationPolicyService
+                    .ShouldSendNotificationAsync(request.RequestId);
+
+                if (shouldSendNotification)
+                {
+                    var reviewerEmail = await _userRepository
+                        .GetEmailByRoleAsync((int)SystemRolesEnum.ReadView);
+
+                    if (!string.IsNullOrEmpty(reviewerEmail))
+                    {
+                        var requestInfo = await _notificationRepository
+                            .GetRequestNotificationInfoAsync(request.RequestId);
+
+                        var documentList = string.Join("",
+                            entities.Select(x => $"<div>• {x.FileName}</div>")
+                        );
+
+                        var requestNumber = requestInfo?.RequestNumber ?? "N/A";
+                        var administrativeUnitName = requestInfo?.AdministrativeUnitName ?? "No especificada";
+                        var requestDescription = requestInfo?.Justification ?? "Sin justificación";
+
+                        await _emailService.SendDocumentsUploadedAsync(
+                            reviewerEmail,
+                            _currentUserService.Email,
+                            requestNumber,
+                            administrativeUnitName,
+                            requestDescription,
+                            DateTime.Now,
+                            documentList
+                        );
+                    }
+                }
 
                 return entities.Select(x => x.Id).ToList();
             }
@@ -107,7 +153,6 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
             {
                 await _unitOfWork.RollbackAsync();
 
-                // 🔥 Si falla BD, eliminar archivos físicos
                 foreach (var path in uploadedPaths)
                 {
                     await _fileStorageService.DeleteAsync(path);

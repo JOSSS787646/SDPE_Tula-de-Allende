@@ -6,9 +6,11 @@ using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.AdministrtiveU
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Community;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Document;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.IPaymentPolicy;
+using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.ISystemConfiguration;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Permissions;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.RequestingAdministration;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.RequestManager;
+using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.RequestNotification;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Roles;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.StatusRequest;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Suppliers;
@@ -22,10 +24,12 @@ using SistemaDigitalizacionPolizas.Infrastructure.Persistence.Document_Persisten
 using SistemaDigitalizacionPolizas.Infrastructure.Persistence.PaymentPolicy_Persistences;
 using SistemaDigitalizacionPolizas.Infrastructure.Persistence.RequestingAdministration_Persistences;
 using SistemaDigitalizacionPolizas.Infrastructure.Persistence.RequestManager_Persistences;
+using SistemaDigitalizacionPolizas.Infrastructure.Persistence.RequestNotification_Persistences;
 using SistemaDigitalizacionPolizas.Infrastructure.Persistence.Services.Auditory;
 using SistemaDigitalizacionPolizas.Infrastructure.Persistence.Services.UnitOfWork;
 using SistemaDigitalizacionPolizas.Infrastructure.Persistence.Services.UploatFile;
 using SistemaDigitalizacionPolizas.Infrastructure.Persistence.Supplier_Persistence;
+using SistemaDigitalizacionPolizas.Infrastructure.Persistence.SystemConfiguration_Persistences;
 using SSistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.StatusRequest;
 
 
@@ -96,9 +100,11 @@ namespace SistemaDigitalizacionPolizas.Infrastructure
             services.AddScoped<IRequestDocumentExceptionRepository, RequestDocumentExceptionRepository>();
             services.AddScoped<IRequestManagerRepository, RequestManagerRepository>();
             services.AddScoped<IPaymentPolicyRepository, PaymentPolicyRepository>();
+            services.AddScoped<IRequestNotificationRepository, RequestNotificationRepository>();
+            services.AddScoped<ISystemConfigurationRepository, SystemConfigurationRepository>();
 
 
-            
+
 
             //Application Status Repository
             services.AddScoped<IApplicationStatusRepository, ApplicationStatusRepository>();

@@ -11,6 +11,7 @@ using SistemaDigitalizacionPolizas.Domain.Entities.RequestingAdministration_Enti
 using SistemaDigitalizacionPolizas.Domain.Entities.RequestManager_Entities;
 using SistemaDigitalizacionPolizas.Domain.Entities.RequestStatusHistory_Entities;
 using SistemaDigitalizacionPolizas.Domain.Entities.Supplier_Entities;
+using SistemaDigitalizacionPolizas.Domain.Entities.SystemConfiguration_Entities;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Document;
 using SistemaDigitalizacionPolizas.Infrastructure.Persistence.Document_Persistences;
 using SistemaDigitalizacionPolizas.Infrastructure.Persistence.RequestManager_Persistences;
@@ -46,6 +47,8 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence
         public DbSet<RequestDocumentException> RequestDocumentExceptions { get; set; }
         public DbSet<RequestManager> RequestManagers { get; set; }
         public DbSet<PaymentPolicy> PaymentPolicies { get; set; }
+
+        public DbSet<SystemConfiguration> SystemConfigurations { get; set; }
         public DbSet<RequestStatusHistory> RequestStatusHistories { get; set; }
         //Recuperacion de Contraseñas
         public DbSet<PasswordResetToken> PasswordResetTokens { get; set; }
