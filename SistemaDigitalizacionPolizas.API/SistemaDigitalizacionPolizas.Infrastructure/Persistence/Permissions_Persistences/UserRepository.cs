@@ -22,6 +22,14 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Permissions_Pe
                 .FirstOrDefaultAsync(u => u.Email == email);
         }
 
+
+        public async Task<string?> GetEmailByRoleAsync(int roleId)
+        {
+            return await _context.Users
+                .Where(x => x.IdRole == roleId && x.Asset)
+                .Select(x => x.Email)
+                .FirstOrDefaultAsync();
+        }
         //Obtiene a un usurio con su sul, area, token y permisos
         public async Task<User?> GetUserWithRolesAndPermissionsAsync(string email)
         {

@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Services;
-
 
 namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Services.Auditory
 {
@@ -30,6 +24,26 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Services.Audit
                 return userIdClaim != null
                     ? int.Parse(userIdClaim.Value)
                     : 0;
+            }
+        }
+
+        public string Email
+        {
+            get
+            {
+                return _httpContextAccessor.HttpContext?
+                    .User?
+                    .FindFirst(ClaimTypes.Email)?.Value ?? "";
+            }
+        }
+
+        public string Role
+        {
+            get
+            {
+                return _httpContextAccessor.HttpContext?
+                    .User?
+                    .FindFirst(ClaimTypes.Role)?.Value ?? "";
             }
         }
     }

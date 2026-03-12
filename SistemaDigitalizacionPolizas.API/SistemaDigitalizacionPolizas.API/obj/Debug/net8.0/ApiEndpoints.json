@@ -200,6 +200,27 @@
   },
   {
     "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.AcquisitionRequestController",
+    "Method": "UpdateCFDICommand",
+    "RelativePath": "api/AcquisitionRequest/{id}/CFDI",
+    "HttpMethod": "PATCH",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "cdfi",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.AcquisitionRequestController",
     "Method": "UpdatePaymentPolicy",
     "RelativePath": "api/AcquisitionRequest/{id}/payment-policy",
     "HttpMethod": "PATCH",
