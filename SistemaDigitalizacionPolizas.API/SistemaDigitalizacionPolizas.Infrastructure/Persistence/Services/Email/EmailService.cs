@@ -82,11 +82,14 @@ public class EmailService : IEmailService
 
 
     public async Task SendDocumentsUploadedAsync(
-    string to,
-    string userName,
-    int requestId,
-    DateTime date
-)
+        string to,
+        string userName,
+        string requestId,
+        string administrativeUnit,
+        string requestDescription,
+        DateTime date,
+        string documentsList
+    )
     {
         ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
@@ -98,7 +101,9 @@ public class EmailService : IEmailService
         using var stream = assembly.GetManifestResourceStream(resourceName);
 
         if (stream == null)
-            throw new Exception("No se encontró el template.");
+            throw new FileNotFoundException(
+                $"No se encontró el template embebido: {resourceName}"
+            );
 
         using var reader = new StreamReader(stream);
 
@@ -107,8 +112,11 @@ public class EmailService : IEmailService
         htmlBody = htmlBody
             .Replace("{{USER}}", userName)
             .Replace("{{REQUEST}}", requestId.ToString())
+            .Replace("{{UNIT}}", administrativeUnit)
+            .Replace("{{DESCRIPTION}}", requestDescription)
             .Replace("{{DATE}}", date.ToString("dd/MM/yyyy"))
-            .Replace("{{TIME}}", date.ToString("HH:mm"));
+            .Replace("{{TIME}}", date.ToString("HH:mm"))
+            .Replace("{{DOCUMENTS}}", documentsList);
 
         var smtp = new SmtpClient
         {
@@ -124,7 +132,7 @@ public class EmailService : IEmailService
         var mail = new MailMessage
         {
             From = new MailAddress(_configuration["Smtp:User"]),
-            Subject = "Documentos cargados para revisión",
+            Subject = $"Documentos cargados para revisión - Solicitud #{requestId}",
             Body = htmlBody,
             IsBodyHtml = true
         };
@@ -133,4 +141,134 @@ public class EmailService : IEmailService
 
         await smtp.SendMailAsync(mail);
     }
+
+
+
+    public async Task SendDocumentReviewNotificationAsync(
+      string toEmail,
+      string reviewerName,
+      string requestNumber,
+      string result,
+      string? observations,
+         string documentName
+  )
+    {
+        ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+
+        var assembly = Assembly.GetExecutingAssembly();
+
+        var resourceName =
+        "SistemaDigitalizacionPolizas.Infrastructure.Persistence.Services.Email.Templates.DocumentReviewNotification.html";
+
+        using var stream = assembly.GetManifestResourceStream(resourceName);
+
+        if (stream == null)
+            throw new FileNotFoundException(
+                $"No se encontró el template embebido: {resourceName}"
+            );
+
+        using var reader = new StreamReader(stream);
+
+        var htmlBody = await reader.ReadToEndAsync();
+
+        var now = DateTime.Now;
+
+        htmlBody = htmlBody
+            .Replace("{{REVIEWER}}", reviewerName)
+            .Replace("{{REQUEST}}", requestNumber)
+            .Replace("{{DOCUMENT}}", documentName)
+            .Replace("{{RESULT}}", result)
+            .Replace("{{OBSERVATIONS}}", observations ?? "Sin observaciones")
+            .Replace("{{DATE}}", now.ToString("dd/MM/yyyy"))
+            .Replace("{{TIME}}", now.ToString("HH:mm"));
+
+        var smtp = new SmtpClient
+        {
+            Host = _configuration["Smtp:Host"],
+            Port = int.Parse(_configuration["Smtp:Port"]),
+            EnableSsl = true,
+            Credentials = new NetworkCredential(
+                _configuration["Smtp:User"],
+                _configuration["Smtp:Password"]
+            )
+        };
+
+        var mail = new MailMessage
+        {
+            From = new MailAddress(_configuration["Smtp:User"]),
+            Subject = $"Documentos revisados - Solicitud #{requestNumber}",
+            Body = htmlBody,
+            IsBodyHtml = true
+        };
+
+        mail.To.Add(toEmail);
+
+        await smtp.SendMailAsync(mail);
+    }
+
+
+    public async Task SendDocumentReviewedAsync(
+        string toEmail,
+        string reviewerName,
+        string requestNumber,
+        string documentName,
+        string result,
+        string? observations
+    )
+    {
+        ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+
+        var assembly = Assembly.GetExecutingAssembly();
+
+        var resourceName =
+        "SistemaDigitalizacionPolizas.Infrastructure.Persistence.Services.Email.Templates.DocumentReviewed.html";
+
+        using var stream = assembly.GetManifestResourceStream(resourceName);
+
+        if (stream == null)
+            throw new FileNotFoundException(
+                $"No se encontró el template embebido: {resourceName}"
+            );
+
+        using var reader = new StreamReader(stream);
+
+        var htmlBody = await reader.ReadToEndAsync();
+
+        var now = DateTime.Now;
+
+        htmlBody = htmlBody
+            .Replace("{{REVIEWER}}", reviewerName)
+            .Replace("{{REQUEST}}", requestNumber)
+            .Replace("{{DOCUMENT}}", documentName)
+            .Replace("{{RESULT}}", result)
+            .Replace("{{OBSERVATIONS}}", observations ?? "Sin observaciones")
+            .Replace("{{DATE}}", now.ToString("dd/MM/yyyy"))
+            .Replace("{{TIME}}", now.ToString("HH:mm"));
+
+        var smtp = new SmtpClient
+        {
+            Host = _configuration["Smtp:Host"],
+            Port = int.Parse(_configuration["Smtp:Port"]),
+            EnableSsl = true,
+            Credentials = new NetworkCredential(
+                _configuration["Smtp:User"],
+                _configuration["Smtp:Password"]
+            )
+        };
+
+        var mail = new MailMessage
+        {
+            From = new MailAddress(_configuration["Smtp:User"]),
+            Subject = $"Resultado de revisión de documento - Solicitud #{requestNumber}",
+            Body = htmlBody,
+            IsBodyHtml = true
+        };
+
+        mail.To.Add(toEmail);
+
+        await smtp.SendMailAsync(mail);
+    }
+
+
+
 }

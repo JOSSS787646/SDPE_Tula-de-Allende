@@ -14,6 +14,16 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Permissions_Pe
             _context = context;
         }
 
+        public async Task<int> GetUserIdByRoleAsync(int roleId)
+        {
+            var user = await _context.Users
+                .Where(u => u.IdRole == roleId && u.Asset)
+                .Select(u => new { u.IdUser })
+                .FirstOrDefaultAsync();
+
+            return user?.IdUser ?? 0;
+        }
+
 
         //Obtiene a un usuario por su gamil
         public async Task<User?> GetByEmailAsync(string email)

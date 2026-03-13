@@ -11,6 +11,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Persistence\Services\Email\Templates\DocumentReviewed.html" />
+    <EmbeddedResource Include="Persistence\Services\Email\Templates\DocumentReviewNotification.html" />
+    <EmbeddedResource Include="Persistence\Services\Email\Templates\DocumentsUploaded.html" />
     <EmbeddedResource Include="Persistence\Services\Email\Templates\PasswordRecovery.html" />
   </ItemGroup>
 
@@ -18,6 +21,7 @@
     <PackageReference Include="AWSSDK.S3" Version="4.0.17" />
     <PackageReference Include="BCrypt.Net-Next" Version="3.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.3.9" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.2.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.9" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.6" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.6">
@@ -29,6 +33,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\SistemaDigitalizacionPolizas.Application\SistemaDigitalizacionPolizas.Application.csproj" />
     <ProjectReference Include="..\SistemaDigitalizacionPolizas.Domain\SistemaDigitalizacionPolizas.Domain.csproj" />
   </ItemGroup>
 

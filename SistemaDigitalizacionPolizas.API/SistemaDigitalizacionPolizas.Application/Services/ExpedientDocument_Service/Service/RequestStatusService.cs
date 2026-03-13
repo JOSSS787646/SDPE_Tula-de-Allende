@@ -44,8 +44,8 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
             if (!request.IdAcquisitionClassification.HasValue)
                 return;
 
-            // 1️⃣ Documentos requeridos por clasificación (solo obligatorios activos)
-            var requiredDocs = await _classificationRepository
+            // 1️⃣ TODOS los documentos de la clasificación
+            var allDocs = await _classificationRepository
                 .GetRequiredByClassification(request.IdAcquisitionClassification.Value);
 
             // 2️⃣ Excepciones activas de esta solicitud
@@ -56,8 +56,8 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
             var uploadedDocs = await _documentRepository
                 .GetActiveByRequestId(requestId);
 
-            // 4️⃣ Documentos obligatorios quitando los que tienen excepción válida
-            var requiredWithoutExceptions = requiredDocs
+            // 4️⃣ Separar obligatorios y no obligatorios
+            var obligatorios = allDocs
                 .Where(r =>
                     r.IsRequired == true &&
                     !exceptions.Any(e =>
@@ -66,77 +66,98 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
                         e.Active == true))
                 .ToList();
 
+            var noObligatorios = allDocs
+                .Where(r =>
+                    r.IsRequired == false ||
+                    exceptions.Any(e =>
+                        e.IdDocumentType == r.DocumentTypeId &&
+                        e.DoesNotApply == true &&
+                        e.Active == true))
+                .ToList();
+
             // ---- LOGS GENERALES ----
             Console.WriteLine("============================================");
             Console.WriteLine($"[RecalculateStatus] RequestId: {requestId}");
-            Console.WriteLine($"  RequiredDocs TOTAL:          {requiredDocs.Count}");
-            Console.WriteLine($"  Obligatorios:                {requiredDocs.Count(r => r.IsRequired == true)}");
+            Console.WriteLine($"  Docs TOTAL en clasificación: {allDocs.Count}");
+            Console.WriteLine($"  Obligatorios a evaluar:      {obligatorios.Count}");
+            Console.WriteLine($"  No obligatorios / excepción: {noObligatorios.Count} → AUTO-APROBADO");
             Console.WriteLine($"  Excepciones activas:         {exceptions.Count}");
-  
             Console.WriteLine($"  UploadedDocs TOTAL:          {uploadedDocs.Count}");
             Console.WriteLine("--------------------------------------------");
 
+            foreach (var noReq in noObligatorios)
+            {
+                Console.WriteLine($"  DocTypeId: {noReq.DocumentTypeId}");
+                Console.WriteLine($"    No obligatorio / con excepción → ✅ AUTO-APROBADO");
+            }
+
             bool allApproved = true;
 
-            foreach (var req in requiredWithoutExceptions)
+            // 5️⃣ Evaluar obligatorios — TODOS los docs del tipo deben estar Aprobados
+            foreach (var req in obligatorios)
             {
-                // Documentos activos de este tipo para esta solicitud
                 var docsOfType = uploadedDocs
                     .Where(d => d.DocumentTypeId == req.DocumentTypeId)
                     .ToList();
 
-                // Estado de cada documento encontrado
-                bool hasApproved = docsOfType.Any(d =>
-                    d.IdDocumentStatus == (int)DocumentStatusEnum.Aprobado);
-
-                bool hasCargado = docsOfType.Any(d =>
-                    d.IdDocumentStatus == (int)DocumentStatusEnum.Cargado);
-
-                bool hasObservado = docsOfType.Any(d =>
-                    d.IdDocumentStatus == (int)DocumentStatusEnum.Observado);
-
                 Console.WriteLine($"  DocTypeId: {req.DocumentTypeId}");
-                Console.WriteLine($"    Docs encontrados : {docsOfType.Count}");
-                Console.WriteLine($"    Aprobado         : {hasApproved}");
-                Console.WriteLine($"    Cargado          : {hasCargado}");
-                Console.WriteLine($"    Observado        : {hasObservado}");
+                Console.WriteLine($"    Docs encontrados: {docsOfType.Count}");
 
+                // Sin documentos → incompleto
                 if (!docsOfType.Any())
                 {
                     allApproved = false;
-                    Console.WriteLine($"    ⚠️  SIN DOCUMENTO → solicitud incompleta");
+                    Console.WriteLine($"    ⚠️  SIN DOCUMENTO → incompleto");
                     continue;
                 }
 
-                // Solo cuenta como OK si tiene al menos uno Aprobado (idEstadoDocumento = 2)
-                if (hasApproved)
+                // ✅ CAMBIO CLAVE: evaluar CADA documento individualmente
+                bool typeIsApproved = true;
+
+                foreach (var doc in docsOfType)
                 {
-                    Console.WriteLine($"    ✅ Aprobado → OK");
-                    continue;
+                    var statusName = doc.IdDocumentStatus switch
+                    {
+                        (int)DocumentStatusEnum.Aprobado => "Aprobado ✅",
+                        (int)DocumentStatusEnum.Cargado => "Cargado 📄",
+                        (int)DocumentStatusEnum.Observado => "Observado 👁️",
+                        _ => $"Desconocido ({doc.IdDocumentStatus})"
+                    };
+
+                    Console.WriteLine($"      DocId: {doc.Id} | Estado: {statusName}");
+
+                    // Si CUALQUIER documento del tipo NO está aprobado → el tipo falla
+                    if (doc.IdDocumentStatus != (int)DocumentStatusEnum.Aprobado)
+                    {
+                        typeIsApproved = false;
+                        Console.WriteLine($"      ❌ No aprobado → este tipo queda incompleto");
+                    }
                 }
 
-                // Tiene docs pero ninguno aprobado (puede ser Cargado u Observado)
-                allApproved = false;
-
-                if (hasObservado)
-                    Console.WriteLine($"    👁️  Observado sin aprobado → solicitud incompleta");
+                if (typeIsApproved)
+                {
+                    Console.WriteLine($"    ✅ Todos aprobados → OK");
+                }
                 else
-                    Console.WriteLine($"    📄 Solo Cargado, sin aprobado → solicitud incompleta");
+                {
+                    allApproved = false;
+                    Console.WriteLine($"    ❌ Al menos uno sin aprobar → solicitud incompleta");
+                }
             }
 
             Console.WriteLine("--------------------------------------------");
             Console.WriteLine($"  allApproved: {allApproved}");
 
-            // 5️⃣ Asignar estado de SOLICITUD directo por ID
+            // 6️⃣ Asignar estado de SOLICITUD
             // EstadoSolicitud: 1 = Incompleto, 2 = Completo
             if (allApproved)
             {
-                request.IdApplicationStatus = 2; // Completo
+                request.IdApplicationStatus = 2;
                 Console.WriteLine("  🟢 ESTADO SOLICITUD → COMPLETO (id: 2)");
             }
             else
             {
-                request.IdApplicationStatus = 1; // Incompleto
+                request.IdApplicationStatus = 1;
                 Console.WriteLine("  🔴 ESTADO SOLICITUD → INCOMPLETO (id: 1)");
             }
 
