@@ -12,5 +12,27 @@
         string requestDescription,
         DateTime date,
         string documentsList);
+
+
+        Task SendDocumentReviewedAsync(
+         string toEmail,
+         string reviewerName,
+         string requestNumber,
+         string documentName,
+         string result,
+         string? observations
+        );
+
+
+        Task SendDocumentReviewNotificationAsync(
+         string toEmail,
+         string reviewerName,
+         string requestNumber,
+         string result,
+         string? observations
+        );
     }
+
+
+
 }

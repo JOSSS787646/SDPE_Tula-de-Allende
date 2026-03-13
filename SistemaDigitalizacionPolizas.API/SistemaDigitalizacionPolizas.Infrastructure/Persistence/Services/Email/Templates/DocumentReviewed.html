@@ -1,0 +1,208 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Resultado de revisión de documento</title>
+</head>
+
+<body style="
+margin:0;
+padding:0;
+background:#f4f4f4;
+font-family:Segoe UI,Tahoma,Geneva,Verdana,sans-serif;
+">
+
+    <table width="100%" cellpadding="0" cellspacing="0">
+        <tr>
+            <td align="center" style="padding:40px 10px;">
+
+                <table width="540" cellpadding="0" cellspacing="0" style="
+background:#ffffff;
+border-radius:18px;
+box-shadow:0 15px 40px rgba(0,0,0,0.25);
+overflow:hidden;
+">
+
+                    <!-- HEADER -->
+                    <tr>
+                        <td style="
+background:#5b0b24;
+padding:26px 28px;
+">
+
+                            <h2 style="
+margin:0;
+color:#ffffff;
+font-size:20px;
+font-weight:600;
+letter-spacing:.4px;
+">
+                                Sistema de Digitalización de Pólizas
+                            </h2>
+
+                            <p style="
+margin:6px 0 0;
+color:#f3f3f3;
+font-size:12px;
+">
+                                Notificación automática · Resultado de revisión documental
+                            </p>
+
+                        </td>
+                    </tr>
+
+                    <!-- BODY -->
+                    <tr>
+                        <td style="padding:34px 30px;color:#333;">
+
+                            <h3 style="
+text-align:center;
+font-size:19px;
+font-weight:700;
+margin:0;
+">
+                                Resultado de revisión de documento
+                            </h3>
+
+                            <div style="
+width:70px;
+height:3px;
+background:#c9980b;
+margin:14px auto 26px;
+border-radius:4px;
+"></div>
+
+                            <p style="font-size:14px;line-height:1.6;color:#444;">
+                                Su documento ha sido revisado dentro del sistema de digitalización de pólizas.
+                                A continuación se muestra el resultado del proceso de validación.
+                            </p>
+
+                            <!-- INFO CARD -->
+                            <div style="
+background:#fafafa;
+border:1px solid #eee;
+border-radius:10px;
+padding:18px;
+margin-top:20px;
+">
+
+                                <table width="100%" style="font-size:14px;line-height:1.6">
+
+                                    <tr>
+                                        <td width="40%"><strong>Solicitud:</strong></td>
+                                        <td>#{{REQUEST}}</td>
+                                    </tr>
+
+                                    <tr>
+                                        <td><strong>Documento:</strong></td>
+                                        <td>{{DOCUMENT}}</td>
+                                    </tr>
+
+                                    <tr>
+                                        <td><strong>Revisado por:</strong></td>
+                                        <td>{{REVIEWER}}</td>
+                                    </tr>
+
+                                    <tr>
+                                        <td><strong>Resultado:</strong></td>
+                                        <td>{{RESULT}}</td>
+                                    </tr>
+
+                                    <tr>
+                                        <td><strong>Fecha:</strong></td>
+                                        <td>{{DATE}}</td>
+                                    </tr>
+
+                                    <tr>
+                                        <td><strong>Hora:</strong></td>
+                                        <td>{{TIME}}</td>
+                                    </tr>
+
+                                </table>
+
+                            </div>
+
+                            <!-- OBSERVACIONES -->
+                            <div style="
+background:#f7f7f7;
+border-radius:10px;
+padding:18px;
+margin-top:22px;
+">
+
+                                <p style="
+margin:0 0 10px 0;
+font-weight:600;
+font-size:14px;
+">
+                                    Observaciones del revisor
+                                </p>
+
+                                <div style="
+font-size:13px;
+line-height:1.8;
+color:#444;
+">
+
+                                    {{OBSERVATIONS}}
+
+                                </div>
+
+                            </div>
+
+                            <!-- BUTTON -->
+                            <div style="text-align:center;margin-top:30px;">
+
+                                <a href="{{REQUEST_URL}}" style="
+display:inline-block;
+background:#5b0b24;
+color:#ffffff;
+padding:12px 28px;
+font-size:14px;
+text-decoration:none;
+border-radius:30px;
+font-weight:600;
+box-shadow:0 6px 14px rgba(0,0,0,0.25);
+">
+                                    Ver solicitud
+                                </a>
+
+                            </div>
+
+                            <p style="
+margin-top:26px;
+font-size:13px;
+color:#555;
+text-align:center;
+line-height:1.6;
+">
+                                Si el documento presenta observaciones, acceda al sistema para realizar las correcciones correspondientes.
+                            </p>
+
+                        </td>
+                    </tr>
+
+                    <!-- FOOTER -->
+                    <tr>
+                        <td style="
+background:#f3f3f3;
+padding:18px;
+text-align:center;
+font-size:12px;
+color:#777;
+">
+
+                            © 2024–2027 · Sistema de Digitalización de Pólizas<br>
+                            Tecnología, innovación y servicio a la comunidad
+
+                        </td>
+                    </tr>
+
+                </table>
+
+            </td>
+        </tr>
+    </table>
+
+</body>
+</html>

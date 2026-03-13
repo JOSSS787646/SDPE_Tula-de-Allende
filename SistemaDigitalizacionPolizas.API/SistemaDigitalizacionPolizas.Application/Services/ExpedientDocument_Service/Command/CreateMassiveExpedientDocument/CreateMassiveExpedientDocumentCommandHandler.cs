@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.Extensions.Logging;
 using SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Service.Service;
 using SistemaDigitalizacionPolizas.Domain.Entities.Document_Entities;
 using SistemaDigitalizacionPolizas.Domain.Enums;
@@ -7,6 +8,7 @@ using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.StatusRequest;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Services;
 using SistemaDigitalizacionPolizas.Infrastructure.Persistence.Services.UploatFile;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.RequestNotification;
+using System.Threading;
 
 namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Service.Command.CreateMassiveExpedientDocument
 {
@@ -23,6 +25,7 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
         private readonly IRequestStatusService _requestStatusService;
         private readonly IEmailService _emailService;
         private readonly IUserRepository _userRepository;
+        private readonly ILogger<CreateMassiveExpedientDocumentCommandHandler> _logger;
 
         public CreateMassiveExpedientDocumentCommandHandler(
             IDocumentExpedientRepository repository,
@@ -34,7 +37,8 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
             IUnitOfWorkService unitOfWork,
             IRequestStatusService requestStatusService,
             IEmailService emailService,
-            IUserRepository userRepository)
+            IUserRepository userRepository,
+            ILogger<CreateMassiveExpedientDocumentCommandHandler> logger)
         {
             _repository = repository;
             _statusRepository = statusRepository;
@@ -46,12 +50,15 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
             _requestStatusService = requestStatusService;
             _emailService = emailService;
             _userRepository = userRepository;
+            _logger = logger;
         }
 
         public async Task<List<int>> Handle(
             CreateMassiveExpedientDocumentCommand request,
             CancellationToken cancellationToken)
         {
+            _logger.LogInformation("Iniciando carga masiva de documentos para RequestId {RequestId}", request.RequestId);
+
             if (request.Documents == null || !request.Documents.Any())
                 throw new Exception("Debe enviar al menos un archivo.");
 
@@ -72,37 +79,68 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
                 if (cargadoStatus == null)
                     throw new Exception("No existe estado 'Cargado' configurado.");
 
-                foreach (var item in request.Documents)
+                // ============================================
+                // SUBIDA DE ARCHIVOS EN PARALELO
+                // ============================================
+
+                var semaphore = new SemaphoreSlim(3); // máximo 3 uploads simultáneos
+
+                var tasks = request.Documents.Select(async item =>
                 {
-                    if (item.File == null || item.File.Length == 0)
-                        throw new Exception("Uno de los archivos enviados es inválido.");
+                    await semaphore.WaitAsync(cancellationToken);
 
-                    await using var stream = item.File.OpenReadStream();
-
-                    var filePath = await _fileStorageService.UploadAsync(
-                        stream,
-                        item.File.FileName,
-                        item.File.ContentType,
-                        "expedientes"
-                    );
-
-                    uploadedPaths.Add(filePath);
-
-                    entities.Add(new ExpedientDocument
+                    try
                     {
-                        RequestId = request.RequestId,
-                        DocumentTypeId = item.DocumentTypeId,
-                        IdDocumentStatus = (int)DocumentStatusEnum.Cargado,
-                        FileName = item.File.FileName,
-                        FilePath = filePath,
-                        UploadDate = DateTime.UtcNow,
-                        Observations = item.Observations,
-                        UploadedBy = userId,
-                        CreatedBy = userId,
-                        CreatedAt = DateTime.UtcNow,
-                        Active = true
-                    });
-                }
+                        if (item.File == null || item.File.Length == 0)
+                            throw new Exception("Uno de los archivos enviados es inválido.");
+
+                        await using var stream = item.File.OpenReadStream();
+
+                        var filePath = await _fileStorageService.UploadAsync(
+                            stream,
+                            item.File.FileName,
+                            item.File.ContentType,
+                            "expedientes"
+                        );
+
+                        lock (uploadedPaths)
+                        {
+                            uploadedPaths.Add(filePath);
+                        }
+
+                        var entity = new ExpedientDocument
+                        {
+                            RequestId = request.RequestId,
+                            DocumentTypeId = item.DocumentTypeId,
+                            IdDocumentStatus = (int)DocumentStatusEnum.Cargado,
+                            FileName = item.File.FileName,
+                            FilePath = filePath,
+                            UploadDate = DateTime.UtcNow,
+                            Observations = item.Observations,
+                            UploadedBy = userId,
+                            CreatedBy = userId,
+                            CreatedAt = DateTime.UtcNow,
+                            Active = true
+                        };
+
+                        lock (entities)
+                        {
+                            entities.Add(entity);
+                        }
+                    }
+                    finally
+                    {
+                        semaphore.Release();
+                    }
+                });
+
+                await Task.WhenAll(tasks);
+
+                _logger.LogInformation("Archivos subidos correctamente para RequestId {RequestId}", request.RequestId);
+
+                // ============================================
+                // GUARDAR EN BASE DE DATOS
+                // ============================================
 
                 await _repository.AddRangeAsync(entities);
 
@@ -110,47 +148,61 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
 
                 await _unitOfWork.CommitAsync();
 
+                _logger.LogInformation("Documentos guardados correctamente para RequestId {RequestId}", request.RequestId);
+
                 // ============================================
-                // VALIDAR SI SE DEBE ENVIAR NOTIFICACIÓN
+                // VALIDAR ENVÍO DE CORREO
                 // ============================================
 
                 var shouldSendNotification = await _notificationPolicyService
                     .ShouldSendNotificationAsync(request.RequestId);
 
-                if (shouldSendNotification)
+                if (!shouldSendNotification)
                 {
-                    var reviewerEmail = await _userRepository
-                        .GetEmailByRoleAsync((int)SystemRolesEnum.ReadView);
-
-                    if (!string.IsNullOrEmpty(reviewerEmail))
-                    {
-                        var requestInfo = await _notificationRepository
-                            .GetRequestNotificationInfoAsync(request.RequestId);
-
-                        var documentList = string.Join("",
-                            entities.Select(x => $"<div>• {x.FileName}</div>")
-                        );
-
-                        var requestNumber = requestInfo?.RequestNumber ?? "N/A";
-                        var administrativeUnitName = requestInfo?.AdministrativeUnitName ?? "No especificada";
-                        var requestDescription = requestInfo?.Justification ?? "Sin justificación";
-
-                        await _emailService.SendDocumentsUploadedAsync(
-                            reviewerEmail,
-                            _currentUserService.Email,
-                            requestNumber,
-                            administrativeUnitName,
-                            requestDescription,
-                            DateTime.Now,
-                            documentList
-                        );
-                    }
+                    _logger.LogInformation("La política de notificaciones bloqueó el envío de correo para RequestId {RequestId}", request.RequestId);
+                    return entities.Select(x => x.Id).ToList();
                 }
+
+                var reviewerEmail = await _userRepository
+                    .GetEmailByRoleAsync((int)SystemRolesEnum.ReadView);
+
+                if (string.IsNullOrEmpty(reviewerEmail))
+                {
+                    _logger.LogWarning("No se encontró correo para el rol ReadView.");
+                    return entities.Select(x => x.Id).ToList();
+                }
+
+                var requestInfo = await _notificationRepository
+                    .GetRequestNotificationInfoAsync(request.RequestId);
+
+                var documentList = string.Join("",
+                    entities.Select(x => $"<div>• {x.FileName}</div>")
+                );
+
+                var requestNumber = requestInfo?.RequestNumber ?? "N/A";
+                var administrativeUnitName = requestInfo?.AdministrativeUnitName ?? "No especificada";
+                var requestDescription = requestInfo?.Justification ?? "Sin justificación";
+
+                _logger.LogInformation("Enviando correo de notificación a {Email}", reviewerEmail);
+
+                await _emailService.SendDocumentsUploadedAsync(
+                    reviewerEmail,
+                    _currentUserService.Email,
+                    requestNumber,
+                    administrativeUnitName,
+                    requestDescription,
+                    DateTime.Now,
+                    documentList
+                );
+
+                _logger.LogInformation("Correo enviado correctamente para RequestId {RequestId}", request.RequestId);
 
                 return entities.Select(x => x.Id).ToList();
             }
-            catch
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Error durante la carga masiva de documentos para RequestId {RequestId}", request.RequestId);
+
                 await _unitOfWork.RollbackAsync();
 
                 foreach (var path in uploadedPaths)

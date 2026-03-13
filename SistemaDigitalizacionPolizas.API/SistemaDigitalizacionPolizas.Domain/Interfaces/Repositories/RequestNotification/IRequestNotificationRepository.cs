@@ -12,5 +12,7 @@ namespace SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.RequestNot
     public interface IRequestNotificationRepository
     {
         Task<RequestNotificationDto?> GetRequestNotificationInfoAsync(int requestId);
+        Task<DocumentApprovedNotificationDto?> GetDocumentApprovedInfoAsync(int requestId);
+        Task<DocumentObservedNotificationDto?> GetDocumentObservedInfoAsync(int requestId);
     }
 }

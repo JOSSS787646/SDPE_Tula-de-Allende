@@ -793,6 +793,7 @@
           "MediatR": "8.0.0",
           "MediatR.Extensions.Microsoft.DependencyInjection": "8.0.0",
           "Microsoft.AspNetCore.Http.Abstractions": "2.3.9",
+          "Microsoft.Extensions.Logging.Abstractions": "9.0.9",
           "SistemaDigitalizacionPolizas.Domain": "1.0.0"
         },
         "runtime": {

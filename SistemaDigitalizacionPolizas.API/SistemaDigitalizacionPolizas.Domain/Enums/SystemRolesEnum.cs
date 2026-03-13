@@ -11,7 +11,8 @@ namespace SistemaDigitalizacionPolizas.Domain.Enums
     //RECIBIR EL CORREO SOBRE LOS DATOS QUE NECESITA
     public enum SystemRolesEnum
     {
-        ReadView = 3
+        ReadView = 3,
+        AdministradorAdquisiciones = 4
 
     }
 }

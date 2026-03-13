@@ -12,6 +12,6 @@ namespace SistemaDigitalizacionPolizas.Domain.Dtos.Notificacion
         public string AdministrativeUnitName { get; set; } = "";
         public string Justification { get; set; } = "";
 
-        public DateTime RequestDate { get; set; } 
+        public DateTime? RequestDate { get; set; } 
     }
 }

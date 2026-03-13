@@ -170,36 +170,24 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
         /// <summary>
         /// Actualiza un documento existente del expediente.
         /// </summary>
-        [HttpPut("{id}")]
+        [HttpPut("{id:int}")]
         [Consumes("multipart/form-data")]
-        [RequestSizeLimit(524288000)]
+        [RequestSizeLimit(52428800)]
         public async Task<IActionResult> UpdateDocument(
-            int id,
-            [FromForm] UpdateExpedientDocumentCommand command)
+        int id,
+        [FromForm] UpdateExpedientDocumentCommand command)
         {
             if (id <= 0)
-                return BadRequest(new
-                {
-                    success = false,
-                    message = "El id del documento es inválido."
-                });
+                return BadRequest("Id inválido.");
 
             command.Id = id;
 
             var result = await _mediator.Send(command);
 
             if (!result)
-                return BadRequest(new
-                {
-                    success = false,
-                    message = "No se pudo actualizar el documento."
-                });
+                return NotFound("Documento no encontrado.");
 
-            return Ok(new
-            {
-                success = true,
-                message = "Documento actualizado correctamente."
-            });
+            return Ok("Documento actualizado correctamente.");
         }
 
         // ============================================================

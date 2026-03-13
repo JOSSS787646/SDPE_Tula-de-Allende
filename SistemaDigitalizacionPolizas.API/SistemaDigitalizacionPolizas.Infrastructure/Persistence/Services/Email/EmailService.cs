@@ -141,4 +141,132 @@ public class EmailService : IEmailService
 
         await smtp.SendMailAsync(mail);
     }
+
+
+
+    public async Task SendDocumentReviewNotificationAsync(
+      string toEmail,
+      string reviewerName,
+      string requestNumber,
+      string result,
+      string? observations
+  )
+    {
+        ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+
+        var assembly = Assembly.GetExecutingAssembly();
+
+        var resourceName =
+        "SistemaDigitalizacionPolizas.Infrastructure.Persistence.Services.Email.Templates.DocumentReviewNotification.html";
+
+        using var stream = assembly.GetManifestResourceStream(resourceName);
+
+        if (stream == null)
+            throw new FileNotFoundException(
+                $"No se encontró el template embebido: {resourceName}"
+            );
+
+        using var reader = new StreamReader(stream);
+
+        var htmlBody = await reader.ReadToEndAsync();
+
+        var now = DateTime.Now;
+
+        htmlBody = htmlBody
+            .Replace("{{REVIEWER}}", reviewerName)
+            .Replace("{{REQUEST}}", requestNumber)
+            .Replace("{{RESULT}}", result)
+            .Replace("{{OBSERVATIONS}}", observations ?? "Sin observaciones")
+            .Replace("{{DATE}}", now.ToString("dd/MM/yyyy"))
+            .Replace("{{TIME}}", now.ToString("HH:mm"));
+
+        var smtp = new SmtpClient
+        {
+            Host = _configuration["Smtp:Host"],
+            Port = int.Parse(_configuration["Smtp:Port"]),
+            EnableSsl = true,
+            Credentials = new NetworkCredential(
+                _configuration["Smtp:User"],
+                _configuration["Smtp:Password"]
+            )
+        };
+
+        var mail = new MailMessage
+        {
+            From = new MailAddress(_configuration["Smtp:User"]),
+            Subject = $"Documentos revisados - Solicitud #{requestNumber}",
+            Body = htmlBody,
+            IsBodyHtml = true
+        };
+
+        mail.To.Add(toEmail);
+
+        await smtp.SendMailAsync(mail);
+    }
+
+
+    public async Task SendDocumentReviewedAsync(
+        string toEmail,
+        string reviewerName,
+        string requestNumber,
+        string documentName,
+        string result,
+        string? observations
+    )
+    {
+        ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+
+        var assembly = Assembly.GetExecutingAssembly();
+
+        var resourceName =
+        "SistemaDigitalizacionPolizas.Infrastructure.Persistence.Services.Email.Templates.DocumentReviewed.html";
+
+        using var stream = assembly.GetManifestResourceStream(resourceName);
+
+        if (stream == null)
+            throw new FileNotFoundException(
+                $"No se encontró el template embebido: {resourceName}"
+            );
+
+        using var reader = new StreamReader(stream);
+
+        var htmlBody = await reader.ReadToEndAsync();
+
+        var now = DateTime.Now;
+
+        htmlBody = htmlBody
+            .Replace("{{REVIEWER}}", reviewerName)
+            .Replace("{{REQUEST}}", requestNumber)
+            .Replace("{{DOCUMENT}}", documentName)
+            .Replace("{{RESULT}}", result)
+            .Replace("{{OBSERVATIONS}}", observations ?? "Sin observaciones")
+            .Replace("{{DATE}}", now.ToString("dd/MM/yyyy"))
+            .Replace("{{TIME}}", now.ToString("HH:mm"));
+
+        var smtp = new SmtpClient
+        {
+            Host = _configuration["Smtp:Host"],
+            Port = int.Parse(_configuration["Smtp:Port"]),
+            EnableSsl = true,
+            Credentials = new NetworkCredential(
+                _configuration["Smtp:User"],
+                _configuration["Smtp:Password"]
+            )
+        };
+
+        var mail = new MailMessage
+        {
+            From = new MailAddress(_configuration["Smtp:User"]),
+            Subject = $"Resultado de revisión de documento - Solicitud #{requestNumber}",
+            Body = htmlBody,
+            IsBodyHtml = true
+        };
+
+        mail.To.Add(toEmail);
+
+        await smtp.SendMailAsync(mail);
+    }
+
+
+
 }
