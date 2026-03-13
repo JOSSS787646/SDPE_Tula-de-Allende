@@ -141,3 +141,5 @@ C:\Estadia Ingenieria\Marzo\Sprint7\SistemaDigitalizacionPolizas.API\SistemaDigi
 C:\Estadia Ingenieria\Marzo\Sprint7\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Infrastructure\obj\Debug\net8.0\SistemaDigitalizacionPolizas.Infrastructure.pdb
 C:\Estadia Ingenieria\Marzo\Sprint7\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Infrastructure\obj\Debug\net8.0\SistemaDigitalizacionPolizas.Infrastructure.genruntimeconfig.cache
 C:\Estadia Ingenieria\Marzo\Sprint7\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Infrastructure\obj\Debug\net8.0\ref\SistemaDigitalizacionPolizas.Infrastructure.dll
+C:\Estadia Ingenieria\Marzo\Sprint7\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Infrastructure\bin\Debug\net8.0\SistemaDigitalizacionPolizas.Application.dll
+C:\Estadia Ingenieria\Marzo\Sprint7\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Infrastructure\bin\Debug\net8.0\SistemaDigitalizacionPolizas.Application.pdb

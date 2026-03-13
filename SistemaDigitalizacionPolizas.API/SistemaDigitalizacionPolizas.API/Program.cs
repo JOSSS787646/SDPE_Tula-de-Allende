@@ -2,43 +2,77 @@
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+
 using SistemaDigitalizacionPolizas.API.BackgroundWorkers;
-using SistemaDigitalizacionPolizas.API.BackgroundWorkers.SistemaDigitalizacionPolizas.API.BackgroundWorkers;
 using SistemaDigitalizacionPolizas.Application;
-using SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Service.Service.Gmail_Services;
 using SistemaDigitalizacionPolizas.Infrastructure;
+
+using SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Service.Service.Gmail_Services;
+
+
+
 using System.Text;
-
-
+using SistemaDigitalizacionPolizas.API.BackgroundWorkers.SistemaDigitalizacionPolizas.API.BackgroundWorkers;
+using SistemaDigitalizacionPolizas.API.SignalR;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// =======================
-// Controllers
-// =======================
+
+// ======================================================
+// CONTROLLERS
+// ======================================================
+
 builder.Services.AddControllers();
 
 
+// ======================================================
+// SIGNALR (NOTIFICACIONES EN TIEMPO REAL)
+// ======================================================
+
+builder.Services.AddSignalR();
+
+
+// ======================================================
+// CONFIGURACIÓN DE TAMAÑO DE ARCHIVOS
+// ======================================================
+
 builder.Services.Configure<FormOptions>(options =>
 {
-    options.MultipartBodyLengthLimit = 524288000; // 500 MB total por request
+    options.MultipartBodyLengthLimit = 524288000; // 500 MB
+});
+
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.Limits.MaxRequestBodySize = 524288000; // 500 MB
 });
 
 
-//SERVICIO DEL GMAIL
+// ======================================================
+// SERVICIO DE CORREOS (QUEUE + WORKER)
+// ======================================================
+
+// Cola de correos
 builder.Services.AddSingleton<EmailQueue>();
+
+// Interfaz de la cola
 builder.Services.AddSingleton<IEmailQueue>(sp =>
     sp.GetRequiredService<EmailQueue>());
 
+// Worker que procesa la cola
 builder.Services.AddHostedService<EmailBackgroundWorker>();
 
 
-// 🔥 NECESARIO para CurrentUserService
+// ======================================================
+// HTTP CONTEXT (para CurrentUserService)
+// ======================================================
+
 builder.Services.AddHttpContextAccessor();
 
-// =======================
-// CORS (Frontend)
-// =======================
+
+// ======================================================
+// CORS (FRONTEND)
+// ======================================================
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
@@ -46,17 +80,21 @@ builder.Services.AddCors(options =>
         policy
             .WithOrigins(
                 "http://localhost:5173", // Vite
-                "http://localhost:3000"  // CRA
+                "http://localhost:3000"  // React
             )
             .AllowAnyHeader()
-            .AllowAnyMethod();
+            .AllowAnyMethod()
+            .AllowCredentials(); // IMPORTANTE para SignalR
     });
 });
 
-// =======================
-// Swagger
-// =======================
+
+// ======================================================
+// SWAGGER
+// ======================================================
+
 builder.Services.AddEndpointsApiExplorer();
+
 builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("v1", new OpenApiInfo
@@ -92,54 +130,80 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
-// =======================
-// Capas (Clean Architecture)
-// =======================
+
+// ======================================================
+// CAPAS DE LA APLICACIÓN (CLEAN ARCHITECTURE)
+// ======================================================
+
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
 
 
-// =======================
-// JWT Authentication
-// =======================
+// ======================================================
+// AUTENTICACIÓN JWT
+// ======================================================
+
 var jwtSettings = builder.Configuration.GetSection("Jwt");
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
-    {
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuer = true,
-            ValidateAudience = true,
-            ValidateLifetime = true,
-            ValidateIssuerSigningKey = true,
-
-            ValidIssuer = jwtSettings["Issuer"],
-            ValidAudience = jwtSettings["Audience"],
-            IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(jwtSettings["Key"]!)
-            ),
-            ClockSkew = TimeSpan.Zero
-        };
-    });
-
-
-builder.WebHost.ConfigureKestrel(options =>
+.AddJwtBearer(options =>
 {
-    options.Limits.MaxRequestBodySize = 524288000; // 500 MB
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+
+        ValidIssuer = jwtSettings["Issuer"],
+        ValidAudience = jwtSettings["Audience"],
+
+        IssuerSigningKey = new SymmetricSecurityKey(
+            Encoding.UTF8.GetBytes(jwtSettings["Key"]!)
+        ),
+
+        ClockSkew = TimeSpan.Zero
+    };
+
+    // NECESARIO PARA QUE SIGNALR FUNCIONE CON JWT
+    options.Events = new JwtBearerEvents
+    {
+        OnMessageReceived = context =>
+        {
+            var accessToken = context.Request.Query["access_token"];
+
+            var path = context.HttpContext.Request.Path;
+
+            if (!string.IsNullOrEmpty(accessToken) &&
+                path.StartsWithSegments("/notifications"))
+            {
+                context.Token = accessToken;
+            }
+
+            return Task.CompletedTask;
+        }
+    };
 });
 
-// =======================
-// Authorization
-// =======================
+
+// ======================================================
+// AUTORIZACIÓN
+// ======================================================
 
 builder.Services.AddAuthorization();
 
+
+// ======================================================
+// BUILD APP
+// ======================================================
+
 var app = builder.Build();
-//app.UseMiddleware<ExceptionMiddleware>();
-// =======================
-// Pipeline
-// =======================
+
+
+// ======================================================
+// MIDDLEWARE PIPELINE
+// ======================================================
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -147,9 +211,24 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
 app.UseCors("AllowFrontend");
+
 app.UseAuthentication();
+
 app.UseAuthorization();
+
+
+// ======================================================
+// ENDPOINT DE SIGNALR
+// ======================================================
+
+app.MapHub<NotificationHub>("/notifications");
+
+
+// ======================================================
+// CONTROLLERS
+// ======================================================
 
 app.MapControllers();
 

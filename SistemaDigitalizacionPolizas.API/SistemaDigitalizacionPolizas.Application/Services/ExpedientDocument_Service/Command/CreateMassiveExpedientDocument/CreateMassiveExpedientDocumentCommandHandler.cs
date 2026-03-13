@@ -10,6 +10,9 @@ using SistemaDigitalizacionPolizas.Infrastructure.Persistence.Services.UploatFil
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.RequestNotification;
 using SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Service.Service.Gmail_Services;
 
+// NUEVO
+using SistemaDigitalizacionPolizas.Application.Services.CreateNotification_Service.Commands.CreateNotification;
+
 namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Service.Command.CreateMassiveExpedientDocument
 {
     public class CreateMassiveExpedientDocumentCommandHandler
@@ -28,6 +31,9 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
         private readonly IEmailQueue _emailQueue;
         private readonly ILogger<CreateMassiveExpedientDocumentCommandHandler> _logger;
 
+        // NUEVO
+        private readonly IMediator _mediator;
+
         public CreateMassiveExpedientDocumentCommandHandler(
             IDocumentExpedientRepository repository,
             IDocumentStatusRepository statusRepository,
@@ -40,7 +46,9 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
             IEmailService emailService,
             IUserRepository userRepository,
             IEmailQueue emailQueue,
-            ILogger<CreateMassiveExpedientDocumentCommandHandler> logger)
+            ILogger<CreateMassiveExpedientDocumentCommandHandler> logger,
+            IMediator mediator // NUEVO
+        )
         {
             _repository = repository;
             _statusRepository = statusRepository;
@@ -54,6 +62,8 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
             _userRepository = userRepository;
             _emailQueue = emailQueue;
             _logger = logger;
+
+            _mediator = mediator; // NUEVO
         }
 
         public async Task<List<int>> Handle(
@@ -163,6 +173,10 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
                 if (string.IsNullOrEmpty(reviewerEmail))
                     return entities.Select(x => x.Id).ToList();
 
+                // NUEVO: obtener userId del revisor
+                var reviewerUserId = await _userRepository
+                    .GetUserIdByRoleAsync((int)SystemRolesEnum.ReadView);
+
                 var requestInfo = await _notificationRepository
                     .GetRequestNotificationInfoAsync(request.RequestId);
 
@@ -189,6 +203,22 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
                         documentList
                     )
                 );
+
+                // ============================================
+                // NUEVO: CREAR NOTIFICACIÓN (BD + REALTIME)
+                // ============================================
+
+                if (reviewerUserId > 0)
+                {
+                    await _mediator.Send(
+                        new CreateNotificationCommand(
+                            reviewerUserId,
+                            "Documentos cargados",
+                            $"Se cargaron documentos en la solicitud {requestNumber}",
+                            request.RequestId
+                        )
+                    );
+                }
 
                 return entities.Select(x => x.Id).ToList();
             }
