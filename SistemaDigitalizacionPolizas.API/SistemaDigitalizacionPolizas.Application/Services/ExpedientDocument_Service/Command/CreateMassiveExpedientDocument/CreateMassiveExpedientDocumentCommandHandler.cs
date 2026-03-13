@@ -8,7 +8,7 @@ using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.StatusRequest;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Services;
 using SistemaDigitalizacionPolizas.Infrastructure.Persistence.Services.UploatFile;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.RequestNotification;
-using System.Threading;
+using SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Service.Service.Gmail_Services;
 
 namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Service.Command.CreateMassiveExpedientDocument
 {
@@ -25,6 +25,7 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
         private readonly IRequestStatusService _requestStatusService;
         private readonly IEmailService _emailService;
         private readonly IUserRepository _userRepository;
+        private readonly IEmailQueue _emailQueue;
         private readonly ILogger<CreateMassiveExpedientDocumentCommandHandler> _logger;
 
         public CreateMassiveExpedientDocumentCommandHandler(
@@ -38,6 +39,7 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
             IRequestStatusService requestStatusService,
             IEmailService emailService,
             IUserRepository userRepository,
+            IEmailQueue emailQueue,
             ILogger<CreateMassiveExpedientDocumentCommandHandler> logger)
         {
             _repository = repository;
@@ -50,6 +52,7 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
             _requestStatusService = requestStatusService;
             _emailService = emailService;
             _userRepository = userRepository;
+            _emailQueue = emailQueue;
             _logger = logger;
         }
 
@@ -57,8 +60,6 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
             CreateMassiveExpedientDocumentCommand request,
             CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Iniciando carga masiva de documentos para RequestId {RequestId}", request.RequestId);
-
             if (request.Documents == null || !request.Documents.Any())
                 throw new Exception("Debe enviar al menos un archivo.");
 
@@ -83,7 +84,7 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
                 // SUBIDA DE ARCHIVOS EN PARALELO
                 // ============================================
 
-                var semaphore = new SemaphoreSlim(3); // máximo 3 uploads simultáneos
+                var semaphore = new SemaphoreSlim(3);
 
                 var tasks = request.Documents.Select(async item =>
                 {
@@ -136,10 +137,8 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
 
                 await Task.WhenAll(tasks);
 
-                _logger.LogInformation("Archivos subidos correctamente para RequestId {RequestId}", request.RequestId);
-
                 // ============================================
-                // GUARDAR EN BASE DE DATOS
+                // GUARDAR DOCUMENTOS
                 // ============================================
 
                 await _repository.AddRangeAsync(entities);
@@ -148,29 +147,21 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
 
                 await _unitOfWork.CommitAsync();
 
-                _logger.LogInformation("Documentos guardados correctamente para RequestId {RequestId}", request.RequestId);
-
                 // ============================================
                 // VALIDAR ENVÍO DE CORREO
                 // ============================================
 
-                var shouldSendNotification = await _notificationPolicyService
-                    .ShouldSendNotificationAsync(request.RequestId);
+                var shouldSendNotification =
+                    await _notificationPolicyService.ShouldSendNotificationAsync(request.RequestId);
 
                 if (!shouldSendNotification)
-                {
-                    _logger.LogInformation("La política de notificaciones bloqueó el envío de correo para RequestId {RequestId}", request.RequestId);
                     return entities.Select(x => x.Id).ToList();
-                }
 
                 var reviewerEmail = await _userRepository
                     .GetEmailByRoleAsync((int)SystemRolesEnum.ReadView);
 
                 if (string.IsNullOrEmpty(reviewerEmail))
-                {
-                    _logger.LogWarning("No se encontró correo para el rol ReadView.");
                     return entities.Select(x => x.Id).ToList();
-                }
 
                 var requestInfo = await _notificationRepository
                     .GetRequestNotificationInfoAsync(request.RequestId);
@@ -183,26 +174,26 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
                 var administrativeUnitName = requestInfo?.AdministrativeUnitName ?? "No especificada";
                 var requestDescription = requestInfo?.Justification ?? "Sin justificación";
 
-                _logger.LogInformation("Enviando correo de notificación a {Email}", reviewerEmail);
+                // ============================================
+                // ENVIAR CORREO POR COLA (WORKER)
+                // ============================================
 
-                await _emailService.SendDocumentsUploadedAsync(
-                    reviewerEmail,
-                    _currentUserService.Email,
-                    requestNumber,
-                    administrativeUnitName,
-                    requestDescription,
-                    DateTime.Now,
-                    documentList
+                _emailQueue.Enqueue(() =>
+                    _emailService.SendDocumentsUploadedAsync(
+                        reviewerEmail,
+                        _currentUserService.Email,
+                        requestNumber,
+                        administrativeUnitName,
+                        requestDescription,
+                        DateTime.Now,
+                        documentList
+                    )
                 );
-
-                _logger.LogInformation("Correo enviado correctamente para RequestId {RequestId}", request.RequestId);
 
                 return entities.Select(x => x.Id).ToList();
             }
-            catch (Exception ex)
+            catch
             {
-                _logger.LogError(ex, "Error durante la carga masiva de documentos para RequestId {RequestId}", request.RequestId);
-
                 await _unitOfWork.RollbackAsync();
 
                 foreach (var path in uploadedPaths)

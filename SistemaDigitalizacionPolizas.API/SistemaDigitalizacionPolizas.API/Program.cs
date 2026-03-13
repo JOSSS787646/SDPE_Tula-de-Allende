@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http.Features;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using SistemaDigitalizacionPolizas.API.BackgroundWorkers;
+using SistemaDigitalizacionPolizas.API.BackgroundWorkers.SistemaDigitalizacionPolizas.API.BackgroundWorkers;
 using SistemaDigitalizacionPolizas.Application;
 using SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Service.Service.Gmail_Services;
 using SistemaDigitalizacionPolizas.Infrastructure;
