@@ -2,7 +2,9 @@
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using SistemaDigitalizacionPolizas.API.BackgroundWorkers;
 using SistemaDigitalizacionPolizas.Application;
+using SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Service.Service.Gmail_Services;
 using SistemaDigitalizacionPolizas.Infrastructure;
 using System.Text;
 
@@ -20,6 +22,15 @@ builder.Services.Configure<FormOptions>(options =>
 {
     options.MultipartBodyLengthLimit = 524288000; // 500 MB total por request
 });
+
+
+//SERVICIO DEL GMAIL
+builder.Services.AddSingleton<EmailQueue>();
+builder.Services.AddSingleton<IEmailQueue>(sp =>
+    sp.GetRequiredService<EmailQueue>());
+
+builder.Services.AddHostedService<EmailBackgroundWorker>();
+
 
 // 🔥 NECESARIO para CurrentUserService
 builder.Services.AddHttpContextAccessor();

@@ -1,10 +1,12 @@
 ﻿using MediatR;
 using Microsoft.Extensions.Logging;
 using SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Service.Service;
+using SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Service.Service.Gmail_Services;
 using SistemaDigitalizacionPolizas.Domain.Enums;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Document;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.RequestNotification;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Services;
+using System.Net.Mail;
 
 namespace SistemaDigitalizacionPolizas.Application.Services.AcqusitionRequest_Service.Commands.ReviewDocument
 {
@@ -13,33 +15,33 @@ namespace SistemaDigitalizacionPolizas.Application.Services.AcqusitionRequest_Se
     {
         private readonly IDocumentExpedientRepository _repository;
         private readonly IRequestStatusService _requestStatusService;
-        private readonly IUnitOfWorkService _unitOfWork;
 
         private readonly INotificationPolicyService _notificationPolicyService;
         private readonly IRequestNotificationRepository _notificationRepository;
         private readonly IEmailService _emailService;
         private readonly IUserRepository _userRepository;
+        private readonly IEmailQueue _emailQueue;
 
         private readonly ILogger<ReviewDocumentCommandHandler> _logger;
 
         public ReviewDocumentCommandHandler(
             IDocumentExpedientRepository repository,
             IRequestStatusService requestStatusService,
-            IUnitOfWorkService unitOfWork,
             INotificationPolicyService notificationPolicyService,
             IRequestNotificationRepository notificationRepository,
             IEmailService emailService,
             IUserRepository userRepository,
+            IEmailQueue emailQueue,
             ILogger<ReviewDocumentCommandHandler> logger)
         {
             _repository = repository;
             _requestStatusService = requestStatusService;
-            _unitOfWork = unitOfWork;
 
             _notificationPolicyService = notificationPolicyService;
             _notificationRepository = notificationRepository;
             _emailService = emailService;
             _userRepository = userRepository;
+            _emailQueue = emailQueue;
 
             _logger = logger;
         }
@@ -67,195 +69,133 @@ namespace SistemaDigitalizacionPolizas.Application.Services.AcqusitionRequest_Se
             if (request.DocumentStatusId == (int)DocumentStatusEnum.Observado &&
                 string.IsNullOrWhiteSpace(request.Observations))
             {
-                _logger.LogWarning(
-                    "Documento observado sin observaciones. DocumentoId {DocumentId}",
-                    request.DocumentId
-                );
-
                 throw new Exception("Debe agregar observaciones cuando el documento es observado.");
             }
 
-            // =============================
+            // =====================================
             // ACTUALIZAR DOCUMENTO
-            // =============================
-
-            _logger.LogInformation(
-                "Actualizando estado documento a {StatusId}",
-                request.DocumentStatusId
-            );
+            // =====================================
 
             document.IdDocumentStatus = request.DocumentStatusId;
             document.Observations = request.Observations;
 
             await _repository.UpdateAsync(document);
 
-            // =============================
+            // =====================================
             // RECALCULAR ESTADO SOLICITUD
-            // =============================
-
-            _logger.LogInformation(
-                "Recalculando estado de solicitud {RequestId}",
-                document.RequestId
-            );
+            // =====================================
 
             await _requestStatusService.RecalculateStatus(document.RequestId);
 
-            // =============================
+            // =====================================
             // VALIDAR POLÍTICA DE CORREO
-            // =============================
+            // =====================================
 
             var shouldSendNotification =
                 await _notificationPolicyService.ShouldSendNotificationAsync(document.RequestId);
 
-            _logger.LogInformation(
-                "Resultado política notificaciones: {ShouldSend}",
-                shouldSendNotification
-            );
-
             if (!shouldSendNotification)
             {
-                _logger.LogInformation(
-                    "Correo bloqueado por política de notificaciones."
-                );
+                _logger.LogInformation("Correo bloqueado por política de notificaciones.");
                 return true;
             }
 
-            // =============================
-            // OBTENER REVISOR (ROL READVIEW)
-            // =============================
+            // =====================================
+            // OBTENER REVISOR
+            // =====================================
 
             var reviewerEmail = await _userRepository
                 .GetEmailByRoleAsync((int)SystemRolesEnum.ReadView);
 
             if (string.IsNullOrEmpty(reviewerEmail))
-            {
-                _logger.LogWarning("No se encontró correo para el rol ReadView.");
                 reviewerEmail = "readview@system.local";
-            }
 
-            _logger.LogInformation(
-                "Revisor identificado como {ReviewerEmail}",
-                reviewerEmail
-            );
+            var result = request.DocumentStatusId == (int)DocumentStatusEnum.Aprobado
+                ? "Aprobado"
+                : "Observado";
 
-            // ====================================================
-            // DOCUMENTO APROBADO
-            // ====================================================
+            // =====================================
+            // OBTENER INFO DE NOTIFICACIÓN
+            // =====================================
+
+            string? managerEmail = null;
+            string? adminEmail = null;
+            string requestNumber = "";
 
             if (request.DocumentStatusId == (int)DocumentStatusEnum.Aprobado)
             {
-                _logger.LogInformation("Procesando notificación de documento APROBADO");
-
                 var info = await _notificationRepository
                     .GetDocumentApprovedInfoAsync(document.RequestId);
 
                 if (info == null)
-                {
-                    _logger.LogWarning(
-                        "No se encontró información de notificación para solicitud {RequestId}",
-                        document.RequestId
-                    );
-
                     return true;
-                }
 
-                _logger.LogInformation(
-                    "Datos notificación: RequestNumber={RequestNumber}, ManagerEmail={ManagerEmail}",
-                    info.RequestNumber,
-                    info.ManagerEmail
-                );
+                managerEmail = info.ManagerEmail;
+                requestNumber = info.RequestNumber;
 
-                if (!string.IsNullOrEmpty(info.ManagerEmail))
-                {
-                    _logger.LogInformation(
-                        "Enviando correo de documento aprobado a {Email}",
-                        info.ManagerEmail
-                    );
-
-                    await _emailService.SendDocumentReviewedAsync(
-                        info.ManagerEmail,
-                        reviewerEmail,
-                        info.RequestNumber,
-                        document.FileName,
-                        "Aprobado",
-                        document.Observations
-                    );
-                }
-                else
-                {
-                    _logger.LogWarning("ManagerEmail viene vacío.");
-                }
+                adminEmail = await _userRepository
+                    .GetEmailByRoleAsync((int)SystemRolesEnum.AdministradorAdquisiciones);
             }
-
-            // ====================================================
-            // DOCUMENTO OBSERVADO
-            // ====================================================
-
-            if (request.DocumentStatusId == (int)DocumentStatusEnum.Observado)
+            else
             {
-                _logger.LogInformation("Procesando notificación de documento OBSERVADO");
-
                 var info = await _notificationRepository
                     .GetDocumentObservedInfoAsync(document.RequestId);
 
                 if (info == null)
-                {
-                    _logger.LogWarning(
-                        "No se encontró información para solicitud {RequestId}",
-                        document.RequestId
-                    );
-
                     return true;
-                }
 
-                _logger.LogInformation(
-                    "Datos notificación: ManagerEmail={ManagerEmail}, AdminEmail={AdminEmail}",
-                    info.ManagerEmail,
-                    info.AdminEmail
-                );
-
-                // correo al encargado
-                if (!string.IsNullOrEmpty(info.ManagerEmail))
-                {
-                    _logger.LogInformation(
-                        "Enviando correo al encargado {Email}",
-                        info.ManagerEmail
-                    );
-
-                    await _emailService.SendDocumentReviewedAsync(
-                        info.ManagerEmail,
-                        reviewerEmail,
-                        info.RequestNumber,
-                        document.FileName,
-                        "Observado",
-                        document.Observations
-                    );
-                }
-
-                // correo al administrador
-                if (!string.IsNullOrEmpty(info.AdminEmail))
-                {
-                    _logger.LogInformation(
-                        "Enviando correo al AdministradorAdquisiciones {Email}",
-                        info.AdminEmail
-                    );
-
-                    await _emailService.SendDocumentReviewNotificationAsync(
-                        info.AdminEmail,
-                        reviewerEmail,
-                        info.RequestNumber,
-                        "Observado",
-                        document.Observations
-                    );
-                }
+                managerEmail = info.ManagerEmail;
+                adminEmail = info.AdminEmail;
+                requestNumber = info.RequestNumber;
             }
 
-            _logger.LogInformation(
-                "Proceso de revisión finalizado correctamente para documento {DocumentId}",
-                request.DocumentId
-            );
+            // =====================================
+            // ENCOLAR CORREOS
+            // =====================================
+
+            if (IsValidEmail(managerEmail))
+            {
+                _emailQueue.Enqueue(() =>
+                    _emailService.SendDocumentReviewedAsync(
+                        managerEmail,
+                        reviewerEmail,
+                        requestNumber,
+                        document.FileName,
+                        result,
+                        document.Observations
+                ));
+            }
+
+            if (IsValidEmail(adminEmail))
+            {
+                _emailQueue.Enqueue(() =>
+    _emailService.SendDocumentReviewedAsync(
+        managerEmail,
+        reviewerEmail,
+        requestNumber,
+        document.FileName ?? "Documento no identificado",
+        result,
+        document.Observations
+));
+            }
 
             return true;
+        }
+
+        private bool IsValidEmail(string? email)
+        {
+            if (string.IsNullOrWhiteSpace(email))
+                return false;
+
+            try
+            {
+                var addr = new MailAddress(email);
+                return addr.Address == email;
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }

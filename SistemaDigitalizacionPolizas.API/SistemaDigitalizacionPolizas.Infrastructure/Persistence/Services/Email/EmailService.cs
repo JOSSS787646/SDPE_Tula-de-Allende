@@ -149,7 +149,8 @@ public class EmailService : IEmailService
       string reviewerName,
       string requestNumber,
       string result,
-      string? observations
+      string? observations,
+         string documentName
   )
     {
         ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
@@ -175,6 +176,7 @@ public class EmailService : IEmailService
         htmlBody = htmlBody
             .Replace("{{REVIEWER}}", reviewerName)
             .Replace("{{REQUEST}}", requestNumber)
+            .Replace("{{DOCUMENT}}", documentName)
             .Replace("{{RESULT}}", result)
             .Replace("{{OBSERVATIONS}}", observations ?? "Sin observaciones")
             .Replace("{{DATE}}", now.ToString("dd/MM/yyyy"))
