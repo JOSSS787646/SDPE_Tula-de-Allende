@@ -34,6 +34,8 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.RequestManager
 
                     RequestNumber = r.RequestNumber,
 
+                    Email = rm.Email,
+
                     AdministrativeUnit = ua != null ? ua.Description : null
                 }
 

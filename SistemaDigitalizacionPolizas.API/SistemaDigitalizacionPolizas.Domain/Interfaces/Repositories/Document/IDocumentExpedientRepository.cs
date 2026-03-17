@@ -36,5 +36,8 @@ namespace SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Document
         Task<IEnumerable<ExpedientDocumentPreviewDto>> GetDocumentsByClassificationAsync(int classificationId);
         void Delete(ExpedientDocument entity);
 
+
+
+        Task UpdateAsync(ExpedientDocument entity);
     }
 }

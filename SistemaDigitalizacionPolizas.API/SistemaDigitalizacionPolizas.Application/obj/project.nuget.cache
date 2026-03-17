@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "3Pe2+R7s+t8=",
+  "dgSpecHash": "UiIoSNAUuR8=",
   "success": true,
-  "projectFilePath": "C:\\Estadia Ingenieria\\Febrero\\Back\\Sprint6O\\SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.Application\\SistemaDigitalizacionPolizas.Application.csproj",
+  "projectFilePath": "C:\\Estadia Ingenieria\\Marzo\\Sprint7\\SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.Application\\SistemaDigitalizacionPolizas.Application.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\josea\\.nuget\\packages\\automapper\\10.0.0\\automapper.10.0.0.nupkg.sha512",
     "C:\\Users\\josea\\.nuget\\packages\\awssdk.core\\4.0.3.8\\awssdk.core.4.0.3.8.nupkg.sha512",
@@ -14,8 +14,10 @@
     "C:\\Users\\josea\\.nuget\\packages\\microsoft.aspnetcore.http.abstractions\\2.3.9\\microsoft.aspnetcore.http.abstractions.2.3.9.nupkg.sha512",
     "C:\\Users\\josea\\.nuget\\packages\\microsoft.aspnetcore.http.features\\2.3.0\\microsoft.aspnetcore.http.features.2.3.0.nupkg.sha512",
     "C:\\Users\\josea\\.nuget\\packages\\microsoft.csharp\\4.7.0\\microsoft.csharp.4.7.0.nupkg.sha512",
-    "C:\\Users\\josea\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\2.0.0\\microsoft.extensions.dependencyinjection.abstractions.2.0.0.nupkg.sha512",
+    "C:\\Users\\josea\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\9.0.9\\microsoft.extensions.dependencyinjection.abstractions.9.0.9.nupkg.sha512",
+    "C:\\Users\\josea\\.nuget\\packages\\microsoft.extensions.logging.abstractions\\9.0.9\\microsoft.extensions.logging.abstractions.9.0.9.nupkg.sha512",
     "C:\\Users\\josea\\.nuget\\packages\\microsoft.extensions.primitives\\8.0.0\\microsoft.extensions.primitives.8.0.0.nupkg.sha512",
+    "C:\\Users\\josea\\.nuget\\packages\\system.diagnostics.diagnosticsource\\9.0.9\\system.diagnostics.diagnosticsource.9.0.9.nupkg.sha512",
     "C:\\Users\\josea\\.nuget\\packages\\system.reflection.emit\\4.7.0\\system.reflection.emit.4.7.0.nupkg.sha512",
     "C:\\Users\\josea\\.nuget\\packages\\system.text.encodings.web\\8.0.0\\system.text.encodings.web.8.0.0.nupkg.sha512"
   ],

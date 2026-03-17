@@ -354,6 +354,93 @@
         }
       }
     },
+    "/api/AcquisitionRequest/{id}/payment-policy": {
+      "patch": {
+        "tags": [
+          "AcquisitionRequest"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "integer",
+                "format": "int32"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "type": "integer",
+                "format": "int32"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "type": "integer",
+                "format": "int32"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/AcquisitionRequest/{id}/CFDI": {
+      "patch": {
+        "tags": [
+          "AcquisitionRequest"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "string"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "type": "string"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/AcquisitionType": {
       "post": {
         "tags": [
@@ -2486,6 +2573,48 @@
         }
       }
     },
+    "/api/expedient-documents/expedient-documents/{id}/review": {
+      "post": {
+        "tags": [
+          "ExpedientDocument"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReviewDocumentRequestDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReviewDocumentRequestDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReviewDocumentRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/FundingSource": {
       "post": {
         "tags": [
@@ -2671,6 +2800,98 @@
         }
       }
     },
+    "/api/notifications/{userId}": {
+      "get": {
+        "tags": [
+          "Notifications"
+        ],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/notifications/unread/{userId}": {
+      "get": {
+        "tags": [
+          "Notifications"
+        ],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/notifications/read/{notificationId}": {
+      "put": {
+        "tags": [
+          "Notifications"
+        ],
+        "parameters": [
+          {
+            "name": "notificationId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/notifications/read-all/{userId}": {
+      "put": {
+        "tags": [
+          "Notifications"
+        ],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/PaymentPolicy": {
       "post": {
         "tags": [
@@ -2708,6 +2929,153 @@
             }
           }
         },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/PaymentPolicy/policies": {
+      "get": {
+        "tags": [
+          "PaymentPolicy"
+        ],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/PaymentPolicy/available-policies": {
+      "get": {
+        "tags": [
+          "PaymentPolicy"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/PaymentPolicy/payment-policies": {
+      "put": {
+        "tags": [
+          "PaymentPolicy"
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "IdPaymentPolicy": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "PolicyCode": {
+                    "type": "string"
+                  },
+                  "Description": {
+                    "type": "string"
+                  },
+                  "File": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              },
+              "encoding": {
+                "IdPaymentPolicy": {
+                  "style": "form"
+                },
+                "PolicyCode": {
+                  "style": "form"
+                },
+                "Description": {
+                  "style": "form"
+                },
+                "File": {
+                  "style": "form"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "PaymentPolicy"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeletePaymentPolicyCommand"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeletePaymentPolicyCommand"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeletePaymentPolicyCommand"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/PaymentPolicy/payment-policies/{id}/download": {
+      "get": {
+        "tags": [
+          "PaymentPolicy"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -3586,6 +3954,37 @@
         }
       }
     },
+    "/api/system-configuration/upsert": {
+      "post": {
+        "tags": [
+          "SystemConfiguration"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpsertSystemConfigurationCommand"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpsertSystemConfigurationCommand"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpsertSystemConfigurationCommand"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/users": {
       "post": {
         "tags": [
@@ -3740,6 +4139,14 @@
             "nullable": true
           },
           "observations": {
+            "type": "string",
+            "nullable": true
+          },
+          "cfdi": {
+            "type": "string",
+            "nullable": true
+          },
+          "policyNumber": {
             "type": "string",
             "nullable": true
           },
@@ -3993,6 +4400,10 @@
             "nullable": true
           },
           "observations": {
+            "type": "string",
+            "nullable": true
+          },
+          "cfdi": {
             "type": "string",
             "nullable": true
           },
@@ -4430,6 +4841,20 @@
         },
         "additionalProperties": false
       },
+      "DeletePaymentPolicyCommand": {
+        "type": "object",
+        "properties": {
+          "idPaymentPolicy": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "password": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "DeleteRequestRequestDto": {
         "type": "object",
         "properties": {
@@ -4759,6 +5184,20 @@
         },
         "additionalProperties": false
       },
+      "ReviewDocumentRequestDto": {
+        "type": "object",
+        "properties": {
+          "documentStatusId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "observations": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "SimpleCatalogDto": {
         "type": "object",
         "properties": {
@@ -4910,6 +5349,10 @@
             "nullable": true
           },
           "observations": {
+            "type": "string",
+            "nullable": true
+          },
+          "cfdi": {
             "type": "string",
             "nullable": true
           },
@@ -5319,6 +5762,20 @@
           "createdBy": {
             "type": "integer",
             "format": "int32",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "UpsertSystemConfigurationCommand": {
+        "type": "object",
+        "properties": {
+          "emailsEnabled": {
+            "type": "boolean"
+          },
+          "notificationStartDate": {
+            "type": "string",
+            "format": "date-time",
             "nullable": true
           }
         },

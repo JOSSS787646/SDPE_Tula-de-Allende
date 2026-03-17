@@ -21,5 +21,9 @@ namespace SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Acquisitio
 
         Task UpdateAsync(AcquisitionRequest entity);
         Task DeleteCascadeAsync(int solicitudId);
+
+        Task<bool> ExistsByRequestNumberAsync(string requestNumber);
+
+        Task RemovePaymentPolicyFromRequests(int paymentPolicyId);
     }
 }

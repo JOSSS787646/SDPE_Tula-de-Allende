@@ -55,11 +55,11 @@ namespace SistemaDigitalizacionPolizas.Application.Services.PaymentPolicy_Servic
                 using (var stream = request.File.OpenReadStream())
                 {
                     filePath = await _fileStorageService.UploadAsync(
-                        stream,
-                        request.File.FileName,
-                        request.File.ContentType,
-                        $"policies/{DateTime.UtcNow.Year}"
-                    );
+    stream,
+    request.File.FileName,
+    request.File.ContentType,
+    $"payment-policies/"
+);
                 }
 
                 // 4️⃣ Obtener usuario autenticado

@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace SistemaDigitalizacionPolizas.Domain.Dtos.AcquisitionRequest
 {
-    public class RequestDocumentChecklistDto
+    public class 
+        
+        RequestDocumentChecklistDto
     {
         public int DocumentTypeId { get; set; }
 
@@ -25,5 +27,6 @@ namespace SistemaDigitalizacionPolizas.Domain.Dtos.AcquisitionRequest
         public List<string>? FileUrls { get; set; }
 
         public List<string>? PreviewUrls { get; set; }
+        public List<int> FileIds { get; set; }
     }
 }

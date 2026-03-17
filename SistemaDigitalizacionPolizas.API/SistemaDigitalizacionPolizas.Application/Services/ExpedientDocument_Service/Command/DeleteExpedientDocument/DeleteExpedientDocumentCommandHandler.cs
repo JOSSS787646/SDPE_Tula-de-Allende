@@ -2,16 +2,11 @@
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Document;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Services;
 using SistemaDigitalizacionPolizas.Infrastructure.Persistence.Services.UploatFile;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Service.Command.DeleteExpedientDocument
 {
     public class DeleteExpedientDocumentCommandHandler
-     : IRequestHandler<DeleteExpedientDocumentCommand, bool>
+        : IRequestHandler<DeleteExpedientDocumentCommand, bool>
     {
         private readonly IDocumentExpedientRepository _repository;
         private readonly IUserRepository _userRepository;
@@ -40,7 +35,6 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
             DeleteExpedientDocumentCommand request,
             CancellationToken cancellationToken)
         {
-            // 🔐 obtener usuario actual
             var userId = _currentUser.UserId;
 
             var user = await _userRepository.GetByIdAsync(userId);
@@ -48,7 +42,6 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
             if (user == null)
                 throw new Exception("Usuario no encontrado.");
 
-            // 🔐 validar contraseña
             var validPassword = BCrypt.Net.BCrypt.Verify(
                 request.Password,
                 user.Password
@@ -71,11 +64,12 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
             {
                 _repository.Delete(entity);
 
-                if (requestId.HasValue)
-                    await _requestStatusService.RecalculateStatus(requestId.Value);
+                // 🔥 recalcular estado de la solicitud
+                await _requestStatusService.RecalculateStatus(requestId);
 
                 await _unitOfWork.CommitAsync();
 
+                // eliminar archivo físico
                 if (!string.IsNullOrEmpty(filePath))
                     await _fileStorageService.DeleteAsync(filePath);
 
@@ -88,4 +82,4 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
             }
         }
     }
-    }
+}

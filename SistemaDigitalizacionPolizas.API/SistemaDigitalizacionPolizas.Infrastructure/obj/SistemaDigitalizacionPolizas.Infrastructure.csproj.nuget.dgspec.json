@@ -1,17 +1,116 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Estadia Ingenieria\\Febrero\\Back\\Sprint6O\\SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.Infrastructure\\SistemaDigitalizacionPolizas.Infrastructure.csproj": {}
+    "C:\\Estadia Ingenieria\\Marzo\\Sprint7\\SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.Infrastructure\\SistemaDigitalizacionPolizas.Infrastructure.csproj": {}
   },
   "projects": {
-    "C:\\Estadia Ingenieria\\Febrero\\Back\\Sprint6O\\SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.Domain\\SistemaDigitalizacionPolizas.Domain.csproj": {
+    "C:\\Estadia Ingenieria\\Marzo\\Sprint7\\SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.Application\\SistemaDigitalizacionPolizas.Application.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Estadia Ingenieria\\Febrero\\Back\\Sprint6O\\SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.Domain\\SistemaDigitalizacionPolizas.Domain.csproj",
-        "projectName": "SistemaDigitalizacionPolizas.Domain",
-        "projectPath": "C:\\Estadia Ingenieria\\Febrero\\Back\\Sprint6O\\SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.Domain\\SistemaDigitalizacionPolizas.Domain.csproj",
+        "projectUniqueName": "C:\\Estadia Ingenieria\\Marzo\\Sprint7\\SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.Application\\SistemaDigitalizacionPolizas.Application.csproj",
+        "projectName": "SistemaDigitalizacionPolizas.Application",
+        "projectPath": "C:\\Estadia Ingenieria\\Marzo\\Sprint7\\SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.Application\\SistemaDigitalizacionPolizas.Application.csproj",
         "packagesPath": "C:\\Users\\josea\\.nuget\\packages\\",
-        "outputPath": "C:\\Estadia Ingenieria\\Febrero\\Back\\Sprint6O\\SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.Domain\\obj\\",
+        "outputPath": "C:\\Estadia Ingenieria\\Marzo\\Sprint7\\SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.Application\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\josea\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "C:\\Estadia Ingenieria\\Marzo\\Sprint7\\SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.Domain\\SistemaDigitalizacionPolizas.Domain.csproj": {
+                "projectPath": "C:\\Estadia Ingenieria\\Marzo\\Sprint7\\SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.Domain\\SistemaDigitalizacionPolizas.Domain.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.200"
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "dependencies": {
+            "AutoMapper": {
+              "target": "Package",
+              "version": "[10.0.0, )"
+            },
+            "BCrypt.Net-Next": {
+              "target": "Package",
+              "version": "[3.2.0, )"
+            },
+            "FluentValidation": {
+              "target": "Package",
+              "version": "[10.2.0, )"
+            },
+            "MediatR": {
+              "target": "Package",
+              "version": "[8.0.0, )"
+            },
+            "MediatR.Extensions.Microsoft.DependencyInjection": {
+              "target": "Package",
+              "version": "[8.0.0, )"
+            },
+            "Microsoft.AspNetCore.Http.Abstractions": {
+              "target": "Package",
+              "version": "[2.3.9, )"
+            },
+            "Microsoft.Extensions.Logging.Abstractions": {
+              "target": "Package",
+              "version": "[9.0.9, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.203/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Estadia Ingenieria\\Marzo\\Sprint7\\SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.Domain\\SistemaDigitalizacionPolizas.Domain.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Estadia Ingenieria\\Marzo\\Sprint7\\SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.Domain\\SistemaDigitalizacionPolizas.Domain.csproj",
+        "projectName": "SistemaDigitalizacionPolizas.Domain",
+        "projectPath": "C:\\Estadia Ingenieria\\Marzo\\Sprint7\\SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.Domain\\SistemaDigitalizacionPolizas.Domain.csproj",
+        "packagesPath": "C:\\Users\\josea\\.nuget\\packages\\",
+        "outputPath": "C:\\Estadia Ingenieria\\Marzo\\Sprint7\\SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.Domain\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -75,14 +174,14 @@
         }
       }
     },
-    "C:\\Estadia Ingenieria\\Febrero\\Back\\Sprint6O\\SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.Infrastructure\\SistemaDigitalizacionPolizas.Infrastructure.csproj": {
+    "C:\\Estadia Ingenieria\\Marzo\\Sprint7\\SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.Infrastructure\\SistemaDigitalizacionPolizas.Infrastructure.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Estadia Ingenieria\\Febrero\\Back\\Sprint6O\\SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.Infrastructure\\SistemaDigitalizacionPolizas.Infrastructure.csproj",
+        "projectUniqueName": "C:\\Estadia Ingenieria\\Marzo\\Sprint7\\SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.Infrastructure\\SistemaDigitalizacionPolizas.Infrastructure.csproj",
         "projectName": "SistemaDigitalizacionPolizas.Infrastructure",
-        "projectPath": "C:\\Estadia Ingenieria\\Febrero\\Back\\Sprint6O\\SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.Infrastructure\\SistemaDigitalizacionPolizas.Infrastructure.csproj",
+        "projectPath": "C:\\Estadia Ingenieria\\Marzo\\Sprint7\\SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.Infrastructure\\SistemaDigitalizacionPolizas.Infrastructure.csproj",
         "packagesPath": "C:\\Users\\josea\\.nuget\\packages\\",
-        "outputPath": "C:\\Estadia Ingenieria\\Febrero\\Back\\Sprint6O\\SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.Infrastructure\\obj\\",
+        "outputPath": "C:\\Estadia Ingenieria\\Marzo\\Sprint7\\SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.Infrastructure\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -103,8 +202,11 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "C:\\Estadia Ingenieria\\Febrero\\Back\\Sprint6O\\SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.Domain\\SistemaDigitalizacionPolizas.Domain.csproj": {
-                "projectPath": "C:\\Estadia Ingenieria\\Febrero\\Back\\Sprint6O\\SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.Domain\\SistemaDigitalizacionPolizas.Domain.csproj"
+              "C:\\Estadia Ingenieria\\Marzo\\Sprint7\\SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.Application\\SistemaDigitalizacionPolizas.Application.csproj": {
+                "projectPath": "C:\\Estadia Ingenieria\\Marzo\\Sprint7\\SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.Application\\SistemaDigitalizacionPolizas.Application.csproj"
+              },
+              "C:\\Estadia Ingenieria\\Marzo\\Sprint7\\SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.Domain\\SistemaDigitalizacionPolizas.Domain.csproj": {
+                "projectPath": "C:\\Estadia Ingenieria\\Marzo\\Sprint7\\SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.Domain\\SistemaDigitalizacionPolizas.Domain.csproj"
               }
             }
           }
@@ -136,6 +238,10 @@
             "Microsoft.AspNetCore.Http.Abstractions": {
               "target": "Package",
               "version": "[2.3.9, )"
+            },
+            "Microsoft.AspNetCore.SignalR": {
+              "target": "Package",
+              "version": "[1.2.0, )"
             },
             "Microsoft.EntityFrameworkCore": {
               "target": "Package",

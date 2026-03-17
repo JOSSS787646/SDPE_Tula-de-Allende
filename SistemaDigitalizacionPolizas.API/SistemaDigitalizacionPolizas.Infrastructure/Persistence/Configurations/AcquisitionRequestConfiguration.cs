@@ -46,7 +46,12 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Configurations
                    .HasColumnName("justificacion")
                    .HasMaxLength(5000);
 
-       
+
+
+            builder.Property(x => x.CFDI)
+                   .HasColumnName("cfdi")
+                   .HasMaxLength(100);
+
 
             builder.Property(x => x.AuthorizationDate)
                    .HasColumnName("fechaAutorizacion")

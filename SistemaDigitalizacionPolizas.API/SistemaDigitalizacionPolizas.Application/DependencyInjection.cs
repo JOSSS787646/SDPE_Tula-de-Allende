@@ -18,6 +18,8 @@ namespace SistemaDigitalizacionPolizas.Application
                 typeof(ValidationBehaviour<,>)
             );
             services.AddScoped<IRequestStatusService, RequestStatusService>();
+            services.AddScoped<INotificationPolicyService, NotificationPolicyService>();
+
 
             return services;
         }

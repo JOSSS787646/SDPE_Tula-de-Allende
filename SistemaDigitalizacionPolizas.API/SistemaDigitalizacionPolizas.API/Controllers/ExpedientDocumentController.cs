@@ -12,6 +12,7 @@ using SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Servic
 using SistemaDigitalizacionPolizas.Domain.Dtos.AcquisitionRequest;
 using SistemaDigitalizacionPolizas.Domain.Dtos.ExpedientDocument;
 using SistemaDigitalizacionPolizas.Domain.Dtos.Auth;
+using SistemaDigitalizacionPolizas.Application.Services.AcqusitionRequest_Service.Commands.ReviewDocument;
 
 namespace SistemaDigitalizacionPolizas.API.Controllers
 {
@@ -19,7 +20,7 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
     /// Controlador para la gestión de documentos del expediente.
     /// Permite consultar, subir, actualizar, eliminar y descargar documentos.
     /// </summary>
-    [Authorize]
+   // [Authorize]
     [ApiController]
     [Route("api/expedient-documents")]
     public class ExpedientDocumentController : ControllerBase
@@ -169,36 +170,24 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
         /// <summary>
         /// Actualiza un documento existente del expediente.
         /// </summary>
-        [HttpPut("{id}")]
+        [HttpPut("{id:int}")]
         [Consumes("multipart/form-data")]
-        [RequestSizeLimit(524288000)]
+        [RequestSizeLimit(52428800)]
         public async Task<IActionResult> UpdateDocument(
-            int id,
-            [FromForm] UpdateExpedientDocumentCommand command)
+        int id,
+        [FromForm] UpdateExpedientDocumentCommand command)
         {
             if (id <= 0)
-                return BadRequest(new
-                {
-                    success = false,
-                    message = "El id del documento es inválido."
-                });
+                return BadRequest("Id inválido.");
 
             command.Id = id;
 
             var result = await _mediator.Send(command);
 
             if (!result)
-                return BadRequest(new
-                {
-                    success = false,
-                    message = "No se pudo actualizar el documento."
-                });
+                return NotFound("Documento no encontrado.");
 
-            return Ok(new
-            {
-                success = true,
-                message = "Documento actualizado correctamente."
-            });
+            return Ok("Documento actualizado correctamente.");
         }
 
         // ============================================================
@@ -216,6 +205,25 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
         {
             var result = await _mediator.Send(
                 new DeleteExpedientDocumentCommand(id, request.Password)
+            );
+
+            return Ok(result);
+        }
+
+
+
+
+        [HttpPost("expedient-documents/{id}/review")]
+        public async Task<IActionResult> ReviewDocument(
+    int id,
+    [FromBody] ReviewDocumentRequestDto request)
+        {
+            var result = await _mediator.Send(
+                new ReviewDocumentCommand(
+                    id,
+                    request.DocumentStatusId,
+                    request.Observations
+                )
             );
 
             return Ok(result);
