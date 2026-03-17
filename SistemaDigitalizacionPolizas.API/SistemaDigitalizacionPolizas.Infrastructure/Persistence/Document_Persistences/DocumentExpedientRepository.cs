@@ -181,6 +181,10 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Document_Persi
                         .Select(x => x.Observations)
                         .FirstOrDefault(),
 
+                    FileIds = docs
+                        .Select(x => x.Id)
+                        .ToList(),
+
                     FileNames = docs
                         .Select(x => x.FileName)
                         .ToList(),
@@ -189,7 +193,6 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Document_Persi
                         .Select(x => x.FilePath)
                         .ToList(),
 
-                    // Se llena en el handler con URLs firmadas
                     PreviewUrls = null
                 };
             }).ToList();
