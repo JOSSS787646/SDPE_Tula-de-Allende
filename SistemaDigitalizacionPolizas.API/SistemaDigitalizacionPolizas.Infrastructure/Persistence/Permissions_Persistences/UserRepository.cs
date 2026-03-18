@@ -105,6 +105,7 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Permissions_Pe
                     Role = u.Role.RolName,
                     idRole=u.IdRole,
                     AdministrativeUnit = u.AdministrativeUnit.Description,
+                    IdAdministrativeUnit=u.IdAdministrativeUnit,
                     Asset = u.Asset
                 })
                 .ToListAsync();

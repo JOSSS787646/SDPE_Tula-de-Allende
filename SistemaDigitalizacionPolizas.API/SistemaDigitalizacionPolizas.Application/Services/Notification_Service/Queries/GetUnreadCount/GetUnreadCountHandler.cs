@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace SistemaDigitalizacionPolizas.Application.Services.Notification_Service.Queries.GetUnreadCount
 {
-    public class GetUnreadCountQueryHandler
-       : IRequestHandler<GetUnreadCountQuery, int>
+    public class GetUnreadCountHandler
+     : IRequestHandler<GetUnreadCountQuery, int>
     {
         private readonly INotificationRepository _repository;
 
-        public GetUnreadCountQueryHandler(INotificationRepository repository)
+        public GetUnreadCountHandler(INotificationRepository repository)
         {
             _repository = repository;
         }

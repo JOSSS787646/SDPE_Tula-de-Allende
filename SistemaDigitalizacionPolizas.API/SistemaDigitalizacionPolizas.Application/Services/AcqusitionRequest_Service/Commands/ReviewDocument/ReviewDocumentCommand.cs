@@ -9,6 +9,6 @@ namespace SistemaDigitalizacionPolizas.Application.Services.AcqusitionRequest_Se
     public record ReviewDocumentCommand(
      int DocumentId,
      int DocumentStatusId,
-     string? Observations
+     string? ObservationsUpload
  ) : IRequest<bool>;
 }

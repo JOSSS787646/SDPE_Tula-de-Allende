@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Service.Service;
 using SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Service.Service.Gmail_Services;
+using SistemaDigitalizacionPolizas.Application.Services.Notification_Service.Commands.CreateNotification;
 using SistemaDigitalizacionPolizas.Domain.Enums;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Document;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.RequestNotification;
@@ -41,6 +42,7 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
         private readonly IEmailService _emailService;
         private readonly IUserRepository _userRepository;
         private readonly IEmailQueue _emailQueue;
+        private readonly IMediator _mediator;
 
         private readonly ICurrentUserService _currentUserService;
 
@@ -54,7 +56,8 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
             IEmailService emailService,
             IUserRepository userRepository,
             IEmailQueue emailQueue,
-            ICurrentUserService currentUserService)
+            ICurrentUserService currentUserService,
+            IMediator mediator)
         {
             _repository = repository;
             _fileStorageService = fileStorageService;
@@ -68,6 +71,7 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
             _emailQueue = emailQueue;
 
             _currentUserService = currentUserService;
+            _mediator = mediator;
         }
 
         public async Task<bool> Handle(
@@ -170,6 +174,24 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
                     )
                 );
 
+
+                //Enviar notificación interna (en la aplicación)
+
+                var reviewerUserId = await _userRepository
+                    .GetUserIdByRoleAsync((int)SystemRolesEnum.ReadView);
+
+                if (reviewerUserId > 0)
+                {
+                    await _mediator.Send(
+                        new CreateNotificationCommand(
+                            reviewerUserId,
+                            "Documento actualizado",
+                            $"Se actualizó el documento '{entity.FileName}' en la solicitud {requestNumber}",
+                            entity.RequestId
+                        ),
+                        cancellationToken
+                    );
+                }
                 return true;
             }
             catch

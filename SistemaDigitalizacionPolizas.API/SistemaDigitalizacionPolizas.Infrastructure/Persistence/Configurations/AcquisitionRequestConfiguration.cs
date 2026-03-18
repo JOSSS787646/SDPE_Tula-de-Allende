@@ -48,6 +48,7 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Configurations
 
 
 
+
             builder.Property(x => x.CFDI)
                    .HasColumnName("cfdi")
                    .HasMaxLength(100);
@@ -57,8 +58,9 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Configurations
                    .HasColumnName("fechaAutorizacion")
                    .HasColumnType("date");
 
+
             builder.Property(x => x.Observations)
-                   .HasColumnName("Obervaciones") // ⚠ error en BD
+                   .HasColumnName("Obervaciones")
                    .HasMaxLength(1500);
 
             // =====================================================

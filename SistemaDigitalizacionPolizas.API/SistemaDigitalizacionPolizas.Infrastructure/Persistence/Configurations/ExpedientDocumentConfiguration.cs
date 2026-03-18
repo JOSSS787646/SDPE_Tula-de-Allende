@@ -59,6 +59,12 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Configurations
                 .HasColumnName("observaciones")
                 .HasMaxLength(45);
 
+
+
+            builder.Property(x => x.ObservationsUpload)
+              .HasColumnName("observacionesCarga")
+              .HasMaxLength(5000);
+
             // ============================================
             // Auditoría
             // ============================================

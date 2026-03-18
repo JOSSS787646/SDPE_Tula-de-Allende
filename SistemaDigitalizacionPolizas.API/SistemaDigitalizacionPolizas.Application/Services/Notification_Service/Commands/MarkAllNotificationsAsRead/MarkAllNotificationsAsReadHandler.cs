@@ -5,23 +5,23 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SistemaDigitalizacionPolizas.Application.Services.Notification_Service.Commands.MarkNotificationAsRead
+namespace SistemaDigitalizacionPolizas.Application.Services.Notification_Service.Commands.MarkAllNotificationsAsRead
 {
-    public class MarkNotificationAsReadCommandHandler
-        : IRequestHandler<MarkNotificationAsReadCommand, Unit>
+    public class MarkAllNotificationsAsReadHandler
+         : IRequestHandler<MarkAllNotificationsAsReadCommand>
     {
         private readonly INotificationRepository _repository;
 
-        public MarkNotificationAsReadCommandHandler(INotificationRepository repository)
+        public MarkAllNotificationsAsReadHandler(INotificationRepository repository)
         {
             _repository = repository;
         }
 
         public async Task<Unit> Handle(
-            MarkNotificationAsReadCommand request,
+            MarkAllNotificationsAsReadCommand request,
             CancellationToken cancellationToken)
         {
-            await _repository.MarkAsReadAsync(request.NotificationId);
+            await _repository.MarkAllAsReadAsync(request.UserId);
 
             return Unit.Value;
         }

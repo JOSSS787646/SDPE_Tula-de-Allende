@@ -36,6 +36,9 @@ namespace SistemaDigitalizacionPolizas.Domain.Entities.Document_Entities
         // ================================
         public string? Observations { get; set; }
 
+
+        public string? ObservationsUpload { get; set; }
+
         // ================================
         // Audit Fields
         // ================================

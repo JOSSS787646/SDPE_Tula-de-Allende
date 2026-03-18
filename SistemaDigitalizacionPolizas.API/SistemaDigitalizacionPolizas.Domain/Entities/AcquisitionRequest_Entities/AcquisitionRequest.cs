@@ -30,6 +30,7 @@ namespace SistemaDigitalizacionPolizas.Domain.Entities.AcquisitionRequest_Entiti
 
         public string? Observations { get; set; }
 
+
         public string? CFDI { get; set; }
 
         // ===============================

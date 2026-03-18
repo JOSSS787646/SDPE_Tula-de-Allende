@@ -130,10 +130,10 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Document_Persi
 
             // 1️⃣ Traer documentos del expediente UNA vez
             var expedientDocs = await _context.ExpedientDocuments
-                .Where(x => x.RequestId == requestId && x.Active == true)
+            .Where(x => x.RequestId == requestId && x.Active == true)
+             .Include(x => x.DocumentStatus) 
                 .AsNoTracking()
                 .ToListAsync();
-
             // 2️⃣ Traer excepciones UNA vez
             var exceptions = await _context.RequestDocumentExceptions
                 .Where(x => x.IdRequest == requestId)
@@ -158,7 +158,6 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Document_Persi
             .AsNoTracking()
                .ToListAsync();
 
-            // 4️⃣ Construir DTO respetando tu modelo
             var result = documentRules.Select(rule =>
             {
                 var docs = expedientDocs
@@ -181,6 +180,12 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Document_Persi
                         .Select(x => x.Observations)
                         .FirstOrDefault(),
 
+                    Status = docs
+                     .Select(x => x.DocumentStatus != null
+                       ? x.DocumentStatus.Description
+                      : "Sin estado")
+                        .ToList(),
+
                     FileIds = docs
                         .Select(x => x.Id)
                         .ToList(),
@@ -193,7 +198,10 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Document_Persi
                         .Select(x => x.FilePath)
                         .ToList(),
 
-                    PreviewUrls = null
+                    PreviewUrls = null,
+
+
+
                 };
             }).ToList();
 

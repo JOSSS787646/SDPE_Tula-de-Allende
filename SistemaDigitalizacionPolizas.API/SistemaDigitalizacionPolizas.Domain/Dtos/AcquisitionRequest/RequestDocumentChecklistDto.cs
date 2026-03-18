@@ -21,6 +21,7 @@ namespace SistemaDigitalizacionPolizas.Domain.Dtos.AcquisitionRequest
         public bool Uploaded { get; set; }
 
         public string? Observations { get; set; }
+        public List<string>? Status { get; set; }
 
         public List<string>? FileNames { get; set; }
 
