@@ -58,6 +58,10 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Configurations
                    .HasColumnName("fechaAutorizacion")
                    .HasColumnType("date");
 
+            builder.Property(x => x.CompleteMaximeDate)
+                  .HasColumnName("FechaLimite")
+                  .HasColumnType("date");
+
 
             builder.Property(x => x.Observations)
                    .HasColumnName("Obervaciones")

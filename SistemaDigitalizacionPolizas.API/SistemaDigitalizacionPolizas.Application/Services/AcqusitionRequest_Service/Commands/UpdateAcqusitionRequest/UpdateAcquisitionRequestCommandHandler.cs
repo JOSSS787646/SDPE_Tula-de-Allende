@@ -46,6 +46,7 @@ namespace SistemaDigitalizacionPolizas.Application.Services.AcqusitionRequest_Se
             entity.IdCommunity = dto.IdCommunity;
             entity.IdBeneficiary = dto.IdBeneficiary;
             entity.IdPaymentPolicy = dto.IdPolicy;
+            entity.CompleteMaximeDate = dto.CompleteMaximeDate;
 
             entity.UpdatedAt = DateTime.UtcNow;
 

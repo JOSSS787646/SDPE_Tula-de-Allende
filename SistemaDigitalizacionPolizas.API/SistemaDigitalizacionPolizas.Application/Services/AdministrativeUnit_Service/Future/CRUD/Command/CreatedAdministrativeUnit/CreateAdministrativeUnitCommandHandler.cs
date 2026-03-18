@@ -1,8 +1,7 @@
-﻿
-
-using SistemaDigitalizacionPolizas.Domain.Interfaces.Services;
+﻿using SistemaDigitalizacionPolizas.Domain.Interfaces.Services;
 
 namespace SistemaDigitalizacionPolizas.Application.Services.AdministrativeUnit_Service.Future.CRUD.Command.CreatedAdministrativeUnit;
+
 public class CreateAdministrativeUnitCommandHandler
         : IRequestHandler<CreateAdministrativeUnitCommand, int>
 {
@@ -10,8 +9,9 @@ public class CreateAdministrativeUnitCommandHandler
     private readonly ICurrentUserService _currentUserService;
 
     public CreateAdministrativeUnitCommandHandler(
-        IAdministrativeUnit administrativeUnitRepository, ICurrentUserService currentUserService
-        )
+        IAdministrativeUnit administrativeUnitRepository,
+        ICurrentUserService currentUserService
+    )
     {
         _administrativeUnitRepository = administrativeUnitRepository;
         _currentUserService = currentUserService;
@@ -25,15 +25,13 @@ public class CreateAdministrativeUnitCommandHandler
         {
             Code = request.Code,
             Description = request.Description,
-
+            Active = request.Active,
             CreatedBy = _currentUserService.UserId,
             CreatedAt = DateTime.Now
         };
-
 
         var result = await _administrativeUnitRepository.CreateAsync(unit);
 
         return result!.IdAdministrativeUnit;
     }
 }
-

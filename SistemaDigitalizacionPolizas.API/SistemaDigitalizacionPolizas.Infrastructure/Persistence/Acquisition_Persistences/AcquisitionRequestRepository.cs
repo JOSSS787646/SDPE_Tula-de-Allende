@@ -58,6 +58,17 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Acquisition_Pe
             await _context.SaveChangesAsync();
         }
 
+        public async Task UpdateMaxDateAsync(int requestId, DateTime newDate)
+        {
+            var request = await _context.AcquisitionRequests
+                .FirstOrDefaultAsync(x => x.IdRequest == requestId);
+
+            if (request == null)
+
+            request.CompleteMaximeDate = newDate;
+
+            await _context.SaveChangesAsync();
+        }
 
 
 
@@ -75,6 +86,7 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Acquisition_Pe
                     Justification = x.Justification,
                     AuthorizationDate = x.AuthorizationDate,
                     Observations = x.Observations,
+                    CompleteMaximeDate = x.CompleteMaximeDate,
 
                     // 🔹 NUEVO
                     PolicyNumber = x.PaymentPolicy != null

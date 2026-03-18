@@ -28,6 +28,8 @@ namespace SistemaDigitalizacionPolizas.Domain.Entities.AcquisitionRequest_Entiti
         public string? Justification { get; set; }
         public DateTime? AuthorizationDate { get; set; }
 
+        public DateTime? CompleteMaximeDate { get; set; }
+
         public string? Observations { get; set; }
 
 

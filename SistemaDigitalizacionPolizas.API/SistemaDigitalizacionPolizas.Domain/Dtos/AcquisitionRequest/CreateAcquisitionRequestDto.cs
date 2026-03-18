@@ -20,6 +20,8 @@ namespace SistemaDigitalizacionPolizas.Domain.Dtos.AcquisitionRequest
 
         public string? Observations { get; set; }
 
+        public DateTime? CompleteMaximeDate { get; set; }
+
         public string? CFDI { get; set; }
 
         // ===============================

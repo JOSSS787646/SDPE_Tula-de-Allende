@@ -441,6 +441,37 @@
         }
       }
     },
+    "/api/AcquisitionRequest/update-max-date": {
+      "patch": {
+        "tags": [
+          "AcquisitionRequest"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateMaxDateDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateMaxDateDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateMaxDateDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/AcquisitionType": {
       "post": {
         "tags": [
@@ -4292,6 +4323,11 @@
             "type": "string",
             "nullable": true
           },
+          "completeMaximeDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
           "policyNumber": {
             "type": "string",
             "nullable": true
@@ -4547,6 +4583,11 @@
           },
           "observations": {
             "type": "string",
+            "nullable": true
+          },
+          "completeMaximeDate": {
+            "type": "string",
+            "format": "date-time",
             "nullable": true
           },
           "cfdi": {
@@ -5566,6 +5607,11 @@
             "type": "string",
             "nullable": true
           },
+          "completeMaximeDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
           "idAdministrativeUnit": {
             "type": "integer",
             "format": "int32",
@@ -5796,6 +5842,20 @@
           },
           "active": {
             "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "UpdateMaxDateDto": {
+        "type": "object",
+        "properties": {
+          "requestId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "newMaxDate": {
+            "type": "string",
+            "format": "date-time"
           }
         },
         "additionalProperties": false

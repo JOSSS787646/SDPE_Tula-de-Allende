@@ -41,22 +41,24 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
             if (request == null)
                 throw new Exception("Solicitud no encontrada.");
 
+            bool isExpired = request.CompleteMaximeDate.HasValue &&
+                             DateTime.Now > request.CompleteMaximeDate.Value;
+
             if (!request.IdAcquisitionClassification.HasValue)
                 return;
 
-            // 1️⃣ TODOS los documentos de la clasificación
+            // ============================================================
+            // DOCUMENTOS
+            // ============================================================
             var allDocs = await _classificationRepository
                 .GetRequiredByClassification(request.IdAcquisitionClassification.Value);
 
-            // 2️⃣ Excepciones activas de esta solicitud
             var exceptions = await _exceptionRepository
                 .GetActiveByRequestId(requestId);
 
-            // 3️⃣ Documentos cargados activos (SIN filtrar por idEstadoDocumento)
             var uploadedDocs = await _documentRepository
                 .GetActiveByRequestId(requestId);
 
-            // 4️⃣ Separar obligatorios y no obligatorios
             var obligatorios = allDocs
                 .Where(r =>
                     r.IsRequired == true &&
@@ -66,99 +68,58 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
                         e.Active == true))
                 .ToList();
 
-            var noObligatorios = allDocs
-                .Where(r =>
-                    r.IsRequired == false ||
-                    exceptions.Any(e =>
-                        e.IdDocumentType == r.DocumentTypeId &&
-                        e.DoesNotApply == true &&
-                        e.Active == true))
-                .ToList();
-
-            // ---- LOGS GENERALES ----
-            Console.WriteLine("============================================");
-            Console.WriteLine($"[RecalculateStatus] RequestId: {requestId}");
-            Console.WriteLine($"  Docs TOTAL en clasificación: {allDocs.Count}");
-            Console.WriteLine($"  Obligatorios a evaluar:      {obligatorios.Count}");
-            Console.WriteLine($"  No obligatorios / excepción: {noObligatorios.Count} → AUTO-APROBADO");
-            Console.WriteLine($"  Excepciones activas:         {exceptions.Count}");
-            Console.WriteLine($"  UploadedDocs TOTAL:          {uploadedDocs.Count}");
-            Console.WriteLine("--------------------------------------------");
-
-            foreach (var noReq in noObligatorios)
-            {
-                Console.WriteLine($"  DocTypeId: {noReq.DocumentTypeId}");
-                Console.WriteLine($"    No obligatorio / con excepción → ✅ AUTO-APROBADO");
-            }
-
             bool allApproved = true;
 
-            // 5️⃣ Evaluar obligatorios — TODOS los docs del tipo deben estar Aprobados
+            // ============================================================
+            // VALIDAR DOCUMENTOS
+            // ============================================================
             foreach (var req in obligatorios)
             {
                 var docsOfType = uploadedDocs
                     .Where(d => d.DocumentTypeId == req.DocumentTypeId)
                     .ToList();
 
-                Console.WriteLine($"  DocTypeId: {req.DocumentTypeId}");
-                Console.WriteLine($"    Docs encontrados: {docsOfType.Count}");
-
-                // Sin documentos → incompleto
                 if (!docsOfType.Any())
                 {
                     allApproved = false;
-                    Console.WriteLine($"    ⚠️  SIN DOCUMENTO → incompleto");
                     continue;
                 }
 
-                // ✅ CAMBIO CLAVE: evaluar CADA documento individualmente
-                bool typeIsApproved = true;
-
                 foreach (var doc in docsOfType)
                 {
-                    var statusName = doc.IdDocumentStatus switch
-                    {
-                        (int)DocumentStatusEnum.Aprobado => "Aprobado ✅",
-                        (int)DocumentStatusEnum.Cargado => "Cargado 📄",
-                        (int)DocumentStatusEnum.Observado => "Observado 👁️",
-                        _ => $"Desconocido ({doc.IdDocumentStatus})"
-                    };
-
-                    Console.WriteLine($"      DocId: {doc.Id} | Estado: {statusName}");
-
-                    // Si CUALQUIER documento del tipo NO está aprobado → el tipo falla
                     if (doc.IdDocumentStatus != (int)DocumentStatusEnum.Aprobado)
                     {
-                        typeIsApproved = false;
-                        Console.WriteLine($"      ❌ No aprobado → este tipo queda incompleto");
+                        allApproved = false;
                     }
-                }
-
-                if (typeIsApproved)
-                {
-                    Console.WriteLine($"    ✅ Todos aprobados → OK");
-                }
-                else
-                {
-                    allApproved = false;
-                    Console.WriteLine($"    ❌ Al menos uno sin aprobar → solicitud incompleta");
                 }
             }
 
-            Console.WriteLine("--------------------------------------------");
-            Console.WriteLine($"  allApproved: {allApproved}");
+            // ============================================================
+            // 🔥 NUEVA LÓGICA FINAL
+            // ============================================================
 
-            // 6️⃣ Asignar estado de SOLICITUD
-            // EstadoSolicitud: 1 = Incompleto, 2 = Completo
+            Console.WriteLine("============================================");
+            Console.WriteLine($"RequestId: {requestId}");
+            Console.WriteLine($"isExpired: {isExpired}");
+            Console.WriteLine($"allApproved: {allApproved}");
+
             if (allApproved)
             {
-                request.IdApplicationStatus = 2;
-                Console.WriteLine("  🟢 ESTADO SOLICITUD → COMPLETO (id: 2)");
+                // ✅ COMPLETO SIEMPRE GANA
+                request.IdApplicationStatus = (int)RequestStatusEnum.Completo;
+                Console.WriteLine("🟢 COMPLETO (aunque esté vencido)");
+            }
+            else if (isExpired)
+            {
+                // ❌ vencido y no completo
+                request.IdApplicationStatus = (int)RequestStatusEnum.Incompleto;
+                Console.WriteLine("🔴 INCOMPLETO (vencido)");
             }
             else
             {
-                request.IdApplicationStatus = 1;
-                Console.WriteLine("  🔴 ESTADO SOLICITUD → INCOMPLETO (id: 1)");
+                // ⏳ en proceso
+                request.IdApplicationStatus = (int)RequestStatusEnum.EnRevision;
+                Console.WriteLine("🟡 EN REVISIÓN");
             }
 
             Console.WriteLine("============================================");

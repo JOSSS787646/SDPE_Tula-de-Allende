@@ -3,6 +3,7 @@ using SistemaDigitalizacionPolizas.Application.Services.AcqusitionRequest_Servic
 using SistemaDigitalizacionPolizas.Application.Services.AcqusitionRequest_Service.Commands.DeleteRequest;
 using SistemaDigitalizacionPolizas.Application.Services.AcqusitionRequest_Service.Commands.UpdateAcqusitionRequest;
 using SistemaDigitalizacionPolizas.Application.Services.AcqusitionRequest_Service.Commands.UpdateCFDI;
+using SistemaDigitalizacionPolizas.Application.Services.AcqusitionRequest_Service.Commands.UpdateMaxDate;
 using SistemaDigitalizacionPolizas.Application.Services.AcqusitionRequest_Service.Commands.UpdatePaymentPolicy;
 using SistemaDigitalizacionPolizas.Application.Services.AcqusitionRequest_Service.Queries.GetAcquisitionRequestDetail;
 using SistemaDigitalizacionPolizas.Application.Services.AcqusitionRequest_Service.Queries.GetAllAcquisitionRequest;
@@ -111,6 +112,21 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
             );
 
             return Ok(result);
+        }
+
+
+        [HttpPatch("update-max-date")]
+        public async Task<IActionResult> UpdateMaxDate(UpdateMaxDateDto dto)
+        {
+            var command = new UpdateMaxDateCommand
+            {
+                RequestId = dto.RequestId,
+                NewMaxDate = dto.NewMaxDate
+            };
+
+            await _mediator.Send(command);
+
+            return Ok(new { message = "Fecha actualizada correctamente" });
         }
     }
 }

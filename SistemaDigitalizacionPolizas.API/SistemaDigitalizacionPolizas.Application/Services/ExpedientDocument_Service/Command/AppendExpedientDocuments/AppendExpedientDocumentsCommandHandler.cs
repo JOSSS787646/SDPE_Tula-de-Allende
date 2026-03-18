@@ -12,19 +12,6 @@ using SistemaDigitalizacionPolizas.Application.Services.Notification_Service.Com
 
 namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Service.Command.AppendExpedientDocuments
 {
-    /// <summary>
-    /// Permite agregar nuevos documentos a un expediente existente.
-    ///
-    /// Flujo:
-    /// 1. Valida archivos enviados
-    /// 2. Inicia transacción
-    /// 3. Sube archivos al almacenamiento
-    /// 4. Crea entidades ExpedientDocument
-    /// 5. Guarda en base de datos
-    /// 6. Recalcula estado de la solicitud
-    /// 7. Confirma transacción
-    /// 8. Envía notificación por cola (worker)
-    /// </summary>
     public class AppendExpedientDocumentsCommandHandler
         : IRequestHandler<AppendExpedientDocumentsCommand, List<int>>
     {
@@ -126,10 +113,17 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
                     });
                 }
 
+                // =====================================
                 // Guardar documentos
+                // =====================================
                 await _repository.AddRangeAsync(entities);
 
-                // Recalcular estado de la solicitud
+                // 🔥 CLAVE: persistir antes del recalculo
+                await _unitOfWork.SaveChangesAsync();
+
+                // =====================================
+                // Recalcular estado (EnRevision / Completo / Incompleto)
+                // =====================================
                 await _requestStatusService.RecalculateStatus(request.RequestId);
 
                 await _unitOfWork.CommitAsync();
@@ -162,7 +156,7 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
                 var administrativeUnitName = requestInfo?.AdministrativeUnitName ?? "No especificada";
                 var requestDescription = requestInfo?.Justification ?? "Sin justificación";
 
-                // Enviar correo mediante cola (worker)
+                // Enviar correo mediante cola
                 _emailQueue.Enqueue(() =>
                     _emailService.SendDocumentsUploadedAsync(
                         reviewerEmail,
@@ -176,7 +170,7 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
                 );
 
                 var reviewerUserId = await _userRepository
-                .GetUserIdByRoleAsync((int)SystemRolesEnum.ReadView);
+                    .GetUserIdByRoleAsync((int)SystemRolesEnum.ReadView);
 
                 if (reviewerUserId > 0)
                 {
