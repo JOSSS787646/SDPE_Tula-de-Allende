@@ -9,9 +9,8 @@ using SistemaDigitalizacionPolizas.Domain.Interfaces.Services;
 using SistemaDigitalizacionPolizas.Infrastructure.Persistence.Services.UploatFile;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.RequestNotification;
 using SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Service.Service.Gmail_Services;
+using SistemaDigitalizacionPolizas.Application.Services.Notification_Service.Commands.CreateNotification;
 
-// NUEVO
-using SistemaDigitalizacionPolizas.Application.Services.CreateNotification_Service.Commands.CreateNotification;
 
 namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Service.Command.CreateMassiveExpedientDocument
 {
@@ -214,10 +213,15 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
                         new CreateNotificationCommand(
                             reviewerUserId,
                             "Documentos cargados",
-                            $"Se cargaron documentos en la solicitud {requestNumber}",
+                            $"Se cargaron {entities.Count} documento(s) en la solicitud {requestNumber}",
                             request.RequestId
-                        )
+                        ),
+                        cancellationToken
                     );
+
+                    Console.WriteLine($"ReviewerUserId: {reviewerUserId}");
+                    Console.WriteLine($"RequestId: {request.RequestId}");
+                    Console.WriteLine($"Entities: {entities.Count}");
                 }
 
                 return entities.Select(x => x.Id).ToList();

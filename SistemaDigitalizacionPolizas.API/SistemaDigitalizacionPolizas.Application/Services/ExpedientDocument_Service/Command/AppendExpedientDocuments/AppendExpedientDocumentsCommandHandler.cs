@@ -8,6 +8,7 @@ using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.StatusRequest;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.RequestNotification;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Services;
 using SistemaDigitalizacionPolizas.Infrastructure.Persistence.Services.UploatFile;
+using SistemaDigitalizacionPolizas.Application.Services.Notification_Service.Commands.CreateNotification;
 
 namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Service.Command.AppendExpedientDocuments
 {
@@ -38,6 +39,7 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
         private readonly IUserRepository _userRepository;
         private readonly IEmailService _emailService;
         private readonly IEmailQueue _emailQueue;
+        private readonly IMediator _mediator;
 
         public AppendExpedientDocumentsCommandHandler(
             IDocumentExpedientRepository repository,
@@ -50,7 +52,8 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
             IRequestStatusService requestStatusService,
             IUserRepository userRepository,
             IEmailService emailService,
-            IEmailQueue emailQueue)
+            IEmailQueue emailQueue,
+            IMediator mediator)
         {
             _repository = repository;
             _statusRepository = statusRepository;
@@ -63,6 +66,7 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
             _userRepository = userRepository;
             _emailService = emailService;
             _emailQueue = emailQueue;
+            _mediator = mediator;
         }
 
         public async Task<List<int>> Handle(
@@ -170,6 +174,22 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
                         documentList
                     )
                 );
+
+                var reviewerUserId = await _userRepository
+                .GetUserIdByRoleAsync((int)SystemRolesEnum.ReadView);
+
+                if (reviewerUserId > 0)
+                {
+                    await _mediator.Send(
+                        new CreateNotificationCommand(
+                            reviewerUserId,
+                            "Documentos agregados",
+                            $"Se agregaron {entities.Count} documento(s) a la solicitud {requestNumber}",
+                            request.RequestId
+                        ),
+                        cancellationToken
+                    );
+                }
 
                 return entities.Select(x => x.Id).ToList();
             }

@@ -6,6 +6,5 @@ using System.Threading.Tasks;
 
 namespace SistemaDigitalizacionPolizas.Application.Services.Notification_Service.Commands.MarkAllNotificationsAsRead
 {
-    public record MarkAllNotificationsAsReadCommand(int UserId)
-        : IRequest;
+    public record MarkAllNotificationsAsReadCommand(int UserId) : IRequest;
 }

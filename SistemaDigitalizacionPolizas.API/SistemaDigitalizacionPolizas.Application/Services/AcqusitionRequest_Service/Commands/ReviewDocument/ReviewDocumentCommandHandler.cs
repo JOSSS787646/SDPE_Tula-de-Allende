@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Service.Service;
 using SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Service.Service.Gmail_Services;
+using SistemaDigitalizacionPolizas.Application.Services.Notification_Service.Commands.CreateNotification;
 using SistemaDigitalizacionPolizas.Domain.Enums;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Document;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.RequestNotification;
@@ -21,6 +22,7 @@ namespace SistemaDigitalizacionPolizas.Application.Services.AcqusitionRequest_Se
         private readonly IEmailService _emailService;
         private readonly IUserRepository _userRepository;
         private readonly IEmailQueue _emailQueue;
+        private readonly IMediator _mediator;
 
         private readonly ILogger<ReviewDocumentCommandHandler> _logger;
 
@@ -32,6 +34,7 @@ namespace SistemaDigitalizacionPolizas.Application.Services.AcqusitionRequest_Se
             IEmailService emailService,
             IUserRepository userRepository,
             IEmailQueue emailQueue,
+            IMediator mediator,
             ILogger<ReviewDocumentCommandHandler> logger)
         {
             _repository = repository;
@@ -42,6 +45,7 @@ namespace SistemaDigitalizacionPolizas.Application.Services.AcqusitionRequest_Se
             _emailService = emailService;
             _userRepository = userRepository;
             _emailQueue = emailQueue;
+            _mediator = mediator;
 
             _logger = logger;
         }
@@ -60,14 +64,8 @@ namespace SistemaDigitalizacionPolizas.Application.Services.AcqusitionRequest_Se
                 throw new Exception("Documento no encontrado.");
             }
 
-            _logger.LogInformation(
-                "Documento encontrado: {FileName}, SolicitudId: {RequestId}",
-                document.FileName,
-                document.RequestId
-            );
-
             if (request.DocumentStatusId == (int)DocumentStatusEnum.Observado &&
-                string.IsNullOrWhiteSpace(request.Observations))
+                string.IsNullOrWhiteSpace(request.ObservationsUpload))
             {
                 throw new Exception("Debe agregar observaciones cuando el documento es observado.");
             }
@@ -77,7 +75,7 @@ namespace SistemaDigitalizacionPolizas.Application.Services.AcqusitionRequest_Se
             // =====================================
 
             document.IdDocumentStatus = request.DocumentStatusId;
-            document.Observations = request.Observations;
+            document.ObservationsUpload = request.ObservationsUpload;
 
             await _repository.UpdateAsync(document);
 
@@ -96,12 +94,12 @@ namespace SistemaDigitalizacionPolizas.Application.Services.AcqusitionRequest_Se
 
             if (!shouldSendNotification)
             {
-                _logger.LogInformation("Correo bloqueado por política de notificaciones.");
+                _logger.LogInformation("Correo bloqueado por política.");
                 return true;
             }
 
             // =====================================
-            // OBTENER REVISOR
+            // DATOS GENERALES
             // =====================================
 
             var reviewerEmail = await _userRepository
@@ -114,10 +112,6 @@ namespace SistemaDigitalizacionPolizas.Application.Services.AcqusitionRequest_Se
                 ? "Aprobado"
                 : "Observado";
 
-            // =====================================
-            // OBTENER INFO DE NOTIFICACIÓN
-            // =====================================
-
             string? managerEmail = null;
             string? adminEmail = null;
             string requestNumber = "";
@@ -127,8 +121,7 @@ namespace SistemaDigitalizacionPolizas.Application.Services.AcqusitionRequest_Se
                 var info = await _notificationRepository
                     .GetDocumentApprovedInfoAsync(document.RequestId);
 
-                if (info == null)
-                    return true;
+                if (info == null) return true;
 
                 managerEmail = info.ManagerEmail;
                 requestNumber = info.RequestNumber;
@@ -141,8 +134,7 @@ namespace SistemaDigitalizacionPolizas.Application.Services.AcqusitionRequest_Se
                 var info = await _notificationRepository
                     .GetDocumentObservedInfoAsync(document.RequestId);
 
-                if (info == null)
-                    return true;
+                if (info == null) return true;
 
                 managerEmail = info.ManagerEmail;
                 adminEmail = info.AdminEmail;
@@ -162,21 +154,45 @@ namespace SistemaDigitalizacionPolizas.Application.Services.AcqusitionRequest_Se
                         requestNumber,
                         document.FileName,
                         result,
-                        document.Observations
+                        document.ObservationsUpload
                 ));
             }
 
             if (IsValidEmail(adminEmail))
             {
                 _emailQueue.Enqueue(() =>
-    _emailService.SendDocumentReviewedAsync(
-        managerEmail,
-        reviewerEmail,
-        requestNumber,
-        document.FileName ?? "Documento no identificado",
-        result,
-        document.Observations
-));
+                    _emailService.SendDocumentReviewedAsync(
+                        managerEmail,
+                        reviewerEmail,
+                        requestNumber,
+                        document.FileName ?? "Documento no identificado",
+                        result,
+                        document.ObservationsUpload
+                ));
+            }
+
+            // =====================================
+            // 🔥 NOTIFICACIÓN (CORRECTO Y SEPARADO)
+            // =====================================
+
+            var adquisicionesUserId = await _userRepository
+                .GetUserIdByRoleAsync((int)SystemRolesEnum.AdministradorAdquisiciones);
+
+            if (adquisicionesUserId > 0)
+            {
+                var statusText = request.DocumentStatusId == (int)DocumentStatusEnum.Aprobado
+                    ? "aprobado"
+                    : "observado";
+
+                await _mediator.Send(
+                    new CreateNotificationCommand(
+                        adquisicionesUserId,
+                        "Revisión de documento",
+                        $"El documento '{document.FileName}' fue {statusText} en la solicitud {requestNumber}",
+                        document.RequestId
+                    ),
+                    cancellationToken
+                );
             }
 
             return true;

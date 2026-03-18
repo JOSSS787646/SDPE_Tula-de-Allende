@@ -1552,8 +1552,34 @@
   },
   {
     "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.NotificationsController",
-    "Method": "GetNotifications",
-    "RelativePath": "api/notifications/{userId}",
+    "Method": "Create",
+    "RelativePath": "api/notifications",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "command",
+        "Type": "SistemaDigitalizacionPolizas.Application.Services.Notification_Service.Commands.CreateNotification.CreateNotificationCommand",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Int32",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.NotificationsController",
+    "Method": "GetAllByUser",
+    "RelativePath": "api/notifications/all/{userId}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -1564,7 +1590,17 @@
         "IsRequired": true
       }
     ],
-    "ReturnTypes": []
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.List\u00601[[SistemaDigitalizacionPolizas.Domain.Dtos.Notificacion.NotificationDto, SistemaDigitalizacionPolizas.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
   },
   {
     "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.NotificationsController",
@@ -1585,13 +1621,13 @@
   {
     "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.NotificationsController",
     "Method": "MarkAsRead",
-    "RelativePath": "api/notifications/read/{notificationId}",
+    "RelativePath": "api/notifications/read/{id}",
     "HttpMethod": "PUT",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "notificationId",
+        "Name": "id",
         "Type": "System.Int32",
         "IsRequired": true
       }
@@ -1600,7 +1636,7 @@
   },
   {
     "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.NotificationsController",
-    "Method": "GetUnreadCount",
+    "Method": "GetUnreadByUser",
     "RelativePath": "api/notifications/unread/{userId}",
     "HttpMethod": "GET",
     "IsController": true,
@@ -1612,7 +1648,43 @@
         "IsRequired": true
       }
     ],
-    "ReturnTypes": []
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.List\u00601[[SistemaDigitalizacionPolizas.Domain.Dtos.Notificacion.NotificationDto, SistemaDigitalizacionPolizas.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.NotificationsController",
+    "Method": "GetUnreadCount",
+    "RelativePath": "api/notifications/unread/count/{userId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "userId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Int32",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
   },
   {
     "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.PaymentPolicyController",
