@@ -14,6 +14,8 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Acquisition_Pe
     {
         private readonly SdpeDbContext _context;
 
+
+
         public AcquisitionRequestRepository(SdpeDbContext context)
         {
             _context = context;
@@ -280,6 +282,26 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Acquisition_Pe
                 await transaction.RollbackAsync();
                 throw;
             }
+        }
+
+        public async Task<AcquisitionRequest?> GetByIdWithDetailsAsync(int id)
+        {
+            return await _context.AcquisitionRequests
+                .AsNoTracking()
+                .Include(x => x.AdministrativeUnit)
+                .Include(x => x.Program)
+                .Include(x => x.Project)
+                .Include(x => x.FundingSource)
+                .Include(x => x.AcquisitionType)
+                .Include(x => x.AcquisitionClassification)
+                .Include(x => x.Supplier)
+                .Include(x => x.PaymentPolicy)
+                .Include(x => x.Community)
+                .Include(x => x.Beneficiary)
+                .Include(x => x.ApplicationStatus)
+                .Include(x => x.Details)
+                    .ThenInclude(d => d.Cog)
+                .FirstOrDefaultAsync(x => x.IdRequest == id);
         }
 
     }

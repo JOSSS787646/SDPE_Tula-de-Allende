@@ -1,9 +1,10 @@
 ﻿using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
+using SistemaDigitalizacionPolizas.Application.Services.Pdf_Service;
 using SistemaDigitalizacionPolizas.Domain.Dtos.Pdf;
-using SistemaDigitalizacionPolizas.Infrastructure.Persistence.Services.Pdf;
 using System.Globalization;
+using System.Reflection;
 
 namespace SistemaDigitalizacionPolizas.Infrastructure.Services
 {
@@ -29,7 +30,11 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Services
             {
                 container.Page(page =>
                 {
-                    page.Margin(36);
+                    page.Size(PageSizes.Letter);
+                    page.MarginHorizontal(36);
+                    page.MarginTop(36);
+                    // ✅ Footer necesita margen generoso para no solaparse
+                    page.MarginBottom(50);
                     page.Header().Element(c => ComposeHeader(c, dto));
                     page.Content().Element(c => ComposeContent(c, dto));
                     page.Footer().Element(ComposeFooter);
@@ -40,60 +45,109 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Services
         }
 
         // ─────────────────────────────────────────
+        // LOGO
+        // ─────────────────────────────────────────
+        private byte[]? GetLogo()
+        {
+            var assembly = Assembly.GetExecutingAssembly();
+            var resourceName =
+                "SistemaDigitalizacionPolizas.Infrastructure.Resources.Images.LogoPresidencia.webp";
+
+            using var stream = assembly.GetManifestResourceStream(resourceName);
+            if (stream == null) return null;
+
+            using var ms = new MemoryStream();
+            stream.CopyTo(ms);
+            return ms.ToArray();
+        }
+
+        // ─────────────────────────────────────────
         // HEADER
         // ─────────────────────────────────────────
-        void ComposeHeader(IContainer container, AcquisitionRequestPdfDto dto)
+        private void ComposeHeader(IContainer container, AcquisitionRequestPdfDto dto)
         {
+            var logo = GetLogo();
+
             container.Column(col =>
             {
+                // Franja superior
                 col.Item().Background(ColorPrimario).Height(4);
 
-                col.Item().PaddingTop(10).PaddingBottom(10).Row(row =>
+                col.Item().PaddingTop(8).PaddingBottom(8).Row(row =>
                 {
-                    row.ConstantItem(65).Height(65).Image("wwwroot/logo.png");
-                    row.ConstantItem(15);
+                    // Logo
+                    if (logo != null)
+                        row.ConstantItem(60).Height(60).Image(logo, ImageScaling.FitArea);
+                    else
+                        row.ConstantItem(60).Height(60);
 
-                    row.RelativeItem().Column(titleCol =>
+                    row.ConstantItem(10);
+
+                    // Títulos
+                    row.RelativeItem().AlignMiddle().Column(titleCol =>
                     {
-                        titleCol.Item().Text("PRESIDENCIA MUNICIPAL DE TULA DE ALLENDE")
-                            .Bold().FontSize(13).FontColor(ColorPrimario);
-                        titleCol.Item().PaddingTop(3).Text("Dirección de Adquisiciones")
-                            .FontSize(10).FontColor(ColorTextoSuave);
-                        titleCol.Item().PaddingTop(2).Text("Solicitud de Materiales y Servicios")
-                            .FontSize(10).Bold().FontColor(ColorSecundario);
+                        titleCol.Item()
+                            .Text("PRESIDENCIA MUNICIPAL DE TULA DE ALLENDE")
+                            .Bold().FontSize(12).FontColor(ColorPrimario);
+
+                        titleCol.Item().PaddingTop(2)
+                            .Text("Dirección de Adquisiciones")
+                            .FontSize(9).FontColor(ColorTextoSuave);
+
+                        titleCol.Item().PaddingTop(2)
+                            .Text("Solicitud de Materiales y Servicios")
+                            .FontSize(9).Bold().FontColor(ColorSecundario);
                     });
 
-                    // Caja folio / fechas
-                    row.ConstantItem(160).Background(ColorAcento).Border(1)
-                        .BorderColor(ColorSecundario).Padding(8).Column(infoCol =>
-                        {
-                            infoCol.Item().Text("FOLIO").FontSize(7).FontColor(ColorTextoSuave).Bold();
-                            infoCol.Item().Text(dto.Folio ?? DateTime.Now.Ticks.ToString().Substring(10))
-                                .FontSize(11).Bold().FontColor(ColorPrimario);
+                    row.ConstantItem(10);
 
-                            infoCol.Item().PaddingTop(5).Text("FECHA DE SOLICITUD")
+                    // ✅ Caja de folio — ancho fijo, sin AlignMiddle conflictivo
+                    row.ConstantItem(150).Background(ColorAcento)
+                        .Border(1).BorderColor(ColorSecundario)
+                        .Padding(7).Column(infoCol =>
+                        {
+                            infoCol.Item()
+                                .Text("FOLIO")
                                 .FontSize(7).FontColor(ColorTextoSuave).Bold();
-                            infoCol.Item().Text((dto.RequestDate ?? DateTime.Now).ToString("dd/MM/yyyy"))
+
+                            infoCol.Item()
+                                .Text(dto.Folio ?? "—")
+                                .FontSize(10).Bold().FontColor(ColorPrimario);
+
+                            infoCol.Item().PaddingTop(4)
+                                .Text("FECHA DE SOLICITUD")
+                                .FontSize(7).FontColor(ColorTextoSuave).Bold();
+
+                            infoCol.Item()
+                                .Text((dto.RequestDate ?? DateTime.Now).ToString("dd/MM/yyyy"))
                                 .FontSize(10).FontColor(ColorPrimario);
 
+                            // ✅ Fechas opcionales solo si tienen valor
                             if (dto.AuthorizationDate.HasValue)
                             {
-                                infoCol.Item().PaddingTop(4).Text("FECHA DE AUTORIZACIÓN")
+                                infoCol.Item().PaddingTop(4)
+                                    .Text("FECHA DE AUTORIZACIÓN")
                                     .FontSize(7).FontColor(ColorTextoSuave).Bold();
-                                infoCol.Item().Text(dto.AuthorizationDate.Value.ToString("dd/MM/yyyy"))
+
+                                infoCol.Item()
+                                    .Text(dto.AuthorizationDate.Value.ToString("dd/MM/yyyy"))
                                     .FontSize(10).FontColor(ColorPrimario);
                             }
 
                             if (dto.MaxCompletionDate.HasValue)
                             {
-                                infoCol.Item().PaddingTop(4).Text("FECHA LÍMITE")
+                                infoCol.Item().PaddingTop(4)
+                                    .Text("FECHA LÍMITE")
                                     .FontSize(7).FontColor(ColorTextoSuave).Bold();
-                                infoCol.Item().Text(dto.MaxCompletionDate.Value.ToString("dd/MM/yyyy"))
+
+                                infoCol.Item()
+                                    .Text(dto.MaxCompletionDate.Value.ToString("dd/MM/yyyy"))
                                     .FontSize(10).FontColor(ColorNaranja);
                             }
                         });
                 });
 
+                // Línea divisora
                 col.Item().Background(ColorSecundario).Height(2);
             });
         }
@@ -101,16 +155,18 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Services
         // ─────────────────────────────────────────
         // FOOTER
         // ─────────────────────────────────────────
-        void ComposeFooter(IContainer container)
+        private void ComposeFooter(IContainer container)
         {
             container.Column(col =>
             {
                 col.Item().Background(ColorSecundario).Height(1);
-                col.Item().PaddingTop(6).Row(row =>
+                col.Item().PaddingTop(5).Row(row =>
                 {
-                    row.RelativeItem().Text("Presidencia Municipal de Tula de Allende")
+                    row.RelativeItem()
+                        .Text("Presidencia Municipal de Tula de Allende")
                         .FontSize(8).FontColor(ColorTextoSuave);
-                    row.ConstantItem(100).AlignRight().Text(x =>
+
+                    row.ConstantItem(110).AlignRight().Text(x =>
                     {
                         x.Span("Página ").FontSize(8).FontColor(ColorTextoSuave);
                         x.CurrentPageNumber().FontSize(8).FontColor(ColorTextoSuave);
@@ -124,134 +180,137 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Services
         // ─────────────────────────────────────────
         // CONTENT
         // ─────────────────────────────────────────
-        void ComposeContent(IContainer container, AcquisitionRequestPdfDto dto)
+        private void ComposeContent(IContainer container, AcquisitionRequestPdfDto dto)
         {
-            container.PaddingTop(12).Column(col =>
+            container.PaddingTop(10).Column(col =>
             {
-                col.Spacing(12);
+                col.Spacing(10);
 
-                // ── Status badge ──────────────────────────
+                // Status badge
                 if (!string.IsNullOrWhiteSpace(dto.Status))
-                    col.Item().Element(c => ComposeStatusBadge(c, dto.Status));
+                    col.Item().Element(c => ComposeStatusBadge(c, dto.Status!));
 
-                // ── Datos generales ───────────────────────
+                // Datos generales
                 col.Item().Element(c => ComposeSectionTitle(c, "Datos Generales"));
                 col.Item().Background(ColorGrisClaro).Border(1).BorderColor("#E5E7EB")
-                    .Padding(12).Column(data =>
+                    .Padding(10).Column(data =>
                     {
-                        data.Spacing(6);
+                        data.Spacing(8);
 
                         data.Item().Row(r =>
                         {
-                            r.RelativeItem().Element(c => ComposeField(c,
-                                "Unidad Administrativa", dto.AdministrativeUnit));
-                            r.ConstantItem(12);
-                            r.RelativeItem().Element(c => ComposeField(c,
-                                "Programa", dto.Program));
+                            r.RelativeItem().Element(c =>
+                                ComposeField(c, "Unidad Administrativa", dto.AdministrativeUnit));
+                            r.ConstantItem(10);
+                            r.RelativeItem().Element(c =>
+                                ComposeField(c, "Programa", dto.Program));
                         });
 
                         data.Item().Row(r =>
                         {
-                            r.RelativeItem().Element(c => ComposeField(c,
-                                "Proyecto", dto.Project));
-                            r.ConstantItem(12);
-                            r.RelativeItem().Element(c => ComposeField(c,
-                                "Fuente de Financiamiento", dto.FundingSource));
+                            r.RelativeItem().Element(c =>
+                                ComposeField(c, "Proyecto", dto.Project));
+                            r.ConstantItem(10);
+                            r.RelativeItem().Element(c =>
+                                ComposeField(c, "Fuente de Financiamiento", dto.FundingSource));
                         });
 
                         data.Item().Row(r =>
                         {
-                            r.RelativeItem().Element(c => ComposeField(c,
-                                "Tipo de Adquisición", dto.AcquisitionType));
-                            r.ConstantItem(12);
-                            r.RelativeItem().Element(c => ComposeField(c,
-                                "Clasificación", dto.Classification));
+                            r.RelativeItem().Element(c =>
+                                ComposeField(c, "Tipo de Adquisición", dto.AcquisitionType));
+                            r.ConstantItem(10);
+                            r.RelativeItem().Element(c =>
+                                ComposeField(c, "Clasificación", dto.Classification));
                         });
                     });
 
-                // ── Localización / Beneficiario ───────────
+                // Localización / Beneficiario (condicional)
                 if (!string.IsNullOrWhiteSpace(dto.Community) ||
                     !string.IsNullOrWhiteSpace(dto.Beneficiary))
                 {
                     col.Item().Element(c => ComposeSectionTitle(c, "Localización y Beneficiario"));
                     col.Item().Background(ColorGrisClaro).Border(1).BorderColor("#E5E7EB")
-                        .Padding(12).Row(r =>
+                        .Padding(10).Row(r =>
                         {
-                            r.RelativeItem().Element(c => ComposeField(c,
-                                "Comunidad / Localidad", dto.Community));
-                            r.ConstantItem(12);
-                            r.RelativeItem().Element(c => ComposeField(c,
-                                "Beneficiario", dto.Beneficiary));
+                            r.RelativeItem().Element(c =>
+                                ComposeField(c, "Comunidad / Localidad", dto.Community));
+                            r.ConstantItem(10);
+                            r.RelativeItem().Element(c =>
+                                ComposeField(c, "Beneficiario", dto.Beneficiary));
                         });
                 }
 
-                // ── Justificación ─────────────────────────
+                // Justificación
                 col.Item().Element(c => ComposeSectionTitle(c, "Justificación"));
-                col.Item().Border(1).BorderColor("#E5E7EB").Padding(12)
-                    .Text(dto.Justification ?? "N/A").FontSize(10);
+                // ✅ ShowEntire evita que el bloque se corte entre páginas
+                col.Item().ShowEntire().Border(1).BorderColor("#E5E7EB").Padding(10)
+                    .Text(string.IsNullOrWhiteSpace(dto.Justification) ? "N/A" : dto.Justification)
+                    .FontSize(10);
 
-                // ── Observaciones ─────────────────────────
+                // Observaciones (condicional)
                 if (!string.IsNullOrWhiteSpace(dto.Observations))
                 {
                     col.Item().Element(c => ComposeSectionTitle(c, "Observaciones"));
-                    col.Item().Border(1).BorderColor("#E5E7EB").Padding(12)
+                    col.Item().ShowEntire().Border(1).BorderColor("#E5E7EB").Padding(10)
                         .Text(dto.Observations).FontSize(10).FontColor(ColorTextoSuave);
                 }
 
-                // ── Detalle de materiales ─────────────────
+                // Detalle de materiales
                 col.Item().Element(c => ComposeSectionTitle(c, "Detalle de Materiales"));
                 col.Item().Element(c => ComposeTable(c, dto.Items, dto.TotalAmount));
 
-                // ── Proveedor / Pago ──────────────────────
+                // Proveedor / Pago (condicional)
                 if (!string.IsNullOrWhiteSpace(dto.Supplier) ||
                     !string.IsNullOrWhiteSpace(dto.PaymentPolicy))
                 {
                     col.Item().Element(c => ComposeSectionTitle(c, "Proveedor y Pago"));
                     col.Item().Background(ColorDoradoClaro).Border(1)
-                        .BorderColor(ColorDorado).Padding(12).Column(data =>
+                        .BorderColor(ColorDorado).Padding(10).Column(data =>
                         {
-                            data.Spacing(6);
+                            data.Spacing(8);
                             data.Item().Row(r =>
                             {
-                                r.RelativeItem().Element(c => ComposeField(c,
-                                    "Proveedor", dto.Supplier));
-                                r.ConstantItem(12);
-                                r.RelativeItem().Element(c => ComposeField(c,
-                                    "RFC", dto.SupplierRFC));
+                                r.RelativeItem().Element(c =>
+                                    ComposeField(c, "Proveedor", dto.Supplier));
+                                r.ConstantItem(10);
+                                r.RelativeItem().Element(c =>
+                                    ComposeField(c, "RFC", dto.SupplierRFC));
                             });
                             data.Item().Row(r =>
                             {
-                                r.RelativeItem().Element(c => ComposeField(c,
-                                    "Póliza de Pago", dto.PaymentPolicy));
-                                r.ConstantItem(12);
-                                r.RelativeItem().Element(c => ComposeField(c,
-                                    "CFDI", dto.CFDI));
+                                r.RelativeItem().Element(c =>
+                                    ComposeField(c, "Póliza de Pago", dto.PaymentPolicy));
+                                r.ConstantItem(10);
+                                r.RelativeItem().Element(c =>
+                                    ComposeField(c, "CFDI", dto.CFDI));
                             });
                         });
                 }
 
-                // ── Validación ────────────────────────────
-                col.Item().PaddingTop(4).Background(ColorVerdeFondo).Border(1)
-                    .BorderColor("#86EFAC").Padding(10).Row(r =>
+                // Validación
+                col.Item().Background(ColorVerdeFondo).Border(1)
+                    .BorderColor("#86EFAC").Padding(8).Row(r =>
                     {
-                        r.ConstantItem(16).AlignMiddle().Text("✔")
-                            .FontSize(12).FontColor(ColorVerde).Bold();
-                        r.ConstantItem(6);
-                        r.RelativeItem().AlignMiddle().Column(c2 =>
+                        r.ConstantItem(20).AlignMiddle()
+                            .Text("✔").FontSize(12).FontColor(ColorVerde).Bold();
+
+                        r.RelativeItem().Column(c2 =>
                         {
-                            c2.Item().Text("Documento Validado")
+                            c2.Item()
+                                .Text("Documento Validado")
                                 .Bold().FontSize(10).FontColor(ColorVerde);
-                            c2.Item().Text(
-                                $"Generado el {dto.CreatedAt:dd/MM/yyyy} a las {dto.CreatedAt:HH:mm}" +
-                                (string.IsNullOrWhiteSpace(dto.CreatedByName)
-                                    ? ""
-                                    : $"  •  Creado por: {dto.CreatedByName}"))
-                                .FontSize(8).FontColor(ColorVerde);
+
+                            var auditText = $"Generado el {dto.CreatedAt:dd/MM/yyyy} a las {dto.CreatedAt:HH:mm}";
+                            if (!string.IsNullOrWhiteSpace(dto.CreatedByName))
+                                auditText += $"  •  Creado por: {dto.CreatedByName}";
+
+                            c2.Item().Text(auditText).FontSize(8).FontColor(ColorVerde);
                         });
                     });
 
-                // ── Secciones contables ───────────────────
-                col.Item().PaddingTop(6).Element(c => ComposeEmptySections(c, dto));
+                // Secciones contables
+                col.Item().Element(c => ComposeEmptySections(c, dto));
             });
         }
 
@@ -259,9 +318,10 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Services
         // HELPERS VISUALES
         // ─────────────────────────────────────────
 
-        void ComposeSectionTitle(IContainer container, string title)
+        private void ComposeSectionTitle(IContainer container, string title)
         {
-            container.Row(row =>
+            // ✅ Height fija para que la barra lateral no colapse
+            container.Height(18).Row(row =>
             {
                 row.ConstantItem(4).Background(ColorSecundario);
                 row.ConstantItem(8);
@@ -270,18 +330,18 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Services
             });
         }
 
-        // Campo etiqueta + valor
-        void ComposeField(IContainer container, string label, string? value)
+        private void ComposeField(IContainer container, string label, string? value)
         {
             container.Column(col =>
             {
-                col.Item().Text(label).FontSize(8).FontColor(ColorTextoSuave).Bold();
-                col.Item().Text(value ?? "—").FontSize(10);
+                col.Item()
+                    .Text(label).FontSize(8).FontColor(ColorTextoSuave).Bold();
+                col.Item()
+                    .Text(string.IsNullOrWhiteSpace(value) ? "—" : value).FontSize(10);
             });
         }
 
-        // Badge de estatus
-        void ComposeStatusBadge(IContainer container, string status)
+        private void ComposeStatusBadge(IContainer container, string status)
         {
             var (bg, fg) = status.ToUpperInvariant() switch
             {
@@ -291,42 +351,58 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Services
                 _ => (ColorGrisClaro, ColorTextoSuave)
             };
 
-            container.AlignRight().Background(bg).Border(1).BorderColor(fg)
-                .PaddingHorizontal(12).PaddingVertical(5)
-                .Text($"Estado: {status}").Bold().FontSize(9).FontColor(fg);
+            // ✅ Wrapper Row evita conflicto de AlignRight directo sobre container
+            container.Row(row =>
+            {
+                row.RelativeItem(); // Empuja el badge a la derecha
+                row.AutoItem()
+                    .Background(bg).Border(1).BorderColor(fg)
+                    .PaddingHorizontal(10).PaddingVertical(4)
+                    .Text($"Estado: {status}").Bold().FontSize(9).FontColor(fg);
+            });
         }
 
         // ─────────────────────────────────────────
         // TABLA
         // ─────────────────────────────────────────
-        void ComposeTable(IContainer container,
-                          List<AcquisitionRequestPdfItemDto> items,
-                          decimal totalAmount)
+        private void ComposeTable(
+            IContainer container,
+            List<AcquisitionRequestPdfItemDto> items,
+            decimal totalAmount)
         {
             var culture = new CultureInfo("es-MX");
             bool hasCog = items.Any(i => !string.IsNullOrWhiteSpace(i.CogKey));
+
+            // ✅ Lista vacía — evitar tabla sin filas (crash garantizado en QuestPDF)
+            if (!items.Any())
+            {
+                container.Border(1).BorderColor("#E5E7EB").Padding(10)
+                    .Text("Sin partidas registradas.").FontSize(9).FontColor(ColorTextoSuave);
+                return;
+            }
 
             container.Table(table =>
             {
                 table.ColumnsDefinition(columns =>
                 {
-                    if (hasCog) columns.ConstantColumn(55); // COG
-                    columns.ConstantColumn(45);             // Cant.
-                    columns.ConstantColumn(65);             // Unidad
-                    columns.RelativeColumn();               // Descripción
-                    columns.ConstantColumn(75);             // Precio
-                    columns.ConstantColumn(85);             // Total
+                    if (hasCog) columns.ConstantColumn(50);
+                    columns.ConstantColumn(40);
+                    columns.ConstantColumn(60);
+                    columns.RelativeColumn();
+                    columns.ConstantColumn(72);
+                    columns.ConstantColumn(80);
                 });
 
+                // Header
                 table.Header(header =>
                 {
                     if (hasCog)
-                        header.Cell().Background(ColorPrimario).Padding(7)
+                        header.Cell().Background(ColorPrimario).Padding(6)
                             .Text("COG").Bold().FontSize(8).FontColor(Colors.White);
 
                     foreach (var cell in new[] { "Cant.", "Unidad", "Descripción", "Precio Unit.", "Total" })
-                        header.Cell().Background(ColorPrimario).Padding(7)
-                            .Text(cell).Bold().FontSize(9).FontColor(Colors.White);
+                        header.Cell().Background(ColorPrimario).Padding(6)
+                            .Text(cell).Bold().FontSize(8).FontColor(Colors.White);
                 });
 
                 bool isOdd = false;
@@ -343,35 +419,38 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Services
                     isOdd = !isOdd;
 
                     if (hasCog)
-                        table.Cell().Background(rowBg).Padding(5).AlignMiddle()
+                        table.Cell().Background(rowBg).Padding(5)
                             .Text(item.CogKey ?? "").FontSize(8).FontColor(ColorTextoSuave);
 
-                    table.Cell().Background(rowBg).Padding(6).AlignMiddle()
+                    table.Cell().Background(rowBg).Padding(5)
                         .Text(item.Quantity.ToString("G29")).FontSize(9);
-                    table.Cell().Background(rowBg).Padding(6).AlignMiddle()
+
+                    table.Cell().Background(rowBg).Padding(5)
                         .Text(item.UnitMeasure).FontSize(9);
-                    table.Cell().Background(rowBg).Padding(6).AlignMiddle()
-                        .Column(c =>
-                        {
-                            c.Item().Text(item.Description).FontSize(9);
-                            if (!string.IsNullOrWhiteSpace(item.CogName))
-                                c.Item().Text(item.CogName).FontSize(7)
-                                    .FontColor(ColorTextoSuave);
-                        });
-                    table.Cell().Background(rowBg).Padding(6).AlignMiddle().AlignRight()
+
+                    // ✅ Sin AlignMiddle en celda con Column anidado
+                    table.Cell().Background(rowBg).Padding(5).Column(c =>
+                    {
+                        c.Item().Text(item.Description).FontSize(9);
+                        if (!string.IsNullOrWhiteSpace(item.CogName))
+                            c.Item().Text(item.CogName).FontSize(7).FontColor(ColorTextoSuave);
+                    });
+
+                    table.Cell().Background(rowBg).Padding(5).AlignRight()
                         .Text(item.UnitPrice.ToString("C", culture)).FontSize(9);
-                    table.Cell().Background(rowBg).Padding(6).AlignMiddle().AlignRight()
+
+                    table.Cell().Background(rowBg).Padding(5).AlignRight()
                         .Text(rowTotal.ToString("C", culture)).FontSize(9);
                 }
 
                 // Fila total
-                int spanCount = hasCog ? 5 : 4;
+                uint spanCount = hasCog ? 5u : 4u;
                 decimal displayTotal = totalAmount > 0 ? totalAmount : calculatedTotal;
 
-                table.Cell().ColumnSpan((uint)spanCount).Background(ColorAcento)
-                    .Padding(7).AlignRight()
+                table.Cell().ColumnSpan(spanCount).Background(ColorAcento).Padding(6).AlignRight()
                     .Text("TOTAL GENERAL").Bold().FontSize(9).FontColor(ColorPrimario);
-                table.Cell().Background(ColorAcento).Padding(7).AlignRight()
+
+                table.Cell().Background(ColorAcento).Padding(6).AlignRight()
                     .Text(displayTotal.ToString("C", culture))
                     .Bold().FontSize(10).FontColor(ColorPrimario);
             });
@@ -380,50 +459,54 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Services
         // ─────────────────────────────────────────
         // SECCIONES CONTABLES
         // ─────────────────────────────────────────
-        void ComposeEmptySections(IContainer container, AcquisitionRequestPdfDto dto)
+        private void ComposeEmptySections(IContainer container, AcquisitionRequestPdfDto dto)
         {
+            // ✅ MinHeight garantiza que las cajas no colapsen a 0
             container.Row(row =>
             {
-                // COMPROMETIDO
-                row.RelativeItem().Border(1).BorderColor("#E5E7EB").Padding(10).Column(col =>
-                {
-                    col.Item().Text("COMPROMETIDO").Bold().FontSize(9).FontColor(ColorPrimario);
-                    col.Item().PaddingTop(8)
-                        .Text("Fecha de pedido: _______________")
-                        .FontSize(9).FontColor(ColorTextoSuave);
-                });
-
-                row.ConstantItem(8);
-
-                // DEVENGADO
-                row.RelativeItem().Border(1).BorderColor("#E5E7EB").Padding(10).Column(col =>
-                {
-                    col.Item().Text("DEVENGADO").Bold().FontSize(9).FontColor(ColorPrimario);
-                    col.Item().PaddingTop(8)
-                        .Text("Fecha de recibido: _______________")
-                        .FontSize(9).FontColor(ColorTextoSuave);
-                });
-
-                row.ConstantItem(8);
-
-                // EJERCIDO / PAGADO — pre-relleno si hay datos
-                row.RelativeItem().Border(1).BorderColor("#E5E7EB").Padding(10).Column(col =>
-                {
-                    col.Item().Text("EJERCIDO / PAGADO").Bold().FontSize(9).FontColor(ColorPrimario);
-                    col.Item().PaddingTop(4)
-                        .Text($"Proveedor: {dto.Supplier ?? "_______________"}")
-                        .FontSize(9).FontColor(ColorTextoSuave);
-                    col.Item().PaddingTop(4)
-                        .Text($"RFC: {dto.SupplierRFC ?? "_______________"}")
-                        .FontSize(9).FontColor(ColorTextoSuave);
-                    col.Item().PaddingTop(4)
-                        .Text($"Póliza de pago: {dto.PaymentPolicy ?? "_______________"}")
-                        .FontSize(9).FontColor(ColorTextoSuave);
-                    if (!string.IsNullOrWhiteSpace(dto.CFDI))
-                        col.Item().PaddingTop(4)
-                            .Text($"CFDI: {dto.CFDI}")
+                row.RelativeItem().MinHeight(70).Border(1).BorderColor("#E5E7EB")
+                    .Padding(8).Column(col =>
+                    {
+                        col.Item().Text("COMPROMETIDO")
+                            .Bold().FontSize(9).FontColor(ColorPrimario);
+                        col.Item().PaddingTop(6)
+                            .Text("Fecha de pedido: _______________")
                             .FontSize(9).FontColor(ColorTextoSuave);
-                });
+                    });
+
+                row.ConstantItem(6);
+
+                row.RelativeItem().MinHeight(70).Border(1).BorderColor("#E5E7EB")
+                    .Padding(8).Column(col =>
+                    {
+                        col.Item().Text("DEVENGADO")
+                            .Bold().FontSize(9).FontColor(ColorPrimario);
+                        col.Item().PaddingTop(6)
+                            .Text("Fecha de recibido: _______________")
+                            .FontSize(9).FontColor(ColorTextoSuave);
+                    });
+
+                row.ConstantItem(6);
+
+                row.RelativeItem().MinHeight(70).Border(1).BorderColor("#E5E7EB")
+                    .Padding(8).Column(col =>
+                    {
+                        col.Item().Text("EJERCIDO / PAGADO")
+                            .Bold().FontSize(9).FontColor(ColorPrimario);
+                        col.Item().PaddingTop(4)
+                            .Text($"Proveedor: {dto.Supplier ?? "_______________"}")
+                            .FontSize(9).FontColor(ColorTextoSuave);
+                        col.Item().PaddingTop(4)
+                            .Text($"RFC: {dto.SupplierRFC ?? "_______________"}")
+                            .FontSize(9).FontColor(ColorTextoSuave);
+                        col.Item().PaddingTop(4)
+                            .Text($"Póliza de pago: {dto.PaymentPolicy ?? "_______________"}")
+                            .FontSize(9).FontColor(ColorTextoSuave);
+                        if (!string.IsNullOrWhiteSpace(dto.CFDI))
+                            col.Item().PaddingTop(4)
+                                .Text($"CFDI: {dto.CFDI}")
+                                .FontSize(9).FontColor(ColorTextoSuave);
+                    });
             });
         }
     }

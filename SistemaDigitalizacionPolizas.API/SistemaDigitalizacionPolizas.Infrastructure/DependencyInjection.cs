@@ -1,6 +1,7 @@
 ﻿
 
 using SistemaDigitalizacionPolizas.Application.Interfaces;
+using SistemaDigitalizacionPolizas.Application.Services.Pdf_Service;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Acquisition;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Actions;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.AdministrtiveUnit;
@@ -34,6 +35,7 @@ using SistemaDigitalizacionPolizas.Infrastructure.Persistence.Services.UnitOfWor
 using SistemaDigitalizacionPolizas.Infrastructure.Persistence.Services.UploatFile;
 using SistemaDigitalizacionPolizas.Infrastructure.Persistence.Supplier_Persistence;
 using SistemaDigitalizacionPolizas.Infrastructure.Persistence.SystemConfiguration_Persistences;
+using SistemaDigitalizacionPolizas.Infrastructure.Services;
 using SSistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.StatusRequest;
 
 
@@ -109,6 +111,9 @@ namespace SistemaDigitalizacionPolizas.Infrastructure
             services.AddScoped<ISystemConfigurationRepository, SystemConfigurationRepository>();
 
             services.AddScoped<INotificationRepository, NotificationRepository>();
+
+            services.AddScoped<IPdfService, PdfService>();
+
 
 
 

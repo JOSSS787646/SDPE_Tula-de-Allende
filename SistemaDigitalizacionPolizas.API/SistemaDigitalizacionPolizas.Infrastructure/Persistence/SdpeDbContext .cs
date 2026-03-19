@@ -56,7 +56,7 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence
         public DbSet<RequestStatusHistory> RequestStatusHistories { get; set; }
         //Recuperacion de Contraseñas
         public DbSet<PasswordResetToken> PasswordResetTokens { get; set; }
-
+        public DbSet<AcquisitionRequest> AcquisitionRequestsPfd { get; set; }
 
         // Áreas
         public DbSet<AdministrativeUnit> AdministrativeUnits { get; set; }

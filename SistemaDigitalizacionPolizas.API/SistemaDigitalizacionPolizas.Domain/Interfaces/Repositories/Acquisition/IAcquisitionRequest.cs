@@ -27,5 +27,7 @@ namespace SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Acquisitio
         Task RemovePaymentPolicyFromRequests(int paymentPolicyId);
 
         Task UpdateMaxDateAsync(int requestId, DateTime newDate);
+
+        Task<AcquisitionRequest?> GetByIdWithDetailsAsync(int id);
     }
 }

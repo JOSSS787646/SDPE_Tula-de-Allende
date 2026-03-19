@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Services.Pdf
+namespace SistemaDigitalizacionPolizas.Application.Services.Pdf_Service
 {
     public interface IPdfService
     {

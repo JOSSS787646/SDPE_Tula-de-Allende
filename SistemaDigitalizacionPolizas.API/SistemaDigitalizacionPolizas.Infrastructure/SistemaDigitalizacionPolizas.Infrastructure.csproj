@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <None Remove="Persistence\Services\Email\Templates\PasswordRecovery.html" />
+    <None Remove="Resources\Images\LogoPresidencia.webp" />
   </ItemGroup>
 
   <ItemGroup>
@@ -15,6 +16,7 @@
     <EmbeddedResource Include="Persistence\Services\Email\Templates\DocumentReviewNotification.html" />
     <EmbeddedResource Include="Persistence\Services\Email\Templates\DocumentsUploaded.html" />
     <EmbeddedResource Include="Persistence\Services\Email\Templates\PasswordRecovery.html" />
+    <EmbeddedResource Include="Resources\Images\LogoPresidencia.webp" />
   </ItemGroup>
 
   <ItemGroup>
@@ -55,10 +57,6 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>BD_EneroV1.tt</DependentUpon>
     </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Resources\Images\" />
   </ItemGroup>
 
 </Project>
