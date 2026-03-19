@@ -99,6 +99,7 @@ namespace SistemaDigitalizacionPolizas.Infrastructure
             //Document Status Repository
             services.AddScoped<IDocumentStatusRepository, DocumentStatusRepository>();
             services.AddScoped<IDocumentStatusRepository, DocumentStatusRepository>();
+            services.AddScoped<IApplicationDetailRepository, ApplicationDetailRepository>();
 
             services.AddScoped<IAcquisitionRequest, AcquisitionRequestRepository>();
             services.AddScoped<IRequestDocumentExceptionRepository, RequestDocumentExceptionRepository>();

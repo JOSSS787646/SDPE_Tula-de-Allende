@@ -73,7 +73,10 @@ namespace SistemaDigitalizacionPolizas.Domain.Entities.AcquisitionRequest_Entiti
         public ICollection<RequestManager> RequestManagers { get; set; }
     = new List<RequestManager>();
 
-     
+
+        public ICollection<ApplicationDetail> Details
+        { get; set; } = new List<ApplicationDetail>();
+
 
 
 

@@ -88,12 +88,10 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Acquisition_Pe
                     Observations = x.Observations,
                     CompleteMaximeDate = x.CompleteMaximeDate,
 
-                    // 🔹 NUEVO
                     PolicyNumber = x.PaymentPolicy != null
                         ? x.PaymentPolicy.PolicyCode
                         : null,
 
-                    // 🔹 NUEVO
                     CFDI = x.CFDI,
 
                     AdministrativeUnit = x.AdministrativeUnit == null ? null : new SimpleCatalogDto
@@ -160,11 +158,30 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Acquisition_Pe
                     {
                         Id = x.ApplicationStatus.IdApplicationStatus,
                         Name = x.ApplicationStatus.Description
-                    }
+                    },
+
+                    // 🔥🔥🔥 AQUÍ LO NUEVO → DETALLES
+                    Details = x.Details.Select(d => new ApplicationDetailDto
+                    {
+                        IdDetail = d.IdDetail,
+
+                        // 🔥 COG con nombre
+                        Cog = d.Cog == null ? null : new SimpleCatalogDto
+                        {
+                            Id = d.Cog.idCog,
+                            Name = d.Cog.Description
+                        },
+
+                        Quantity = d.Quantity,
+                        UnitMeasure = d.UnitMeasure,
+                        Description = d.Description,
+                        UnitAmount = d.UnitAmount,
+                        TotalAmount = d.TotalAmount
+
+                    }).ToList()
                 })
                 .FirstOrDefaultAsync();
         }
-
 
 
         public async Task<(IEnumerable<AcquisitionRequestPolizaDto> Data, int TotalRecords)>
@@ -210,29 +227,52 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Acquisition_Pe
 
             try
             {
-
-                // 1️⃣ Obtener la póliza asociada
+                // ==========================================
+                // 1️⃣ Obtener la póliza asociada (si la necesitas después)
+                // ==========================================
                 var policyId = await _context.AcquisitionRequests
                     .Where(x => x.IdRequest == solicitudId)
                     .Select(x => x.IdPaymentPolicy)
                     .FirstOrDefaultAsync();
 
+                // ==========================================
+                // 2️⃣ ELIMINAR DETALLES 🔥 (LO QUE TE FALTABA)
+                // ==========================================
+                await _context.ApplicationDetails
+                    .Where(x => x.ApplicationId == solicitudId)
+                    .ExecuteDeleteAsync();
+
+                // ==========================================
+                // 3️⃣ Documentos
+                // ==========================================
                 await _context.ExpedientDocuments
                     .Where(x => x.RequestId == solicitudId)
                     .ExecuteDeleteAsync();
 
+                // ==========================================
+                // 4️⃣ Managers
+                // ==========================================
                 await _context.RequestManagers
                     .Where(x => x.IdRequest == solicitudId)
                     .ExecuteDeleteAsync();
 
+                // ==========================================
+                // 5️⃣ Excepciones
+                // ==========================================
                 await _context.RequestDocumentExceptions
                     .Where(x => x.IdRequest == solicitudId)
                     .ExecuteDeleteAsync();
 
+                // ==========================================
+                // 6️⃣ Finalmente la solicitud
+                // ==========================================
                 await _context.AcquisitionRequests
                     .Where(x => x.IdRequest == solicitudId)
                     .ExecuteDeleteAsync();
 
+                // ==========================================
+                // COMMIT
+                // ==========================================
                 await transaction.CommitAsync();
             }
             catch

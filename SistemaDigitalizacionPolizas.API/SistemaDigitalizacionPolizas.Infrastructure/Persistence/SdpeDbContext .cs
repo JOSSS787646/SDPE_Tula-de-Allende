@@ -50,6 +50,7 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence
         public DbSet<PaymentPolicy> PaymentPolicies { get; set; }
 
         public DbSet<Notification> Notifications { get; set; }
+        public DbSet<ApplicationDetail> ApplicationDetails { get; set; }
 
         public DbSet<SystemConfiguration> SystemConfigurations { get; set; }
         public DbSet<RequestStatusHistory> RequestStatusHistories { get; set; }

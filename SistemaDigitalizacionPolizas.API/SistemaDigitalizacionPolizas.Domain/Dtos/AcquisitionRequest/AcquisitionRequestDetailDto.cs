@@ -18,6 +18,7 @@ namespace SistemaDigitalizacionPolizas.Domain.Dtos.AcquisitionRequest
         public DateTime? CompleteMaximeDate { get; set; }
         public string? PolicyNumber { get; set; }
 
+        public List<ApplicationDetailDto> Details { get; set; } = new();
         public SimpleCatalogDto? CurrentRequestStatus { get; set; }
 
         // 🔹 Relaciones (solo Id + Nombre)

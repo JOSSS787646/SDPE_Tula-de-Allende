@@ -976,6 +976,60 @@
         }
       }
     },
+    "/api/ApplicationDetails/upsert": {
+      "post": {
+        "tags": [
+          "ApplicationDetails"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpsertApplicationDetailsCommand"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpsertApplicationDetailsCommand"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpsertApplicationDetailsCommand"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/ApplicationDetails/{id}": {
+      "delete": {
+        "tags": [
+          "ApplicationDetails"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/ApplicationStatus": {
       "post": {
         "tags": [
@@ -4332,6 +4386,13 @@
             "type": "string",
             "nullable": true
           },
+          "details": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ApplicationDetailDto"
+            },
+            "nullable": true
+          },
           "currentRequestStatus": {
             "$ref": "#/components/schemas/SimpleCatalogDto"
           },
@@ -4402,6 +4463,39 @@
           },
           "active": {
             "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ApplicationDetailDto": {
+        "type": "object",
+        "properties": {
+          "idDetail": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "cog": {
+            "$ref": "#/components/schemas/SimpleCatalogDto"
+          },
+          "quantity": {
+            "type": "number",
+            "format": "double"
+          },
+          "unitMeasure": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "unitAmount": {
+            "type": "number",
+            "format": "double"
+          },
+          "totalAmount": {
+            "type": "number",
+            "format": "double"
           }
         },
         "additionalProperties": false
@@ -4648,6 +4742,13 @@
             "type": "integer",
             "format": "int32",
             "nullable": true
+          },
+          "details": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CreateApplicationDetailDto"
+            },
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -4699,6 +4800,32 @@
           },
           "active": {
             "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreateApplicationDetailDto": {
+        "type": "object",
+        "properties": {
+          "idCog": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "quantity": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "unitMeasure": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "unitAmount": {
+            "type": "number",
+            "format": "double"
           }
         },
         "additionalProperties": false
@@ -6007,6 +6134,23 @@
           },
           "asset": {
             "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "UpsertApplicationDetailsCommand": {
+        "type": "object",
+        "properties": {
+          "requestId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "details": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ApplicationDetailDto"
+            },
+            "nullable": true
           }
         },
         "additionalProperties": false

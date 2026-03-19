@@ -37,13 +37,16 @@ public class CreateRequestCommandHandler
             throw new Exception($"Ya existe una solicitud con el código '{dto.RequestNumber}'.");
 
         // ==========================================
+        // Validar que tenga detalles 🔥
+        // ==========================================
+        if (dto.Details == null || !dto.Details.Any())
+            throw new Exception("La solicitud debe tener al menos un detalle.");
+
+        // ==========================================
         // Crear entidad
         // ==========================================
         var entity = new AcquisitionRequest
         {
-            // ===============================
-            // Información del negocio
-            // ===============================
             RequestNumber = dto.RequestNumber,
             RequestDate = dto.RequestDate ?? DateTime.UtcNow,
             Justification = dto.Justification,
@@ -52,9 +55,6 @@ public class CreateRequestCommandHandler
             CFDI = dto.CFDI,
             CompleteMaximeDate = dto.CompleteMaximeDate,
 
-            // ===============================
-            // Foreign Keys
-            // ===============================
             IdAdministrativeUnit = dto.IdAdministrativeUnit,
             IdProject = dto.IdProject,
             IdAcquisitionType = dto.IdAcquisitionType,
@@ -67,20 +67,41 @@ public class CreateRequestCommandHandler
             IdBeneficiary = dto.IdBeneficiary,
             IdPaymentPolicy = dto.IdPayementPolicy,
 
-            // ===============================
-            // Auditoría
-            // ===============================
             CreatedBy = _currentUser.UserId,
             CreatedAt = DateTime.UtcNow,
             Active = true
         };
 
         // ==========================================
-        // Guardar
+        // 🔥 AGREGAR DETALLES (AQUÍ ESTÁ LA CLAVE)
+        // ==========================================
+        foreach (var d in dto.Details)
+        {
+            var detail = new ApplicationDetail
+            {
+                // FK se asigna automáticamente por EF
+                CogId = d.IdCog,
+                Quantity = d.Quantity,
+                UnitMeasure = d.UnitMeasure,
+                Description = d.Description,
+                UnitAmount = d.UnitAmount,
+
+                // 🔥 cálculo backend (obligatorio)
+                TotalAmount = d.Quantity * d.UnitAmount,
+
+                CreatedBy = _currentUser.UserId,
+                CreatedDate = DateTime.UtcNow,
+                Active = true
+            };
+
+            entity.Details.Add(detail);
+        }
+
+        // ==========================================
+        // Guardar (guarda TODO: solicitud + detalles)
         // ==========================================
         await _repository.AddAsync(entity);
 
-  
         return entity.IdRequest;
     }
 }
