@@ -29,6 +29,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="10.0.2" />
+    <PackageReference Include="QuestPDF" Version="2026.2.2" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.9.0" />
   </ItemGroup>
 
@@ -57,7 +58,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Persistence\Services\Pdf\" />
+    <Folder Include="Resources\Images\" />
   </ItemGroup>
 
 </Project>
