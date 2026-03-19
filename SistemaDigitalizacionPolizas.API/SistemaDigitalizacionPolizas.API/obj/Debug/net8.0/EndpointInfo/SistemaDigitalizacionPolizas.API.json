@@ -441,6 +441,37 @@
         }
       }
     },
+    "/api/AcquisitionRequest/update-max-date": {
+      "patch": {
+        "tags": [
+          "AcquisitionRequest"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateMaxDateDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateMaxDateDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateMaxDateDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/AcquisitionType": {
       "post": {
         "tags": [
@@ -938,6 +969,60 @@
             }
           }
         },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/ApplicationDetails/upsert": {
+      "post": {
+        "tags": [
+          "ApplicationDetails"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpsertApplicationDetailsCommand"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpsertApplicationDetailsCommand"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpsertApplicationDetailsCommand"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/ApplicationDetails/{id}": {
+      "delete": {
+        "tags": [
+          "ApplicationDetails"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -4292,8 +4377,20 @@
             "type": "string",
             "nullable": true
           },
+          "completeMaximeDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
           "policyNumber": {
             "type": "string",
+            "nullable": true
+          },
+          "details": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ApplicationDetailDto"
+            },
             "nullable": true
           },
           "currentRequestStatus": {
@@ -4366,6 +4463,39 @@
           },
           "active": {
             "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ApplicationDetailDto": {
+        "type": "object",
+        "properties": {
+          "idDetail": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "cog": {
+            "$ref": "#/components/schemas/SimpleCatalogDto"
+          },
+          "quantity": {
+            "type": "number",
+            "format": "double"
+          },
+          "unitMeasure": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "unitAmount": {
+            "type": "number",
+            "format": "double"
+          },
+          "totalAmount": {
+            "type": "number",
+            "format": "double"
           }
         },
         "additionalProperties": false
@@ -4549,6 +4679,11 @@
             "type": "string",
             "nullable": true
           },
+          "completeMaximeDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
           "cfdi": {
             "type": "string",
             "nullable": true
@@ -4607,6 +4742,13 @@
             "type": "integer",
             "format": "int32",
             "nullable": true
+          },
+          "details": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CreateApplicationDetailDto"
+            },
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -4658,6 +4800,32 @@
           },
           "active": {
             "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreateApplicationDetailDto": {
+        "type": "object",
+        "properties": {
+          "idCog": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "quantity": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "unitMeasure": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "unitAmount": {
+            "type": "number",
+            "format": "double"
           }
         },
         "additionalProperties": false
@@ -5566,6 +5734,11 @@
             "type": "string",
             "nullable": true
           },
+          "completeMaximeDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
           "idAdministrativeUnit": {
             "type": "integer",
             "format": "int32",
@@ -5800,6 +5973,20 @@
         },
         "additionalProperties": false
       },
+      "UpdateMaxDateDto": {
+        "type": "object",
+        "properties": {
+          "requestId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "newMaxDate": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
       "UpdatePermissionByRoleCommand": {
         "type": "object",
         "properties": {
@@ -5947,6 +6134,23 @@
           },
           "asset": {
             "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "UpsertApplicationDetailsCommand": {
+        "type": "object",
+        "properties": {
+          "requestId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "details": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ApplicationDetailDto"
+            },
+            "nullable": true
           }
         },
         "additionalProperties": false

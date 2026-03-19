@@ -28,6 +28,8 @@ namespace SistemaDigitalizacionPolizas.Domain.Entities.AcquisitionRequest_Entiti
         public string? Justification { get; set; }
         public DateTime? AuthorizationDate { get; set; }
 
+        public DateTime? CompleteMaximeDate { get; set; }
+
         public string? Observations { get; set; }
 
 
@@ -71,7 +73,10 @@ namespace SistemaDigitalizacionPolizas.Domain.Entities.AcquisitionRequest_Entiti
         public ICollection<RequestManager> RequestManagers { get; set; }
     = new List<RequestManager>();
 
-     
+
+        public ICollection<ApplicationDetail> Details
+        { get; set; } = new List<ApplicationDetail>();
+
 
 
 

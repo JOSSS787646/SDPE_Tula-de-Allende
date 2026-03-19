@@ -10,25 +10,6 @@ using SistemaDigitalizacionPolizas.Infrastructure.Persistence.Services.UploatFil
 
 namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Service.Command.UpdateExpedientDocument
 {
-    /// <summary>
-    /// Permite actualizar un documento existente dentro de un expediente.
-    ///
-    /// Flujo del proceso:
-    /// 1. Obtiene el documento existente desde base de datos
-    /// 2. Inicia una transacción
-    /// 3. Si se envía un nuevo archivo:
-    ///     - se sube al almacenamiento
-    ///     - se actualiza el nombre y la ruta
-    ///     - se cambia el estado del documento a "Cargado"
-    /// 4. Actualiza observaciones si se proporcionan
-    /// 5. Recalcula el estado de la solicitud
-    /// 6. Confirma la transacción
-    /// 7. Elimina el archivo anterior si fue reemplazado
-    /// 8. Si la política lo permite, envía notificación por cola (worker)
-    ///
-    /// El correo no se envía directamente, se coloca en EmailQueue
-    /// para que el EmailBackgroundWorker lo procese con reintentos.
-    /// </summary>
     public class UpdateExpedientDocumentCommandHandler
        : IRequestHandler<UpdateExpedientDocumentCommand, bool>
     {
@@ -93,7 +74,6 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
                 // ====================================
                 // SUBIR NUEVO ARCHIVO SI SE ENVÍA
                 // ====================================
-
                 if (request.NewFile != null)
                 {
                     await using var stream = request.NewFile.OpenReadStream();
@@ -114,16 +94,17 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
                 // ====================================
                 // ACTUALIZAR OBSERVACIONES
                 // ====================================
-
                 if (request.Observations != null)
                     entity.Observations = request.Observations;
 
                 _repository.Update(entity);
 
-                // ====================================
-                // RECALCULAR ESTADO DE SOLICITUD
-                // ====================================
+                // 🔥 CLAVE: guardar antes del recalculo
+                await _unitOfWork.SaveChangesAsync();
 
+                // ====================================
+                // RECALCULAR ESTADO
+                // ====================================
                 await _requestStatusService.RecalculateStatus(entity.RequestId);
 
                 await _unitOfWork.CommitAsync();
@@ -131,14 +112,12 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
                 // ====================================
                 // ELIMINAR ARCHIVO ANTERIOR
                 // ====================================
-
                 if (newFilePath != null && !string.IsNullOrEmpty(oldFilePath))
                     await _fileStorageService.DeleteAsync(oldFilePath);
 
                 // ====================================
-                // VALIDAR ENVÍO DE NOTIFICACIÓN
+                // VALIDAR NOTIFICACIÓN
                 // ====================================
-
                 var shouldSendNotification =
                     await _notificationPolicyService.ShouldSendNotificationAsync(entity.RequestId);
 
@@ -159,9 +138,8 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
                 var requestDescription = requestInfo?.Justification ?? "Sin justificación";
 
                 // ====================================
-                // ENCOLAR CORREO (WORKER)
+                // ENCOLAR CORREO
                 // ====================================
-
                 _emailQueue.Enqueue(() =>
                     _emailService.SendDocumentsUploadedAsync(
                         reviewerEmail,
@@ -174,9 +152,9 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
                     )
                 );
 
-
-                //Enviar notificación interna (en la aplicación)
-
+                // ====================================
+                // NOTIFICACIÓN INTERNA
+                // ====================================
                 var reviewerUserId = await _userRepository
                     .GetUserIdByRoleAsync((int)SystemRolesEnum.ReadView);
 
@@ -192,6 +170,7 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
                         cancellationToken
                     );
                 }
+
                 return true;
             }
             catch

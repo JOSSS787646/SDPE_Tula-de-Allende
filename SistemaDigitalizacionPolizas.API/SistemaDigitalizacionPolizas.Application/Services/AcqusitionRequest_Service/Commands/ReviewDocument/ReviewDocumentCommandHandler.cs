@@ -16,6 +16,7 @@ namespace SistemaDigitalizacionPolizas.Application.Services.AcqusitionRequest_Se
     {
         private readonly IDocumentExpedientRepository _repository;
         private readonly IRequestStatusService _requestStatusService;
+        private readonly IUnitOfWorkService _unitOfWork;
 
         private readonly INotificationPolicyService _notificationPolicyService;
         private readonly IRequestNotificationRepository _notificationRepository;
@@ -29,6 +30,7 @@ namespace SistemaDigitalizacionPolizas.Application.Services.AcqusitionRequest_Se
         public ReviewDocumentCommandHandler(
             IDocumentExpedientRepository repository,
             IRequestStatusService requestStatusService,
+            IUnitOfWorkService unitOfWork, // 🔥 AGREGADO
             INotificationPolicyService notificationPolicyService,
             IRequestNotificationRepository notificationRepository,
             IEmailService emailService,
@@ -39,6 +41,7 @@ namespace SistemaDigitalizacionPolizas.Application.Services.AcqusitionRequest_Se
         {
             _repository = repository;
             _requestStatusService = requestStatusService;
+            _unitOfWork = unitOfWork; // 🔥
 
             _notificationPolicyService = notificationPolicyService;
             _notificationRepository = notificationRepository;
@@ -59,10 +62,7 @@ namespace SistemaDigitalizacionPolizas.Application.Services.AcqusitionRequest_Se
             var document = await _repository.GetByIdAsync(request.DocumentId);
 
             if (document == null)
-            {
-                _logger.LogWarning("Documento no encontrado {DocumentId}", request.DocumentId);
                 throw new Exception("Documento no encontrado.");
-            }
 
             if (request.DocumentStatusId == (int)DocumentStatusEnum.Observado &&
                 string.IsNullOrWhiteSpace(request.ObservationsUpload))
@@ -79,6 +79,9 @@ namespace SistemaDigitalizacionPolizas.Application.Services.AcqusitionRequest_Se
 
             await _repository.UpdateAsync(document);
 
+            // 🔥 CLAVE: guardar antes del recalculo
+            await _unitOfWork.SaveChangesAsync();
+
             // =====================================
             // RECALCULAR ESTADO SOLICITUD
             // =====================================
@@ -86,21 +89,14 @@ namespace SistemaDigitalizacionPolizas.Application.Services.AcqusitionRequest_Se
             await _requestStatusService.RecalculateStatus(document.RequestId);
 
             // =====================================
-            // VALIDAR POLÍTICA DE CORREO
+            // NOTIFICACIONES (igual que ya tienes)
             // =====================================
 
             var shouldSendNotification =
                 await _notificationPolicyService.ShouldSendNotificationAsync(document.RequestId);
 
             if (!shouldSendNotification)
-            {
-                _logger.LogInformation("Correo bloqueado por política.");
                 return true;
-            }
-
-            // =====================================
-            // DATOS GENERALES
-            // =====================================
 
             var reviewerEmail = await _userRepository
                 .GetEmailByRoleAsync((int)SystemRolesEnum.ReadView);
@@ -141,10 +137,6 @@ namespace SistemaDigitalizacionPolizas.Application.Services.AcqusitionRequest_Se
                 requestNumber = info.RequestNumber;
             }
 
-            // =====================================
-            // ENCOLAR CORREOS
-            // =====================================
-
             if (IsValidEmail(managerEmail))
             {
                 _emailQueue.Enqueue(() =>
@@ -170,10 +162,6 @@ namespace SistemaDigitalizacionPolizas.Application.Services.AcqusitionRequest_Se
                         document.ObservationsUpload
                 ));
             }
-
-            // =====================================
-            // 🔥 NOTIFICACIÓN (CORRECTO Y SEPARADO)
-            // =====================================
 
             var adquisicionesUserId = await _userRepository
                 .GetUserIdByRoleAsync((int)SystemRolesEnum.AdministradorAdquisiciones);
