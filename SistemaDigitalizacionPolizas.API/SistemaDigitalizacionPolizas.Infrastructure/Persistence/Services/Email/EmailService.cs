@@ -13,51 +13,15 @@ public class EmailService : IEmailService
         _configuration = configuration;
     }
 
-    public async Task SendAsync(string to, string subject, string code)
-    {
-        // 🔐 Seguridad TLS
-        ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+    // ─────────────────────────────────────────────────────────────
+    // HELPERS PRIVADOS
+    // ─────────────────────────────────────────────────────────────
 
-        // 📦 Obtener assembly actual (Infrastructure)
-        var assembly = Assembly.GetExecutingAssembly();
-
-
- 
-
-        var resources = assembly.GetManifestResourceNames();
-        foreach (var r in resources)
+    private SmtpClient BuildSmtpClient() =>
+        new SmtpClient
         {
-            Console.WriteLine("RESOURCE => " + r);
-        }
-
-        // 📄 Nombre COMPLETO del recurso embebido
-        var resourceName =
-   "SistemaDigitalizacionPolizas.Infrastructure.Persistence.Services.Email.Templates.PasswordRecovery.html";
-
-
-
-
-
-
-
-        using var stream = assembly.GetManifestResourceStream(resourceName);
-
-        if (stream == null)
-            throw new FileNotFoundException(
-                $"No se encontró el template embebido: {resourceName}"
-            );
-
-        using var reader = new StreamReader(stream);
-        var htmlBody = await reader.ReadToEndAsync();
-
-        // 🔁 Reemplazar código
-        htmlBody = htmlBody.Replace("{{CODE}}", code);
-
-        // 📧 Configuración SMTP
-        var smtp = new SmtpClient
-        {
-            Host = _configuration["Smtp:Host"],
-            Port = int.Parse(_configuration["Smtp:Port"]),
+            Host = _configuration["Smtp:Host"]!,
+            Port = int.Parse(_configuration["Smtp:Port"]!),
             EnableSsl = true,
             DeliveryMethod = SmtpDeliveryMethod.Network,
             UseDefaultCredentials = false,
@@ -67,19 +31,112 @@ public class EmailService : IEmailService
             )
         };
 
+    private async Task<string> LoadTemplateAsync(string resourceName)
+    {
+        ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+
+        var assembly = Assembly.GetExecutingAssembly();
+        using var stream = assembly.GetManifestResourceStream(resourceName)
+            ?? throw new FileNotFoundException(
+                $"No se encontró el template embebido: {resourceName}");
+
+        using var reader = new StreamReader(stream);
+        return await reader.ReadToEndAsync();
+    }
+
+    /// <summary>
+    /// Badge superior de la tarjeta:
+    /// Aprobado → fondo verde claro  |  Observado → fondo rojo claro
+    /// </summary>
+    private static string BuildBadge(string result)
+    {
+        bool aprobado = result.Equals("Aprobado", StringComparison.OrdinalIgnoreCase);
+
+        var bg = aprobado ? "#e6f4ea" : "#fdecea";
+        var border = aprobado ? "#b7dfbe" : "#f5c6c2";
+        var badgeBg = aprobado ? "#2e7d32" : "#c62828";
+        var label = aprobado ? "✔ DOCUMENTO APROBADO" : "⚠ DOCUMENTO OBSERVADO";
+
+        return $@"
+<tr>
+  <td style=""background:{bg};border-bottom:1px solid {border};padding:12px 30px;text-align:center;"">
+    <span style=""display:inline-block;background:{badgeBg};color:#fff;font-size:12px;font-weight:600;padding:4px 14px;border-radius:20px;letter-spacing:.4px;"">
+      {label}
+    </span>
+  </td>
+</tr>";
+    }
+
+    /// <summary>
+    /// Span coloreado para la celda "Resultado":
+    /// Aprobado → verde  |  Observado → rojo
+    /// </summary>
+    private static string BuildResultSpan(string result)
+    {
+        bool aprobado = result.Equals("Aprobado", StringComparison.OrdinalIgnoreCase);
+
+        var color = aprobado ? "#1b5e20" : "#b71c1c";
+        var bgSpan = aprobado ? "#e8f5e9" : "#ffebee";
+        var icon = aprobado ? "✔" : "⚠";
+
+        return $@"<span style=""background:{bgSpan};color:{color};font-weight:700;padding:2px 10px;border-radius:12px;font-size:13px;"">{icon} {result}</span>";
+    }
+
+    /// <summary>
+    /// Bloque de observaciones:
+    /// - Si fue Aprobado → no se renderiza (string vacío)
+    /// - Si fue Observado → bloque rojo con el texto
+    /// </summary>
+    private static string BuildObservationsBlock(string result, string? observations)
+    {
+        bool aprobado = result.Equals("Aprobado", StringComparison.OrdinalIgnoreCase);
+
+        if (aprobado)
+            return string.Empty;
+
+        var text = string.IsNullOrWhiteSpace(observations)
+            ? "Sin observaciones registradas."
+            : observations;
+
+        return $@"
+<div style=""background:#fff5f5;border:1px solid #f5c6c2;border-left:4px solid #c62828;border-radius:10px;padding:20px;margin-bottom:20px;"">
+  <p style=""margin:0 0 12px;font-size:13px;font-weight:700;color:#c62828;text-transform:uppercase;letter-spacing:.5px;"">
+    💬 Observaciones del revisor
+  </p>
+  <div style=""font-size:13px;line-height:1.9;color:#444;"">
+    {text}
+  </div>
+</div>";
+    }
+
+    // ─────────────────────────────────────────────────────────────
+    // 1. Recuperación de contraseña
+    // ─────────────────────────────────────────────────────────────
+
+    public async Task SendAsync(string to, string subject, string code)
+    {
+        var resourceName =
+            "SistemaDigitalizacionPolizas.Infrastructure.Persistence.Services.Email.Templates.PasswordRecovery.html";
+
+        var htmlBody = await LoadTemplateAsync(resourceName);
+        htmlBody = htmlBody.Replace("{{CODE}}", code);
+
         var mail = new MailMessage
         {
-            From = new MailAddress(_configuration["Smtp:User"]),
+            From = new MailAddress(_configuration["Smtp:User"]!),
             Subject = subject,
             Body = htmlBody,
             IsBodyHtml = true
         };
-
         mail.To.Add(to);
 
+        using var smtp = BuildSmtpClient();
         await smtp.SendMailAsync(mail);
     }
 
+    // ─────────────────────────────────────────────────────────────
+    // 2. Documentos cargados
+    // ─────────────────────────────────────────────────────────────
 
     public async Task SendDocumentsUploadedAsync(
         string to,
@@ -91,121 +148,82 @@ public class EmailService : IEmailService
         string documentsList
     )
     {
-        ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
-
-        var assembly = Assembly.GetExecutingAssembly();
-
         var resourceName =
-        "SistemaDigitalizacionPolizas.Infrastructure.Persistence.Services.Email.Templates.DocumentsUploaded.html";
+            "SistemaDigitalizacionPolizas.Infrastructure.Persistence.Services.Email.Templates.DocumentsUploaded.html";
 
-        using var stream = assembly.GetManifestResourceStream(resourceName);
+        var htmlBody = await LoadTemplateAsync(resourceName);
 
-        if (stream == null)
-            throw new FileNotFoundException(
-                $"No se encontró el template embebido: {resourceName}"
-            );
-
-        using var reader = new StreamReader(stream);
-
-        var htmlBody = await reader.ReadToEndAsync();
+        var displayName = string.IsNullOrWhiteSpace(userName)
+            ? "Usuario Adquisiciones (sin nombre)"
+            : userName;
 
         htmlBody = htmlBody
-            .Replace("{{USER}}", userName)
-            .Replace("{{REQUEST}}", requestId.ToString())
+            .Replace("{{USER}}", displayName)
+            .Replace("{{REQUEST}}", requestId)
             .Replace("{{UNIT}}", administrativeUnit)
             .Replace("{{DESCRIPTION}}", requestDescription)
             .Replace("{{DATE}}", date.ToString("dd/MM/yyyy"))
             .Replace("{{TIME}}", date.ToString("HH:mm"))
             .Replace("{{DOCUMENTS}}", documentsList);
 
-        var smtp = new SmtpClient
-        {
-            Host = _configuration["Smtp:Host"],
-            Port = int.Parse(_configuration["Smtp:Port"]),
-            EnableSsl = true,
-            Credentials = new NetworkCredential(
-                _configuration["Smtp:User"],
-                _configuration["Smtp:Password"]
-            )
-        };
-
         var mail = new MailMessage
         {
-            From = new MailAddress(_configuration["Smtp:User"]),
+            From = new MailAddress(_configuration["Smtp:User"]!),
             Subject = $"Documentos cargados para revisión - Solicitud #{requestId}",
             Body = htmlBody,
             IsBodyHtml = true
         };
-
         mail.To.Add(to);
 
+        using var smtp = BuildSmtpClient();
         await smtp.SendMailAsync(mail);
     }
 
-
+    // ─────────────────────────────────────────────────────────────
+    // 3. Notificación al revisor (Tesorería / ReadView)
+    // ─────────────────────────────────────────────────────────────
 
     public async Task SendDocumentReviewNotificationAsync(
-      string toEmail,
-      string reviewerName,
-      string requestNumber,
-      string result,
-      string? observations,
-         string documentName
-  )
+        string toEmail,
+        string reviewerName,
+        string requestNumber,
+        string result,
+        string? observations,
+        string documentName
+    )
     {
-        ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
-
-        var assembly = Assembly.GetExecutingAssembly();
-
         var resourceName =
-        "SistemaDigitalizacionPolizas.Infrastructure.Persistence.Services.Email.Templates.DocumentReviewNotification.html";
+            "SistemaDigitalizacionPolizas.Infrastructure.Persistence.Services.Email.Templates.DocumentReviewNotification.html";
 
-        using var stream = assembly.GetManifestResourceStream(resourceName);
-
-        if (stream == null)
-            throw new FileNotFoundException(
-                $"No se encontró el template embebido: {resourceName}"
-            );
-
-        using var reader = new StreamReader(stream);
-
-        var htmlBody = await reader.ReadToEndAsync();
-
+        var htmlBody = await LoadTemplateAsync(resourceName);
         var now = DateTime.Now;
 
         htmlBody = htmlBody
+            .Replace("{{BADGE}}", BuildBadge(result))
             .Replace("{{REVIEWER}}", reviewerName)
             .Replace("{{REQUEST}}", requestNumber)
             .Replace("{{DOCUMENT}}", documentName)
-            .Replace("{{RESULT}}", result)
-            .Replace("{{OBSERVATIONS}}", observations ?? "Sin observaciones")
+            .Replace("{{RESULT}}", BuildResultSpan(result))
+            .Replace("{{OBSERVATIONS_BLOCK}}", BuildObservationsBlock(result, observations))
             .Replace("{{DATE}}", now.ToString("dd/MM/yyyy"))
             .Replace("{{TIME}}", now.ToString("HH:mm"));
 
-        var smtp = new SmtpClient
-        {
-            Host = _configuration["Smtp:Host"],
-            Port = int.Parse(_configuration["Smtp:Port"]),
-            EnableSsl = true,
-            Credentials = new NetworkCredential(
-                _configuration["Smtp:User"],
-                _configuration["Smtp:Password"]
-            )
-        };
-
         var mail = new MailMessage
         {
-            From = new MailAddress(_configuration["Smtp:User"]),
+            From = new MailAddress(_configuration["Smtp:User"]!),
             Subject = $"Documentos revisados - Solicitud #{requestNumber}",
             Body = htmlBody,
             IsBodyHtml = true
         };
-
         mail.To.Add(toEmail);
 
+        using var smtp = BuildSmtpClient();
         await smtp.SendMailAsync(mail);
     }
 
+    // ─────────────────────────────────────────────────────────────
+    // 4. Resultado al cargador (Adquisiciones)
+    // ─────────────────────────────────────────────────────────────
 
     public async Task SendDocumentReviewedAsync(
         string toEmail,
@@ -216,59 +234,32 @@ public class EmailService : IEmailService
         string? observations
     )
     {
-        ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
-
-        var assembly = Assembly.GetExecutingAssembly();
-
         var resourceName =
-        "SistemaDigitalizacionPolizas.Infrastructure.Persistence.Services.Email.Templates.DocumentReviewed.html";
+            "SistemaDigitalizacionPolizas.Infrastructure.Persistence.Services.Email.Templates.DocumentReviewed.html";
 
-        using var stream = assembly.GetManifestResourceStream(resourceName);
-
-        if (stream == null)
-            throw new FileNotFoundException(
-                $"No se encontró el template embebido: {resourceName}"
-            );
-
-        using var reader = new StreamReader(stream);
-
-        var htmlBody = await reader.ReadToEndAsync();
-
+        var htmlBody = await LoadTemplateAsync(resourceName);
         var now = DateTime.Now;
 
         htmlBody = htmlBody
+            .Replace("{{BADGE}}", BuildBadge(result))
             .Replace("{{REVIEWER}}", reviewerName)
             .Replace("{{REQUEST}}", requestNumber)
             .Replace("{{DOCUMENT}}", documentName)
-            .Replace("{{RESULT}}", result)
-            .Replace("{{OBSERVATIONS}}", observations ?? "Sin observaciones")
+            .Replace("{{RESULT}}", BuildResultSpan(result))
+            .Replace("{{OBSERVATIONS_BLOCK}}", BuildObservationsBlock(result, observations))
             .Replace("{{DATE}}", now.ToString("dd/MM/yyyy"))
             .Replace("{{TIME}}", now.ToString("HH:mm"));
 
-        var smtp = new SmtpClient
-        {
-            Host = _configuration["Smtp:Host"],
-            Port = int.Parse(_configuration["Smtp:Port"]),
-            EnableSsl = true,
-            Credentials = new NetworkCredential(
-                _configuration["Smtp:User"],
-                _configuration["Smtp:Password"]
-            )
-        };
-
         var mail = new MailMessage
         {
-            From = new MailAddress(_configuration["Smtp:User"]),
+            From = new MailAddress(_configuration["Smtp:User"]!),
             Subject = $"Resultado de revisión de documento - Solicitud #{requestNumber}",
             Body = htmlBody,
             IsBodyHtml = true
         };
-
         mail.To.Add(toEmail);
 
+        using var smtp = BuildSmtpClient();
         await smtp.SendMailAsync(mail);
     }
-
-
-
 }

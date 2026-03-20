@@ -8,7 +8,7 @@
 <body style="
 margin:0;
 padding:0;
-background:#f4f4f4;
+background:#f0f0f0;
 font-family:Segoe UI,Tahoma,Geneva,Verdana,sans-serif;
 ">
 
@@ -16,63 +16,42 @@ font-family:Segoe UI,Tahoma,Geneva,Verdana,sans-serif;
         <tr>
             <td align="center" style="padding:40px 10px;">
 
-                <table width="540" cellpadding="0" cellspacing="0" style="
+                <table width="560" cellpadding="0" cellspacing="0" style="
 background:#ffffff;
-border-radius:18px;
-box-shadow:0 15px 40px rgba(0,0,0,0.25);
+border-radius:16px;
+box-shadow:0 12px 35px rgba(0,0,0,0.18);
 overflow:hidden;
 ">
 
                     <!-- HEADER -->
                     <tr>
                         <td style="
-background:#5b0b24;
-padding:26px 28px;
+background: linear-gradient(135deg, #5b0b24 0%, #8b1a3a 100%);
+padding:28px 30px;
 ">
-
-                            <h2 style="
-margin:0;
-color:#ffffff;
-font-size:20px;
-font-weight:600;
-letter-spacing:.4px;
-">
-                                Sistema de Digitalización de Pólizas
+                            <h2 style="margin:0;color:#ffffff;font-size:19px;font-weight:700;letter-spacing:.3px;">
+                                📋 Sistema de Digitalización de Pólizas
                             </h2>
-
-                            <p style="
-margin:6px 0 0;
-color:#f3f3f3;
-font-size:12px;
-">
+                            <p style="margin:5px 0 0;color:rgba(255,255,255,0.75);font-size:12px;">
                                 Notificación automática · Resultado de revisión documental
                             </p>
-
                         </td>
                     </tr>
 
+                    <!-- BADGE CONDICIONAL: C# inyecta el bloque completo -->
+                    {{BADGE}}
+
                     <!-- BODY -->
                     <tr>
-                        <td style="padding:34px 30px;color:#333;">
+                        <td style="padding:32px 30px;color:#333;">
 
-                            <h3 style="
-text-align:center;
-font-size:19px;
-font-weight:700;
-margin:0;
-">
+                            <h3 style="text-align:center;font-size:18px;font-weight:700;margin:0 0 6px;color:#2c2c2c;">
                                 Resultado de revisión de documento
                             </h3>
 
-                            <div style="
-width:70px;
-height:3px;
-background:#c9980b;
-margin:14px auto 26px;
-border-radius:4px;
-"></div>
+                            <div style="width:60px;height:3px;background:#c9980b;margin:0 auto 24px;border-radius:4px;"></div>
 
-                            <p style="font-size:14px;line-height:1.6;color:#444;">
+                            <p style="font-size:14px;line-height:1.7;color:#555;margin:0 0 22px;">
                                 Su documento ha sido revisado dentro del sistema de digitalización de pólizas.
                                 A continuación se muestra el resultado del proceso de validación.
                             </p>
@@ -80,103 +59,57 @@ border-radius:4px;
                             <!-- INFO CARD -->
                             <div style="
 background:#fafafa;
-border:1px solid #eee;
+border:1px solid #e8e8e8;
+border-left:4px solid #5b0b24;
 border-radius:10px;
-padding:18px;
-margin-top:20px;
+padding:20px;
+margin-bottom:20px;
 ">
+                                <p style="margin:0 0 12px;font-size:13px;font-weight:700;color:#5b0b24;text-transform:uppercase;letter-spacing:.5px;">
+                                    Información de la revisión
+                                </p>
 
-                                <table width="100%" style="font-size:14px;line-height:1.6">
+                                <table width="100%" style="font-size:14px;line-height:1.8;border-collapse:collapse;">
 
                                     <tr>
-                                        <td width="40%"><strong>Solicitud:</strong></td>
-                                        <td>#{{REQUEST}}</td>
+                                        <td width="45%" style="color:#666;padding:3px 0;"><strong>Solicitud:</strong></td>
+                                        <td style="color:#222;font-weight:600;">#{{REQUEST}}</td>
+                                    </tr>
+
+                                    <tr style="background:#f5f5f5;">
+                                        <td style="color:#666;padding:3px 6px;"><strong>Documento:</strong></td>
+                                        <td style="color:#222;padding:3px 6px;">{{DOCUMENT}}</td>
                                     </tr>
 
                                     <tr>
-                                        <td><strong>Documento:</strong></td>
-                                        <td>{{DOCUMENT}}</td>
+                                        <td style="color:#666;padding:3px 0;"><strong>Revisado por:</strong></td>
+                                        <td style="color:#222;">{{REVIEWER}}</td>
+                                    </tr>
+
+                                    <tr style="background:#f5f5f5;">
+                                        <td style="color:#666;padding:3px 6px;"><strong>Resultado:</strong></td>
+                                        <!-- {{RESULT}} C# inyecta un <span> ya coloreado -->
+                                        <td style="padding:3px 6px;">{{RESULT}}</td>
                                     </tr>
 
                                     <tr>
-                                        <td><strong>Revisado por:</strong></td>
-                                        <td>{{REVIEWER}}</td>
+                                        <td style="color:#666;padding:3px 0;"><strong>Fecha:</strong></td>
+                                        <td style="color:#222;">{{DATE}}</td>
                                     </tr>
 
-                                    <tr>
-                                        <td><strong>Resultado:</strong></td>
-                                        <td>{{RESULT}}</td>
-                                    </tr>
-
-                                    <tr>
-                                        <td><strong>Fecha:</strong></td>
-                                        <td>{{DATE}}</td>
-                                    </tr>
-
-                                    <tr>
-                                        <td><strong>Hora:</strong></td>
-                                        <td>{{TIME}}</td>
+                                    <tr style="background:#f5f5f5;">
+                                        <td style="color:#666;padding:3px 6px;"><strong>Hora:</strong></td>
+                                        <td style="color:#222;padding:3px 6px;">{{TIME}}</td>
                                     </tr>
 
                                 </table>
-
                             </div>
 
-                            <!-- OBSERVACIONES -->
-                            <div style="
-background:#f7f7f7;
-border-radius:10px;
-padding:18px;
-margin-top:22px;
-">
+                            <!-- BLOQUE OBSERVACIONES: C# inyecta el div completo o "" si fue Aprobado -->
+                            {{OBSERVATIONS_BLOCK}}
 
-                                <p style="
-margin:0 0 10px 0;
-font-weight:600;
-font-size:14px;
-">
-                                    Observaciones del revisor
-                                </p>
-
-                                <div style="
-font-size:13px;
-line-height:1.8;
-color:#444;
-">
-
-                                    {{OBSERVATIONS}}
-
-                                </div>
-
-                            </div>
-
-                            <!-- BUTTON -->
-                            <div style="text-align:center;margin-top:30px;">
-
-                                <a href="{{REQUEST_URL}}" style="
-display:inline-block;
-background:#5b0b24;
-color:#ffffff;
-padding:12px 28px;
-font-size:14px;
-text-decoration:none;
-border-radius:30px;
-font-weight:600;
-box-shadow:0 6px 14px rgba(0,0,0,0.25);
-">
-                                    Ver solicitud
-                                </a>
-
-                            </div>
-
-                            <p style="
-margin-top:26px;
-font-size:13px;
-color:#555;
-text-align:center;
-line-height:1.6;
-">
-                                Si el documento presenta observaciones, acceda al sistema para realizar las correcciones correspondientes.
+                            <p style="margin-top:24px;font-size:13px;color:#777;text-align:center;line-height:1.6;">
+                                Acceda al sistema para continuar con el proceso administrativo correspondiente.
                             </p>
 
                         </td>
@@ -186,15 +119,14 @@ line-height:1.6;
                     <tr>
                         <td style="
 background:#f3f3f3;
-padding:18px;
+border-top:1px solid #e5e5e5;
+padding:16px;
 text-align:center;
 font-size:12px;
-color:#777;
+color:#999;
 ">
-
                             © 2024–2027 · Sistema de Digitalización de Pólizas<br>
-                            Tecnología, innovación y servicio a la comunidad
-
+                            <span style="color:#bbb;">Tecnología, innovación y servicio a la comunidad</span>
                         </td>
                     </tr>
 
