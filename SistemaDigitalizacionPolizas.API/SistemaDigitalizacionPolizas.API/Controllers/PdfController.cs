@@ -1,4 +1,5 @@
-﻿using SistemaDigitalizacionPolizas.Application.Services.Pdf_Service.Query.GetAcquisitionRequestPdf;
+﻿using SistemaDigitalizacionPolizas.Application.Services.Pdf_Service.Commands.GenerateAcquisitionRequestFormPdf;
+using SistemaDigitalizacionPolizas.Application.Services.Pdf_Service.Query.GetAcquisitionRequestPdf;
 
 namespace SistemaDigitalizacionPolizas.API.Controllers
 {
@@ -26,6 +27,17 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
                 "application/pdf",
                 $"AcquisitionRequest_{id}.pdf"
             );
+        }
+
+
+        [HttpGet("form/{id}")]
+        public async Task<IActionResult> GetFormPdf(int id)
+        {
+            var pdf = await _mediator.Send(
+                new GenerateAcquisitionRequestFormPdfCommand(id)
+            );
+
+            return File(pdf, "application/pdf", $"Formulario_{id}.pdf");
         }
     }
 

@@ -59,6 +59,9 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
             UpdateExpedientDocumentCommand request,
             CancellationToken cancellationToken)
         {
+            // ================================
+            // OBTENER DOCUMENTO
+            // ================================
             var entity = await _repository.GetByIdAsync(request.Id);
 
             if (entity == null)
@@ -71,9 +74,10 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
 
             try
             {
-                // ====================================
-                // SUBIR NUEVO ARCHIVO SI SE ENVÍA
-                // ====================================
+                // ================================
+                // ACTUALIZACIÓN DE ARCHIVO (OPCIONAL)
+                // Si viene archivo nuevo, se reemplaza
+                // ================================
                 if (request.NewFile != null)
                 {
                     await using var stream = request.NewFile.OpenReadStream();
@@ -91,44 +95,40 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
                     entity.IdDocumentStatus = (int)DocumentStatusEnum.Cargado;
                 }
 
-                // ====================================
+                // ================================
                 // ACTUALIZAR OBSERVACIONES
-                // ====================================
+                // ================================
                 if (request.Observations != null)
                     entity.Observations = request.Observations;
 
                 _repository.Update(entity);
 
-                // 🔥 CLAVE: guardar antes del recalculo
+                // Importante: persistir antes de recalcular estado
                 await _unitOfWork.SaveChangesAsync();
 
-                // ====================================
-                // RECALCULAR ESTADO
-                // ====================================
+                // ================================
+                // REGLA DE NEGOCIO:
+                // RECALCULAR ESTADO DE LA SOLICITUD
+                // ================================
                 await _requestStatusService.RecalculateStatus(entity.RequestId);
 
                 await _unitOfWork.CommitAsync();
 
-                // ====================================
-                // ELIMINAR ARCHIVO ANTERIOR
-                // ====================================
+                // ================================
+                // LIMPIEZA DE ARCHIVO ANTERIOR
+                // Solo si se subió uno nuevo
+                // ================================
                 if (newFilePath != null && !string.IsNullOrEmpty(oldFilePath))
                     await _fileStorageService.DeleteAsync(oldFilePath);
 
-                // ====================================
-                // VALIDAR NOTIFICACIÓN
-                // ====================================
-                var shouldSendNotification =
-                    await _notificationPolicyService.ShouldSendNotificationAsync(entity.RequestId);
-
-                if (!shouldSendNotification)
-                    return true;
-
+                // ================================
+                // OBTENER DATOS PARA NOTIFICACIONES
+                // ================================
                 var reviewerEmail =
                     await _userRepository.GetEmailByRoleAsync((int)SystemRolesEnum.ReadView);
 
-                if (string.IsNullOrEmpty(reviewerEmail))
-                    return true;
+                var reviewerUserId =
+                    await _userRepository.GetUserIdByRoleAsync((int)SystemRolesEnum.ReadView);
 
                 var requestInfo =
                     await _notificationRepository.GetRequestNotificationInfoAsync(entity.RequestId);
@@ -137,27 +137,32 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
                 var administrativeUnitName = requestInfo?.AdministrativeUnitName ?? "No especificada";
                 var requestDescription = requestInfo?.Justification ?? "Sin justificación";
 
-                // ====================================
-                // ENCOLAR CORREO
-                // ====================================
-                _emailQueue.Enqueue(() =>
-                    _emailService.SendDocumentsUploadedAsync(
-                        reviewerEmail,
-                        _currentUserService.Email,
-                        requestNumber,
-                        administrativeUnitName,
-                        requestDescription,
-                        DateTime.Now,
-                        $"<div>• Documento actualizado: {entity.FileName}</div>"
-                    )
-                );
+                // ================================
+                // ENVÍO DE CORREO (CONDICIONAL)
+                // Depende de política + email válido
+                // ================================
+                var shouldSendEmail =
+                    await _notificationPolicyService.ShouldSendNotificationAsync(entity.RequestId);
 
-                // ====================================
-                // NOTIFICACIÓN INTERNA
-                // ====================================
-                var reviewerUserId = await _userRepository
-                    .GetUserIdByRoleAsync((int)SystemRolesEnum.ReadView);
+                if (shouldSendEmail && !string.IsNullOrEmpty(reviewerEmail))
+                {
+                    _emailQueue.Enqueue(() =>
+                        _emailService.SendDocumentsUploadedAsync(
+                            reviewerEmail,
+                            _currentUserService.Email,
+                            requestNumber,
+                            administrativeUnitName,
+                            requestDescription,
+                            DateTime.Now,
+                            $"<div>• Documento actualizado: {entity.FileName}</div>"
+                        )
+                    );
+                }
 
+                // ================================
+                // NOTIFICACIÓN (SIEMPRE SE INTENTA)
+                // Independiente del correo y política
+                // ================================
                 if (reviewerUserId > 0)
                 {
                     await _mediator.Send(
@@ -175,6 +180,9 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
             }
             catch
             {
+                // ================================
+                // ROLLBACK + LIMPIEZA
+                // ================================
                 await _unitOfWork.RollbackAsync();
 
                 if (newFilePath != null)
