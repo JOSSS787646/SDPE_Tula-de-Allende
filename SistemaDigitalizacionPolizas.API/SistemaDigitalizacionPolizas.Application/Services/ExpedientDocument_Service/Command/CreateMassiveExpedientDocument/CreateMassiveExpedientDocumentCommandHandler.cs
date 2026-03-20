@@ -72,6 +72,12 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
             var entities = new List<ExpedientDocument>();
             var userId = _currentUserService.UserId;
 
+            // =====================================================
+            // CAPTURA DEL EMAIL MIENTRAS EL HTTPCONTEXT VIVE
+            // (antes de cualquier await largo o enqueue)
+            // =====================================================
+            var uploaderEmail = _currentUserService.Email;
+
             await _unitOfWork.BeginTransactionAsync();
 
             try
@@ -140,7 +146,6 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
                 // =====================================================
                 await _repository.AddRangeAsync(entities);
 
-                // Recalcula el estatus de la solicitud con base en documentos cargados
                 await _requestStatusService.RecalculateStatus(request.RequestId);
 
                 await _unitOfWork.CommitAsync();
@@ -148,6 +153,8 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
                 // =====================================================
                 // OBTENER DATOS NECESARIOS PARA NOTIFICACIONES
                 // =====================================================
+
+                // Email del revisor (ReadView = Tesorería) — destinatario del correo
                 var reviewerEmail = await _userRepository
                     .GetEmailByRoleAsync((int)SystemRolesEnum.ReadView);
 
@@ -162,7 +169,7 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
                 );
 
                 var requestNumber = requestInfo?.RequestNumber ?? "N/A";
-                var administrativeUnitName = requestInfo?.AdministrativeUnitName ?? "No especificada";
+                var administrativeUnit = requestInfo?.AdministrativeUnitName ?? "No especificada";
                 var requestDescription = requestInfo?.Justification ?? "Sin justificación";
 
                 // =====================================================
@@ -174,15 +181,17 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
 
                 if (shouldSendEmail && !string.IsNullOrEmpty(reviewerEmail))
                 {
+                    // uploaderEmail ya fue capturado al inicio del Handle,
+                    // mientras el HttpContext aún vivía. Aquí es solo un string.
                     _emailQueue.Enqueue(() =>
                         _emailService.SendDocumentsUploadedAsync(
-                            reviewerEmail,
-                            _currentUserService.Email,
-                            requestNumber,
-                            administrativeUnitName,
-                            requestDescription,
-                            DateTime.Now,
-                            documentList
+                            to: reviewerEmail,
+                            userName: uploaderEmail,          // ← email de AdministradorAdquisiciones (rol 4)
+                            requestId: requestNumber,
+                            administrativeUnit: administrativeUnit,
+                            requestDescription: requestDescription,
+                            date: DateTime.Now,
+                            documentsList: documentList
                         )
                     );
                 }
@@ -208,14 +217,10 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
             }
             catch
             {
-                // Rollback de transacción
                 await _unitOfWork.RollbackAsync();
 
-                // Eliminación de archivos subidos en caso de error
                 foreach (var path in uploadedPaths)
-                {
                     await _fileStorageService.DeleteAsync(path);
-                }
 
                 throw;
             }
