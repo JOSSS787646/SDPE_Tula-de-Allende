@@ -1,4 +1,5 @@
 ﻿using SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Service.Service;
+using SistemaDigitalizacionPolizas.Application.Services.Pdf_Service;
 using SistemaDigitalizacionPolizas.Application.Services.RequestingAdministration_Service.Prog.Queries.GetAllProg;
 using SistemaDigitalizacionPolizas.Domain.Entities.RequestingAdministration_Entities;
 
@@ -19,6 +20,11 @@ namespace SistemaDigitalizacionPolizas.Application
             );
             services.AddScoped<IRequestStatusService, RequestStatusService>();
             services.AddScoped<INotificationPolicyService, NotificationPolicyService>();
+
+
+           
+  
+
 
 
             return services;

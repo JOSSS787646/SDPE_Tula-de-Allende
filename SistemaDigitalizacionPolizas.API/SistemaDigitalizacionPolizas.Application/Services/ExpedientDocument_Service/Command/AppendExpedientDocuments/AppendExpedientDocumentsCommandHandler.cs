@@ -60,6 +60,9 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
             AppendExpedientDocumentsCommand request,
             CancellationToken cancellationToken)
         {
+            // ================================
+            // VALIDACIONES DE ENTRADA
+            // ================================
             if (request.Files == null || !request.Files.Any())
                 throw new Exception("Debe enviar al menos un archivo.");
 
@@ -74,13 +77,18 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
 
             try
             {
-                // Obtener estado "Cargado"
+                // ================================
+                // OBTENER ESTADO BASE (CARGADO)
+                // ================================
                 var cargadoStatus = await _statusRepository
                     .GetByCodeAsync((int)DocumentStatusEnum.Cargado);
 
                 if (cargadoStatus == null)
                     throw new Exception("No existe estado 'Cargado' configurado.");
 
+                // ================================
+                // SUBIDA Y CREACIÓN DE ENTIDADES
+                // ================================
                 foreach (var file in request.Files)
                 {
                     if (file == null || file.Length == 0)
@@ -113,37 +121,30 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
                     });
                 }
 
-                // =====================================
-                // Guardar documentos
-                // =====================================
+                // ================================
+                // PERSISTENCIA
+                // ================================
                 await _repository.AddRangeAsync(entities);
 
-                // 🔥 CLAVE: persistir antes del recalculo
+                // Importante: guardar antes de recalcular estado
                 await _unitOfWork.SaveChangesAsync();
 
-                // =====================================
-                // Recalcular estado (EnRevision / Completo / Incompleto)
-                // =====================================
+                // ================================
+                // REGLA DE NEGOCIO:
+                // RECALCULAR ESTADO DE LA SOLICITUD
+                // ================================
                 await _requestStatusService.RecalculateStatus(request.RequestId);
 
                 await _unitOfWork.CommitAsync();
 
-                // =====================================
-                // VALIDAR NOTIFICACIÓN
-                // =====================================
-
-                var shouldSendNotification =
-                    await _notificationPolicyService
-                        .ShouldSendNotificationAsync(request.RequestId);
-
-                if (!shouldSendNotification)
-                    return entities.Select(x => x.Id).ToList();
-
+                // ================================
+                // OBTENER DATOS PARA NOTIFICACIONES
+                // ================================
                 var reviewerEmail = await _userRepository
                     .GetEmailByRoleAsync((int)SystemRolesEnum.ReadView);
 
-                if (string.IsNullOrEmpty(reviewerEmail))
-                    return entities.Select(x => x.Id).ToList();
+                var reviewerUserId = await _userRepository
+                    .GetUserIdByRoleAsync((int)SystemRolesEnum.ReadView);
 
                 var requestInfo = await _notificationRepository
                     .GetRequestNotificationInfoAsync(request.RequestId);
@@ -156,22 +157,33 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
                 var administrativeUnitName = requestInfo?.AdministrativeUnitName ?? "No especificada";
                 var requestDescription = requestInfo?.Justification ?? "Sin justificación";
 
-                // Enviar correo mediante cola
-                _emailQueue.Enqueue(() =>
-                    _emailService.SendDocumentsUploadedAsync(
-                        reviewerEmail,
-                        _currentUserService.Email,
-                        requestNumber,
-                        administrativeUnitName,
-                        requestDescription,
-                        DateTime.Now,
-                        documentList
-                    )
-                );
+                // ================================
+                // ENVÍO DE CORREO (CONDICIONAL)
+                // Depende de política + email válido
+                // ================================
+                var shouldSendEmail =
+                    await _notificationPolicyService
+                        .ShouldSendNotificationAsync(request.RequestId);
 
-                var reviewerUserId = await _userRepository
-                    .GetUserIdByRoleAsync((int)SystemRolesEnum.ReadView);
+                if (shouldSendEmail && !string.IsNullOrEmpty(reviewerEmail))
+                {
+                    _emailQueue.Enqueue(() =>
+                        _emailService.SendDocumentsUploadedAsync(
+                            reviewerEmail,
+                            _currentUserService.Email,
+                            requestNumber,
+                            administrativeUnitName,
+                            requestDescription,
+                            DateTime.Now,
+                            documentList
+                        )
+                    );
+                }
 
+                // ================================
+                // NOTIFICACIÓN (SIEMPRE SE INTENTA)
+                // Independiente del correo y política
+                // ================================
                 if (reviewerUserId > 0)
                 {
                     await _mediator.Send(
@@ -189,6 +201,9 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
             }
             catch
             {
+                // ================================
+                // ROLLBACK + LIMPIEZA DE ARCHIVOS
+                // ================================
                 await _unitOfWork.RollbackAsync();
 
                 foreach (var path in uploadedPaths)

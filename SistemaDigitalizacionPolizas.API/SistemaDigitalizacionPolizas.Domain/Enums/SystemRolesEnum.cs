@@ -12,7 +12,16 @@ namespace SistemaDigitalizacionPolizas.Domain.Enums
     public enum SystemRolesEnum
     {
         //Quien ve el dashboard y puede aprobar o rechazar las pólizas
-        ReadView = 3,
+        //------
+        /// <summary>
+        /// TESORERIA
+        /// </summary>
+        ReadView = 9,
+
+
+        /// <summary>
+        /// Adqusiciones
+        /// </summary>
 
         //Quien administra las pólizas, puede cargar y eliminar pólizas
         AdministradorAdquisiciones = 4

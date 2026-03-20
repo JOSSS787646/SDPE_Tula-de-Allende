@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using Microsoft.Extensions.Logging;
 using SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Service.Service;
 using SistemaDigitalizacionPolizas.Domain.Entities.Document_Entities;
 using SistemaDigitalizacionPolizas.Domain.Enums;
@@ -10,7 +9,6 @@ using SistemaDigitalizacionPolizas.Infrastructure.Persistence.Services.UploatFil
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.RequestNotification;
 using SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Service.Service.Gmail_Services;
 using SistemaDigitalizacionPolizas.Application.Services.Notification_Service.Commands.CreateNotification;
-
 
 namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Service.Command.CreateMassiveExpedientDocument
 {
@@ -28,9 +26,6 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
         private readonly IEmailService _emailService;
         private readonly IUserRepository _userRepository;
         private readonly IEmailQueue _emailQueue;
-        private readonly ILogger<CreateMassiveExpedientDocumentCommandHandler> _logger;
-
-        // NUEVO
         private readonly IMediator _mediator;
 
         public CreateMassiveExpedientDocumentCommandHandler(
@@ -45,8 +40,7 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
             IEmailService emailService,
             IUserRepository userRepository,
             IEmailQueue emailQueue,
-            ILogger<CreateMassiveExpedientDocumentCommandHandler> logger,
-            IMediator mediator // NUEVO
+            IMediator mediator
         )
         {
             _repository = repository;
@@ -60,15 +54,14 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
             _emailService = emailService;
             _userRepository = userRepository;
             _emailQueue = emailQueue;
-            _logger = logger;
-
-            _mediator = mediator; // NUEVO
+            _mediator = mediator;
         }
 
         public async Task<List<int>> Handle(
             CreateMassiveExpedientDocumentCommand request,
             CancellationToken cancellationToken)
         {
+            // Validaciones iniciales
             if (request.Documents == null || !request.Documents.Any())
                 throw new Exception("Debe enviar al menos un archivo.");
 
@@ -83,16 +76,16 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
 
             try
             {
+                // Obtener estado "Cargado"
                 var cargadoStatus = await _statusRepository
                     .GetByCodeAsync((int)DocumentStatusEnum.Cargado);
 
                 if (cargadoStatus == null)
                     throw new Exception("No existe estado 'Cargado' configurado.");
 
-                // ============================================
-                // SUBIDA DE ARCHIVOS EN PARALELO
-                // ============================================
-
+                // =====================================================
+                // SUBIDA DE ARCHIVOS EN PARALELO (CONTROL DE CONCURRENCIA)
+                // =====================================================
                 var semaphore = new SemaphoreSlim(3);
 
                 var tasks = request.Documents.Select(async item =>
@@ -114,9 +107,7 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
                         );
 
                         lock (uploadedPaths)
-                        {
                             uploadedPaths.Add(filePath);
-                        }
 
                         var entity = new ExpedientDocument
                         {
@@ -134,9 +125,7 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
                         };
 
                         lock (entities)
-                        {
                             entities.Add(entity);
-                        }
                     }
                     finally
                     {
@@ -146,33 +135,22 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
 
                 await Task.WhenAll(tasks);
 
-                // ============================================
-                // GUARDAR DOCUMENTOS
-                // ============================================
-
+                // =====================================================
+                // PERSISTENCIA Y ACTUALIZACIÓN DE ESTADO
+                // =====================================================
                 await _repository.AddRangeAsync(entities);
 
+                // Recalcula el estatus de la solicitud con base en documentos cargados
                 await _requestStatusService.RecalculateStatus(request.RequestId);
 
                 await _unitOfWork.CommitAsync();
 
-                // ============================================
-                // VALIDAR ENVÍO DE CORREO
-                // ============================================
-
-                var shouldSendNotification =
-                    await _notificationPolicyService.ShouldSendNotificationAsync(request.RequestId);
-
-                if (!shouldSendNotification)
-                    return entities.Select(x => x.Id).ToList();
-
+                // =====================================================
+                // OBTENER DATOS NECESARIOS PARA NOTIFICACIONES
+                // =====================================================
                 var reviewerEmail = await _userRepository
                     .GetEmailByRoleAsync((int)SystemRolesEnum.ReadView);
 
-                if (string.IsNullOrEmpty(reviewerEmail))
-                    return entities.Select(x => x.Id).ToList();
-
-                // NUEVO: obtener userId del revisor
                 var reviewerUserId = await _userRepository
                     .GetUserIdByRoleAsync((int)SystemRolesEnum.ReadView);
 
@@ -187,26 +165,32 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
                 var administrativeUnitName = requestInfo?.AdministrativeUnitName ?? "No especificada";
                 var requestDescription = requestInfo?.Justification ?? "Sin justificación";
 
-                // ============================================
-                // ENVIAR CORREO POR COLA (WORKER)
-                // ============================================
+                // =====================================================
+                // ENVÍO DE CORREO (CONDICIONAL)
+                // Depende de política + existencia de email
+                // =====================================================
+                var shouldSendEmail =
+                    await _notificationPolicyService.ShouldSendNotificationAsync(request.RequestId);
 
-                _emailQueue.Enqueue(() =>
-                    _emailService.SendDocumentsUploadedAsync(
-                        reviewerEmail,
-                        _currentUserService.Email,
-                        requestNumber,
-                        administrativeUnitName,
-                        requestDescription,
-                        DateTime.Now,
-                        documentList
-                    )
-                );
+                if (shouldSendEmail && !string.IsNullOrEmpty(reviewerEmail))
+                {
+                    _emailQueue.Enqueue(() =>
+                        _emailService.SendDocumentsUploadedAsync(
+                            reviewerEmail,
+                            _currentUserService.Email,
+                            requestNumber,
+                            administrativeUnitName,
+                            requestDescription,
+                            DateTime.Now,
+                            documentList
+                        )
+                    );
+                }
 
-                // ============================================
-                // NUEVO: CREAR NOTIFICACIÓN (BD + REALTIME)
-                // ============================================
-
+                // =====================================================
+                // CREACIÓN DE NOTIFICACIÓN (SIEMPRE SE INTENTA)
+                // Independiente del correo
+                // =====================================================
                 if (reviewerUserId > 0)
                 {
                     await _mediator.Send(
@@ -218,18 +202,16 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
                         ),
                         cancellationToken
                     );
-
-                    Console.WriteLine($"ReviewerUserId: {reviewerUserId}");
-                    Console.WriteLine($"RequestId: {request.RequestId}");
-                    Console.WriteLine($"Entities: {entities.Count}");
                 }
 
                 return entities.Select(x => x.Id).ToList();
             }
             catch
             {
+                // Rollback de transacción
                 await _unitOfWork.RollbackAsync();
 
+                // Eliminación de archivos subidos en caso de error
                 foreach (var path in uploadedPaths)
                 {
                     await _fileStorageService.DeleteAsync(path);
