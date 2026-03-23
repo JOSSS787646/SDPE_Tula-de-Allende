@@ -35,5 +35,11 @@ namespace SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.INotificat
 
         // 📑 Preview de documentos (tu caso)
         Task<DocumentPreviewInfoDto?> GetDocumentsUploadedPreviewAsync(int requestId);
+
+        //Elimar una notificaion 
+        Task<bool> DeleteAsync(int notificationId);
+
+        // Eliminar todas las notificaciones de un usuario
+        Task DeleteAllByUserAsync(int userId);
     }
 }
