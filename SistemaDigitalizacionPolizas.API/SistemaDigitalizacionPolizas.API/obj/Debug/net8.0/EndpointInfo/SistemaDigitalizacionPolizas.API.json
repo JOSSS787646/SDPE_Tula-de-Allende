@@ -5135,6 +5135,14 @@
               "type": "string"
             },
             "nullable": true
+          },
+          "fileIds": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "nullable": true
           }
         },
         "additionalProperties": false

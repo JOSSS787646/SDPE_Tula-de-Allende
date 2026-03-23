@@ -63,6 +63,24 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.NotificationRe
             await _context.SaveChangesAsync();
         }
 
+        public async Task DeleteAsync(int notificationId)
+        {
+            var notification = await _context.Notifications
+                .FirstOrDefaultAsync(x => x.IdNotification == notificationId);
+
+            if (notification != null)
+            {
+                _context.Notifications.Remove(notification);
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        public async Task DeleteAllByUserAsync(int userId)
+        {
+            await _context.Notifications
+                .Where(x => x.UserId == userId)
+                .ExecuteDeleteAsync();
+        }
 
     }
 }
