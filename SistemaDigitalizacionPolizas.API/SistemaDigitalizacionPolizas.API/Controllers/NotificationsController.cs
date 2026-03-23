@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using SistemaDigitalizacionPolizas.Application.Services.Notification_Service.Commands.CreateNotification;
+using SistemaDigitalizacionPolizas.Application.Services.Notification_Service.Commands.DeleteAllNotificationsByUser;
+using SistemaDigitalizacionPolizas.Application.Services.Notification_Service.Commands.DeleteNotification;
 using SistemaDigitalizacionPolizas.Application.Services.Notification_Service.Commands.MarkAllNotificationsAsRead;
 using SistemaDigitalizacionPolizas.Application.Services.Notification_Service.Commands.MarkNotificationAsReadC;
 using SistemaDigitalizacionPolizas.Application.Services.Notification_Service.Queries.GetAllNotificationsByUser;
@@ -86,5 +88,23 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
             return Ok(id); 
         }
 
+        //Eliminar la notificación
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            await _mediator.Send(new DeleteNotificationCommand(id));
+
+            return NoContent(); 
+        }
+
+
+        [HttpDelete("user/{userId}")]
+        public async Task<IActionResult> DeleteAllByUser(int userId)
+        {
+            await _mediator.Send(new DeleteAllNotificationsByUserCommand(userId));
+
+            return NoContent(); 
+        }
     }
 }

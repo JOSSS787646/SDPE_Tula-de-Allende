@@ -127,6 +127,35 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.NotificationRe
                 Date = DateTime.Now,
                 Documents = documents
             };
+
+
+
+
+
         }
+
+        // -- Elimanr el registro
+        public async Task<bool> DeleteAsync(int notificationId)
+        {
+            var notification = await _context.Notifications
+                .FirstOrDefaultAsync(x => x.IdNotification == notificationId);
+
+            if (notification == null)
+                return false;
+
+            _context.Notifications.Remove(notification);
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
+
+        // -- Eliminar todas las notificaciones de un usuario
+        public async Task DeleteAllByUserAsync(int userId)
+        {
+            await _context.Notifications
+                .Where(x => x.UserId == userId)
+                .ExecuteDeleteAsync();
+        }
+
     }
 }
