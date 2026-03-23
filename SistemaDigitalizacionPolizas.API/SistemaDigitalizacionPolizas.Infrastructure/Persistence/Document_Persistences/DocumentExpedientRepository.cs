@@ -1,4 +1,5 @@
 ﻿using SistemaDigitalizacionPolizas.Domain.Dtos.AcquisitionRequest;
+using SistemaDigitalizacionPolizas.Domain.Dtos.ApplicationStatus;
 using SistemaDigitalizacionPolizas.Domain.Dtos.ExpedientDocument;
 using SistemaDigitalizacionPolizas.Domain.Entities.Document_Entities;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Document;
@@ -94,8 +95,7 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Document_Persi
         }
 
 
-        public async Task<(List<ExpedientDocument> Items, int Total)>
-     GetByClassificationAsync(int classificationId, int page, int pageSize)
+        public async Task<(List<ExpedientDocument> Items, int Total)> GetByClassificationAsync(int classificationId, int page, int pageSize)
         {
             var query = _context.ExpedientDocuments
                 .AsNoTracking()
@@ -128,19 +128,20 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Document_Persi
             if (classificationId == null)
                 return new List<RequestDocumentChecklistDto>();
 
-            // 1️⃣ Traer documentos del expediente UNA vez
+            // 1️⃣ Documentos del expediente
             var expedientDocs = await _context.ExpedientDocuments
-            .Where(x => x.RequestId == requestId && x.Active == true)
-             .Include(x => x.DocumentStatus) 
+                .Where(x => x.RequestId == requestId && x.Active == true)
+                .Include(x => x.DocumentStatus)
                 .AsNoTracking()
                 .ToListAsync();
-            // 2️⃣ Traer excepciones UNA vez
+
+            // 2️⃣ Excepciones
             var exceptions = await _context.RequestDocumentExceptions
                 .Where(x => x.IdRequest == requestId)
                 .AsNoTracking()
                 .ToListAsync();
 
-            // 3️⃣ Reglas de documentos por clasificación
+            // 3️⃣ Reglas
             var documentRules = await (
                 from tcd in _context.ClasificationDocumentTypes
                 join td in _context.Documents
@@ -156,7 +157,7 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Document_Persi
                 }
             )
             .AsNoTracking()
-               .ToListAsync();
+            .ToListAsync();
 
             var result = documentRules.Select(rule =>
             {
@@ -170,20 +171,37 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Document_Persi
                     DocumentName = rule.DocumentName,
                     RequiredByRule = rule.IsRequired,
 
+                    // 🔥 FIX bool?
                     NoApplies = exceptions.Any(x =>
                         x.IdDocumentType == rule.IdDocumentType &&
                         x.DoesNotApply == true),
 
                     Uploaded = docs.Any(),
 
+                    // 🔹 Observaciones al cargar
                     Observations = docs
-                        .Select(x => x.Observations)
-                        .FirstOrDefault(),
+                        .Where(x => !string.IsNullOrWhiteSpace(x.Observations))
+                        .Select(x => x.Observations!)
+                        .ToList(),
 
+                    // 🔥 Observaciones de revisión (upload)
+                    ObservationsUpload = docs
+                        .Where(x => !string.IsNullOrWhiteSpace(x.ObservationsUpload))
+                        .Select(x => x.ObservationsUpload!)
+                        .ToList(),
+
+                    // 🔥 Status completo
                     Status = docs
-                     .Select(x => x.DocumentStatus != null
-                       ? x.DocumentStatus.Description
-                      : "Sin estado")
+                        .Where(x => x.DocumentStatus != null)
+                        .GroupBy(x => x.DocumentStatus.idDocumentStatus)
+                        .Select(g => new DocumentStatusDto
+                        {
+                            idDocumentStatus = g.Key,
+                            Code = g.First().DocumentStatus.Code,
+                            Description = g.First().DocumentStatus.Description,
+                            Order = g.First().DocumentStatus.Order,
+                            Active = g.First().DocumentStatus.Active
+                        })
                         .ToList(),
 
                     FileIds = docs
@@ -198,10 +216,7 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Document_Persi
                         .Select(x => x.FilePath)
                         .ToList(),
 
-                    PreviewUrls = null,
-
-
-
+                    PreviewUrls = null
                 };
             }).ToList();
 

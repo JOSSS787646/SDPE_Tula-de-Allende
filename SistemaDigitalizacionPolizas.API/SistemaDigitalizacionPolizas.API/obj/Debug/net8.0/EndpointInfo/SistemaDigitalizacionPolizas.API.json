@@ -5322,6 +5322,31 @@
         },
         "additionalProperties": false
       },
+      "DocumentStatusDto": {
+        "type": "object",
+        "properties": {
+          "idDocumentStatus": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "code": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "order": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "active": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
       "ExpedientDocumentDto": {
         "type": "object",
         "properties": {
@@ -5579,13 +5604,23 @@
             "type": "boolean"
           },
           "observations": {
-            "type": "string",
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "observationsUpload": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
             "nullable": true
           },
           "status": {
             "type": "array",
             "items": {
-              "type": "string"
+              "$ref": "#/components/schemas/DocumentStatusDto"
             },
             "nullable": true
           },
