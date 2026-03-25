@@ -79,18 +79,20 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
                     .Where(d => d.DocumentTypeId == req.DocumentTypeId)
                     .ToList();
 
+                // No hay ningún documento de este tipo
                 if (!docsOfType.Any())
                 {
                     allApproved = false;
                     continue;
                 }
 
-                foreach (var doc in docsOfType)
+                // TODOS los documentos de este tipo deben estar aprobados
+                bool allOfTypeApproved = docsOfType
+                    .All(d => d.IdDocumentStatus == (int)DocumentStatusEnum.Aprobado);
+
+                if (!allOfTypeApproved)
                 {
-                    if (doc.IdDocumentStatus != (int)DocumentStatusEnum.Aprobado)
-                    {
-                        allApproved = false;
-                    }
+                    allApproved = false;
                 }
             }
 

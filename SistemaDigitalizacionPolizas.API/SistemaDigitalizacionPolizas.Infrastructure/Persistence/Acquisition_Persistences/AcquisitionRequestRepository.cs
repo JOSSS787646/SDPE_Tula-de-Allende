@@ -32,6 +32,7 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Acquisition_Pe
         public async Task<AcquisitionRequest?> GetByIdAsync(int id)
         {
             return await _context.AcquisitionRequests
+                .AsNoTracking() 
                 .FirstOrDefaultAsync(x => x.IdRequest == id);
         }
 
@@ -57,6 +58,7 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Acquisition_Pe
 
         public async Task UpdateAsync(AcquisitionRequest entity)
         {
+            _context.AcquisitionRequests.Update(entity); 
             await _context.SaveChangesAsync();
         }
 
@@ -186,8 +188,7 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Acquisition_Pe
         }
 
 
-        public async Task<(IEnumerable<AcquisitionRequestPolizaDto> Data, int TotalRecords)>
- GetAllPolizaInfoPaginatedAsync(int pageNumber, int pageSize)
+        public async Task<(IEnumerable<AcquisitionRequestPolizaDto> Data, int TotalRecords)>GetAllPolizaInfoPaginatedAsync(int pageNumber, int pageSize)
         {
             var query = _context.AcquisitionRequests
                 .AsNoTracking();

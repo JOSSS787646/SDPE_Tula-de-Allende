@@ -58,7 +58,9 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Document_Persi
         public async Task<List<ExpedientDocument>> GetActiveByRequestId(int requestId)
         {
             return await _context.ExpedientDocuments
+                 .AsNoTracking()
                 .Where(x =>
+
                     x.RequestId == requestId &&
                     x.Active == true)
                 .ToListAsync();
@@ -159,6 +161,7 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Document_Persi
             .AsNoTracking()
             .ToListAsync();
 
+            // 🔥 RESULTADO FINAL BIEN ESTRUCTURADO
             var result = documentRules.Select(rule =>
             {
                 var docs = expedientDocs
@@ -171,52 +174,39 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Document_Persi
                     DocumentName = rule.DocumentName,
                     RequiredByRule = rule.IsRequired,
 
-                    // 🔥 FIX bool?
                     NoApplies = exceptions.Any(x =>
                         x.IdDocumentType == rule.IdDocumentType &&
                         x.DoesNotApply == true),
 
                     Uploaded = docs.Any(),
 
-                    // 🔹 Observaciones al cargar
-                    Observations = docs
-                        .Where(x => !string.IsNullOrWhiteSpace(x.Observations))
-                        .Select(x => x.Observations!)
-                        .ToList(),
+                    // 🔥 AQUÍ ESTÁ LA CLAVE (todo por archivo)
+                    Files = docs.Select(x => new DocumentFileDto
+                    {
+                        FileId = x.Id,
+                        FileName = x.FileName,
+                        FileUrl = x.FilePath,
 
-                    // 🔥 Observaciones de revisión (upload)
-                    ObservationsUpload = docs
-                        .Where(x => !string.IsNullOrWhiteSpace(x.ObservationsUpload))
-                        .Select(x => x.ObservationsUpload!)
-                        .ToList(),
+                        // Se llena en el handler
+                        PreviewUrl = string.Empty,
 
-                    // 🔥 Status completo
-                    Status = docs
-                        .Where(x => x.DocumentStatus != null)
-                        .GroupBy(x => x.DocumentStatus.idDocumentStatus)
-                        .Select(g => new DocumentStatusDto
-                        {
-                            idDocumentStatus = g.Key,
-                            Code = g.First().DocumentStatus.Code,
-                            Description = g.First().DocumentStatus.Description,
-                            Order = g.First().DocumentStatus.Order,
-                            Active = g.First().DocumentStatus.Active
-                        })
-                        .ToList(),
+                        Observation = string.IsNullOrWhiteSpace(x.Observations)
+                            ? null
+                            : x.Observations,
 
-                    FileIds = docs
-                        .Select(x => x.Id)
-                        .ToList(),
+                        ObservationUpload = string.IsNullOrWhiteSpace(x.ObservationsUpload)
+                            ? null
+                            : x.ObservationsUpload,
 
-                    FileNames = docs
-                        .Select(x => x.FileName)
-                        .ToList(),
+                        Status = x.DocumentStatus == null
+                            ? null
+                            : new DocumentStatusSimpleDto
+                            {
+                                Id = x.DocumentStatus.idDocumentStatus,
+                                Description = x.DocumentStatus.Description
+                            }
 
-                    FileUrls = docs
-                        .Select(x => x.FilePath)
-                        .ToList(),
-
-                    PreviewUrls = null
+                    }).ToList()
                 };
             }).ToList();
 

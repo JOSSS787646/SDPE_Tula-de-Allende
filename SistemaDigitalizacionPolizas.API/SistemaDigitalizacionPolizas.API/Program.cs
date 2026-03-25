@@ -2,11 +2,8 @@
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-
-using SistemaDigitalizacionPolizas.API.BackgroundWorkers;
 using SistemaDigitalizacionPolizas.Application;
 using SistemaDigitalizacionPolizas.Infrastructure;
-
 using SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Service.Service.Gmail_Services;
 
 
@@ -79,12 +76,12 @@ builder.Services.AddCors(options =>
     {
         policy
             .WithOrigins(
-                "http://localhost:5173", // Vite
-                "http://localhost:3000"  // React
+                "http://localhost:5173", 
+                "http://localhost:3000"  
             )
             .AllowAnyHeader()
             .AllowAnyMethod()
-            .AllowCredentials(); // IMPORTANTE para SignalR
+            .AllowCredentials(); 
     });
 });
 
