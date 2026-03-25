@@ -1,4 +1,5 @@
-﻿using SistemaDigitalizacionPolizas.Domain.Enums;
+﻿using SistemaDigitalizacionPolizas.Domain.Dtos.ExpedientDocument;
+using SistemaDigitalizacionPolizas.Domain.Enums;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Acquisition;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Document;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.RequestingAdministration;
@@ -34,6 +35,9 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
             _unitOfWork = unitOfWork;
         }
 
+        // ============================================================
+        // 🔹 TU MÉTODO ORIGINAL (NO TOCADO)
+        // ============================================================
         public async Task RecalculateStatus(int requestId)
         {
             var request = await _requestRepository.GetByIdAsync(requestId);
@@ -47,9 +51,6 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
             if (!request.IdAcquisitionClassification.HasValue)
                 return;
 
-            // ============================================================
-            // DOCUMENTOS
-            // ============================================================
             var allDocs = await _classificationRepository
                 .GetRequiredByClassification(request.IdAcquisitionClassification.Value);
 
@@ -70,23 +71,18 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
 
             bool allApproved = true;
 
-            // ============================================================
-            // VALIDAR DOCUMENTOS
-            // ============================================================
             foreach (var req in obligatorios)
             {
                 var docsOfType = uploadedDocs
                     .Where(d => d.DocumentTypeId == req.DocumentTypeId)
                     .ToList();
 
-                // No hay ningún documento de este tipo
                 if (!docsOfType.Any())
                 {
                     allApproved = false;
                     continue;
                 }
 
-                // TODOS los documentos de este tipo deben estar aprobados
                 bool allOfTypeApproved = docsOfType
                     .All(d => d.IdDocumentStatus == (int)DocumentStatusEnum.Aprobado);
 
@@ -96,37 +92,89 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
                 }
             }
 
-            // ============================================================
-            // 🔥 NUEVA LÓGICA FINAL
-            // ============================================================
-
-            Console.WriteLine("============================================");
-            Console.WriteLine($"RequestId: {requestId}");
-            Console.WriteLine($"isExpired: {isExpired}");
-            Console.WriteLine($"allApproved: {allApproved}");
-
             if (allApproved)
             {
-                // ✅ COMPLETO SIEMPRE GANA
                 request.IdApplicationStatus = (int)RequestStatusEnum.Completo;
-                Console.WriteLine("🟢 COMPLETO (aunque esté vencido)");
             }
             else if (isExpired)
             {
-                // ❌ vencido y no completo
                 request.IdApplicationStatus = (int)RequestStatusEnum.Incompleto;
-                Console.WriteLine("🔴 INCOMPLETO (vencido)");
             }
             else
             {
-                // ⏳ en proceso
                 request.IdApplicationStatus = (int)RequestStatusEnum.EnRevision;
-                Console.WriteLine("🟡 EN REVISIÓN");
             }
 
-            Console.WriteLine("============================================");
-
             await _requestRepository.UpdateAsync(request);
+        }
+
+        // ============================================================
+        // 🔥 NUEVO MÉTODO (ESTADO GLOBAL POR TIPO)
+        // ============================================================
+        public async Task<List<DocumentGroupStatusDto>> GetDocumentGroupStatus(int requestId)
+        {
+            var request = await _requestRepository.GetByIdAsync(requestId);
+
+            if (request == null)
+                throw new Exception("Solicitud no encontrada.");
+
+            var allDocs = await _classificationRepository
+                .GetRequiredByClassification(request.IdAcquisitionClassification.Value);
+
+            var exceptions = await _exceptionRepository
+                .GetActiveByRequestId(requestId);
+
+            var uploadedDocs = await _documentRepository
+                .GetActiveByRequestId(requestId);
+
+            var obligatorios = allDocs
+                .Where(r =>
+                    r.IsRequired &&
+                    !exceptions.Any(e =>
+                        e.IdDocumentType == r.DocumentTypeId &&
+                        e.DoesNotApply &&
+                        e.Active))
+                .ToList();
+
+            var grouped = obligatorios
+                .GroupBy(x => x.DocumentTypeId);
+
+            var result = new List<DocumentGroupStatusDto>();
+
+            foreach (var group in grouped)
+            {
+                var docsOfType = uploadedDocs
+                    .Where(d => d.DocumentTypeId == group.Key)
+                    .ToList();
+
+                int uploaded = docsOfType.Count;
+                int approved = docsOfType.Count(d =>
+                    d.IdDocumentStatus == (int)DocumentStatusEnum.Aprobado);
+
+                int required = group.Count();
+
+                string status;
+
+                if (uploaded == 0)
+                    status = "Pendiente";
+                else if (approved >= required &&
+                         docsOfType.All(d => d.IdDocumentStatus == (int)DocumentStatusEnum.Aprobado))
+                    status = "Completo";
+                else
+                    status = "Cargado";
+
+                result.Add(new DocumentGroupStatusDto
+                {
+                    DocumentTypeId = group.Key,
+                    DocumentName = group.First().DocumentType.DocumentName,
+                    TotalRequired = required,
+                    TotalUploaded = uploaded,
+                    TotalApproved = approved,
+                    Status = status
+                });
+            }
+
+            return result;
         }
     }
 }

@@ -19,6 +19,9 @@ namespace SistemaDigitalizacionPolizas.Domain.Dtos.AcquisitionRequest
 
         public bool Uploaded { get; set; }
 
+        //Estado global del documento (Pendiente, Cargado, En revisión, Completo)
+        public string GlobalStatus { get; set; } = null!;
+
         // 🔥 Todo agrupado por archivo
         public List<DocumentFileDto> Files { get; set; } = new();
     }
@@ -38,6 +41,7 @@ namespace SistemaDigitalizacionPolizas.Domain.Dtos.AcquisitionRequest
 
         // 🔥 Observación en revisión
         public string? ObservationUpload { get; set; }
+
 
         // 🔥 Status simplificado
         public DocumentStatusSimpleDto? Status { get; set; }
