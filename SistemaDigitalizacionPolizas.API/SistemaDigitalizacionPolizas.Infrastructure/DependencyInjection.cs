@@ -3,7 +3,6 @@
 using SistemaDigitalizacionPolizas.Application.Interfaces;
 using SistemaDigitalizacionPolizas.Application.Services.Pdf_Service;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Acquisition;
-using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Actions;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.AdministrtiveUnit;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Community;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Document;
@@ -19,7 +18,6 @@ using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.StatusRequest;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Suppliers;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Services;
 using SistemaDigitalizacionPolizas.Infrastructure.Persistence.Acquisition_Persistences;
-using SistemaDigitalizacionPolizas.Infrastructure.Persistence.Action_Persistences;
 using SistemaDigitalizacionPolizas.Infrastructure.Persistence.AdministrativeUnit_Persistences;
 using SistemaDigitalizacionPolizas.Infrastructure.Persistence.ApplicationStatus_Persistences;
 using SistemaDigitalizacionPolizas.Infrastructure.Persistence.Community_Persistences;
@@ -90,8 +88,6 @@ namespace SistemaDigitalizacionPolizas.Infrastructure
             services.AddScoped<IAcquisitionClassificationRepository, AcquisitionClassificationRepository>();
             //Supplier Repository
             services.AddScoped<ISupplierRepository, SupplierRepository>();
-            //Action Policy Repository
-            services.AddScoped<IActionPolicyRepository, ActionPolicyRepository>();
             //Document Type Repository
             services.AddScoped<IDocumentTypeRepository, DocumentTypeRepository>();
             //Clasification Document Type Repository

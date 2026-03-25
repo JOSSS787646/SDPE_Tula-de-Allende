@@ -1,5 +1,4 @@
 ﻿using SistemaDigitalizacionPolizas.Domain.Entities.Acquisition_Entities;
-using SistemaDigitalizacionPolizas.Domain.Entities.Actions_Entities;
 using SistemaDigitalizacionPolizas.Domain.Entities.RequestingAdministration_Entities;
 using System;
 using System.Collections.Generic;

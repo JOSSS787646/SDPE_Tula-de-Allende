@@ -140,11 +140,14 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
                 // ================================
                 // OBTENER DATOS PARA NOTIFICACIONES
                 // ================================
-                var reviewerEmail = await _userRepository
-                    .GetEmailByRoleAsync((int)SystemRolesEnum.ReadView);
 
-                var reviewerUserId = await _userRepository
-                    .GetUserIdByRoleAsync((int)SystemRolesEnum.ReadView);
+                // *** CORRECCIÓN PRINCIPAL ***
+                // Se obtienen TODOS los emails e IDs del rol ReadView, no solo uno
+                var reviewerEmails = await _userRepository
+                    .GetEmailsByRoleAsync((int)SystemRolesEnum.ReadView);
+
+                var reviewerUserIds = await _userRepository
+                    .GetUserIdsByRoleAsync((int)SystemRolesEnum.ReadView);
 
                 var requestInfo = await _notificationRepository
                     .GetRequestNotificationInfoAsync(request.RequestId);
@@ -159,32 +162,38 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
 
                 // ================================
                 // ENVÍO DE CORREO (CONDICIONAL)
-                // Depende de política + email válido
+                // Se itera sobre TODOS los revisores con el rol
                 // ================================
                 var shouldSendEmail =
                     await _notificationPolicyService
                         .ShouldSendNotificationAsync(request.RequestId);
 
-                if (shouldSendEmail && !string.IsNullOrEmpty(reviewerEmail))
+                if (shouldSendEmail && reviewerEmails.Any())
                 {
-                    _emailQueue.Enqueue(() =>
-                        _emailService.SendDocumentsUploadedAsync(
-                            reviewerEmail,
-                            _currentUserService.Email,
-                            requestNumber,
-                            administrativeUnitName,
-                            requestDescription,
-                            DateTime.Now,
-                            documentList
-                        )
-                    );
+                    foreach (var email in reviewerEmails.Where(e => !string.IsNullOrEmpty(e)))
+                    {
+                        // Captura local para evitar closure bug en el loop
+                        var capturedEmail = email;
+
+                        _emailQueue.Enqueue(() =>
+                            _emailService.SendDocumentsUploadedAsync(
+                                capturedEmail,
+                                _currentUserService.Email,
+                                requestNumber,
+                                administrativeUnitName,
+                                requestDescription,
+                                DateTime.Now,
+                                documentList
+                            )
+                        );
+                    }
                 }
 
                 // ================================
-                // NOTIFICACIÓN (SIEMPRE SE INTENTA)
-                // Independiente del correo y política
+                // NOTIFICACIÓN IN-APP
+                // Se itera sobre TODOS los revisores con el rol
                 // ================================
-                if (reviewerUserId > 0)
+                foreach (var reviewerUserId in reviewerUserIds.Where(id => id > 0))
                 {
                     await _mediator.Send(
                         new CreateNotificationCommand(

@@ -61,7 +61,6 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
             CreateMassiveExpedientDocumentCommand request,
             CancellationToken cancellationToken)
         {
-            // Validaciones iniciales
             if (request.Documents == null || !request.Documents.Any())
                 throw new Exception("Debe enviar al menos un archivo.");
 
@@ -72,26 +71,18 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
             var entities = new List<ExpedientDocument>();
             var userId = _currentUserService.UserId;
 
-            // =====================================================
-            // CAPTURA DEL EMAIL MIENTRAS EL HTTPCONTEXT VIVE
-            // (antes de cualquier await largo o enqueue)
-            // =====================================================
             var uploaderEmail = _currentUserService.Email;
 
             await _unitOfWork.BeginTransactionAsync();
 
             try
             {
-                // Obtener estado "Cargado"
                 var cargadoStatus = await _statusRepository
                     .GetByCodeAsync((int)DocumentStatusEnum.Cargado);
 
                 if (cargadoStatus == null)
                     throw new Exception("No existe estado 'Cargado' configurado.");
 
-                // =====================================================
-                // SUBIDA DE ARCHIVOS EN PARALELO (CONTROL DE CONCURRENCIA)
-                // =====================================================
                 var semaphore = new SemaphoreSlim(3);
 
                 var tasks = request.Documents.Select(async item =>
@@ -141,25 +132,20 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
 
                 await Task.WhenAll(tasks);
 
-                // =====================================================
-                // PERSISTENCIA Y ACTUALIZACIÓN DE ESTADO
-                // =====================================================
                 await _repository.AddRangeAsync(entities);
 
                 await _requestStatusService.RecalculateStatus(request.RequestId);
 
                 await _unitOfWork.CommitAsync();
 
-                // =====================================================
-                // OBTENER DATOS NECESARIOS PARA NOTIFICACIONES
-                // =====================================================
+                // ================================
+                // 🔥 CAMBIO IMPORTANTE AQUÍ
+                // ================================
+                var reviewerEmails = await _userRepository
+                    .GetEmailsByRoleAsync((int)SystemRolesEnum.ReadView);
 
-                // Email del revisor (ReadView = Tesorería) — destinatario del correo
-                var reviewerEmail = await _userRepository
-                    .GetEmailByRoleAsync((int)SystemRolesEnum.ReadView);
-
-                var reviewerUserId = await _userRepository
-                    .GetUserIdByRoleAsync((int)SystemRolesEnum.ReadView);
+                var reviewerUserIds = await _userRepository
+                    .GetUserIdsByRoleAsync((int)SystemRolesEnum.ReadView);
 
                 var requestInfo = await _notificationRepository
                     .GetRequestNotificationInfoAsync(request.RequestId);
@@ -172,39 +158,42 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
                 var administrativeUnit = requestInfo?.AdministrativeUnitName ?? "No especificada";
                 var requestDescription = requestInfo?.Justification ?? "Sin justificación";
 
-                // =====================================================
-                // ENVÍO DE CORREO (CONDICIONAL)
-                // Depende de política + existencia de email
-                // =====================================================
                 var shouldSendEmail =
                     await _notificationPolicyService.ShouldSendNotificationAsync(request.RequestId);
 
-                if (shouldSendEmail && !string.IsNullOrEmpty(reviewerEmail))
+                // ================================
+                // ENVÍO MULTIPLE
+                // ================================
+                if (shouldSendEmail && reviewerEmails.Any())
                 {
-                    // uploaderEmail ya fue capturado al inicio del Handle,
-                    // mientras el HttpContext aún vivía. Aquí es solo un string.
-                    _emailQueue.Enqueue(() =>
-                        _emailService.SendDocumentsUploadedAsync(
-                            to: reviewerEmail,
-                            userName: uploaderEmail,          // ← email de AdministradorAdquisiciones (rol 4)
-                            requestId: requestNumber,
-                            administrativeUnit: administrativeUnit,
-                            requestDescription: requestDescription,
-                            date: DateTime.Now,
-                            documentsList: documentList
-                        )
-                    );
+                    foreach (var email in reviewerEmails
+                        .Where(e => !string.IsNullOrWhiteSpace(e))
+                        .Distinct())
+                    {
+                        var capturedEmail = email;
+
+                        _emailQueue.Enqueue(() =>
+                            _emailService.SendDocumentsUploadedAsync(
+                                to: capturedEmail,
+                                userName: uploaderEmail,
+                                requestId: requestNumber,
+                                administrativeUnit: administrativeUnit,
+                                requestDescription: requestDescription,
+                                date: DateTime.Now,
+                                documentsList: documentList
+                            )
+                        );
+                    }
                 }
 
-                // =====================================================
-                // CREACIÓN DE NOTIFICACIÓN (SIEMPRE SE INTENTA)
-                // Independiente del correo
-                // =====================================================
-                if (reviewerUserId > 0)
+                // ================================
+                // NOTIFICACIONES MULTI
+                // ================================
+                foreach (var userIdNotif in reviewerUserIds.Where(id => id > 0))
                 {
                     await _mediator.Send(
                         new CreateNotificationCommand(
-                            reviewerUserId,
+                            userIdNotif,
                             "Documentos cargados",
                             $"Se cargaron {entities.Count} documento(s) en la solicitud {requestNumber}",
                             request.RequestId

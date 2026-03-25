@@ -27,5 +27,8 @@ namespace SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Auth
 
         Task<int> GetUserIdByRoleAsync(int roleId);
 
+        Task<List<string>> GetEmailsByRoleAsync(int roleId);
+        Task<List<int>> GetUserIdsByRoleAsync(int roleId);
+
     }
 }

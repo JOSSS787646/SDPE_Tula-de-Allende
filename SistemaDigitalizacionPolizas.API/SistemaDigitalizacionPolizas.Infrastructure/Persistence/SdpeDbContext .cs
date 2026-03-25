@@ -1,7 +1,6 @@
 ﻿using Azure.Core;
 using SistemaDigitalizacionPolizas.Domain.Entities.Acquisition_Entities;
 using SistemaDigitalizacionPolizas.Domain.Entities.AcquisitionRequest_Entities;
-using SistemaDigitalizacionPolizas.Domain.Entities.Actions_Entities;
 using SistemaDigitalizacionPolizas.Domain.Entities.ApplicationStatus;
 using SistemaDigitalizacionPolizas.Domain.Entities.Auth_Entities;
 using SistemaDigitalizacionPolizas.Domain.Entities.Community_Entities;
@@ -33,7 +32,6 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence
         public DbSet<FundingSource> FundingSources { get; set; }
         public DbSet<Proyect> Proyects { get; set; }
         public DbSet<Prog> Progs { get; set; }
-        public DbSet <ActionsPolicy> Actions { get; set; }
         public DbSet<Community> Communities { get; set; }
         public DbSet<Beneficiary> Beneficiaries { get; set; }
         public DbSet<AcquisitionType> AcquisitionTypes { get; set; }

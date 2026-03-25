@@ -23,6 +23,7 @@ namespace SistemaDigitalizacionPolizas.Application.Services.AcqusitionRequest_Se
         private readonly IUserRepository _userRepository;
         private readonly IEmailQueue _emailQueue;
         private readonly IMediator _mediator;
+        private readonly ICurrentUserService _currentUserService;
 
         public ReviewDocumentCommandHandler(
             IDocumentExpedientRepository repository,
@@ -33,7 +34,8 @@ namespace SistemaDigitalizacionPolizas.Application.Services.AcqusitionRequest_Se
             IEmailService emailService,
             IUserRepository userRepository,
             IEmailQueue emailQueue,
-            IMediator mediator)
+            IMediator mediator,
+            ICurrentUserService currentUserService)
         {
             _repository = repository;
             _requestStatusService = requestStatusService;
@@ -45,6 +47,7 @@ namespace SistemaDigitalizacionPolizas.Application.Services.AcqusitionRequest_Se
             _userRepository = userRepository;
             _emailQueue = emailQueue;
             _mediator = mediator;
+            _currentUserService = currentUserService;
         }
 
         public async Task<bool> Handle(
@@ -61,7 +64,6 @@ namespace SistemaDigitalizacionPolizas.Application.Services.AcqusitionRequest_Se
 
             // ================================
             // VALIDACIÓN DE NEGOCIO
-            // Si es observado, debe tener observaciones
             // ================================
             if (request.DocumentStatusId == (int)DocumentStatusEnum.Observado &&
                 string.IsNullOrWhiteSpace(request.ObservationsUpload))
@@ -77,27 +79,22 @@ namespace SistemaDigitalizacionPolizas.Application.Services.AcqusitionRequest_Se
 
             await _repository.UpdateAsync(document);
 
-            // Importante: persistir antes del recalculo
             await _unitOfWork.SaveChangesAsync();
 
             // ================================
-            // REGLA DE NEGOCIO:
-            // RECALCULAR ESTADO DE LA SOLICITUD
+            // RECALCULAR ESTADO
             // ================================
             await _requestStatusService.RecalculateStatus(document.RequestId);
 
             // ================================
-            // OBTENER DATOS PARA NOTIFICACIONES
+            // DATOS PARA NOTIFICACIÓN
             // ================================
-            var reviewerEmail = await _userRepository
-                .GetEmailByRoleAsync((int)SystemRolesEnum.ReadView);
-
             var result = request.DocumentStatusId == (int)DocumentStatusEnum.Aprobado
                 ? "Aprobado"
                 : "Observado";
 
             string? managerEmail = null;
-            string? adminEmail = null;
+            List<string> adminEmails = new();
             string requestNumber = "";
 
             if (request.DocumentStatusId == (int)DocumentStatusEnum.Aprobado)
@@ -110,8 +107,9 @@ namespace SistemaDigitalizacionPolizas.Application.Services.AcqusitionRequest_Se
                     managerEmail = info.ManagerEmail;
                     requestNumber = info.RequestNumber;
 
-                    adminEmail = await _userRepository
-                        .GetEmailByRoleAsync((int)SystemRolesEnum.AdministradorAdquisiciones);
+                    // 🔥 AQUÍ YA TRAES TODOS LOS ADMINS
+                    adminEmails = await _userRepository
+                        .GetEmailsByRoleAsync((int)SystemRolesEnum.AdministradorAdquisiciones);
                 }
             }
             else
@@ -122,40 +120,50 @@ namespace SistemaDigitalizacionPolizas.Application.Services.AcqusitionRequest_Se
                 if (info != null)
                 {
                     managerEmail = info.ManagerEmail;
-                    adminEmail = info.AdminEmail;
                     requestNumber = info.RequestNumber;
+
+                    // si aquí también quieres múltiples admins:
+                    adminEmails = await _userRepository
+                        .GetEmailsByRoleAsync((int)SystemRolesEnum.AdministradorAdquisiciones);
                 }
             }
 
             // ================================
-            // ENVÍO DE CORREO (CONDICIONAL)
-            // Depende de política + emails válidos
+            // NORMALIZAR DESTINATARIOS
+            // ================================
+            var recipients = new List<string>();
+
+            if (IsValidEmail(managerEmail))
+                recipients.Add(managerEmail!);
+
+            // 🔥 CLAVE: agregar TODOS los admins
+            recipients.AddRange(adminEmails);
+
+            recipients = recipients
+                .Where(e => !string.IsNullOrWhiteSpace(e))
+                .Distinct()
+                .ToList();
+
+            // DEBUG (opcional)
+            // Console.WriteLine($"Correos a enviar: {recipients.Count}");
+
+            // ================================
+            // ENVÍO DE CORREOS
             // ================================
             var shouldSendEmail =
-                await _notificationPolicyService.ShouldSendNotificationAsync(document.RequestId);
+                await _notificationPolicyService
+                    .ShouldSendNotificationAsync(document.RequestId);
 
-            if (shouldSendEmail)
+            if (shouldSendEmail && recipients.Any())
             {
-                if (IsValidEmail(managerEmail))
+                foreach (var email in recipients)
                 {
-                    _emailQueue.Enqueue(() =>
-                        _emailService.SendDocumentReviewedAsync(
-                            managerEmail,
-                            reviewerEmail,
-                            requestNumber,
-                            document.FileName,
-                            result,
-                            document.ObservationsUpload
-                        )
-                    );
-                }
+                    var capturedEmail = email;
 
-                if (IsValidEmail(adminEmail))
-                {
                     _emailQueue.Enqueue(() =>
                         _emailService.SendDocumentReviewedAsync(
-                            adminEmail,
-                            reviewerEmail,
+                            capturedEmail,
+                            _currentUserService.Email,
                             requestNumber,
                             document.FileName ?? "Documento no identificado",
                             result,
@@ -166,13 +174,12 @@ namespace SistemaDigitalizacionPolizas.Application.Services.AcqusitionRequest_Se
             }
 
             // ================================
-            // NOTIFICACIÓN (SIEMPRE SE INTENTA)
-            // Independiente del correo
+            // NOTIFICACIONES IN-APP (MULTI)
             // ================================
-            var adquisicionesUserId = await _userRepository
-                .GetUserIdByRoleAsync((int)SystemRolesEnum.AdministradorAdquisiciones);
+            var adquisicionesUserIds = await _userRepository
+                .GetUserIdsByRoleAsync((int)SystemRolesEnum.AdministradorAdquisiciones);
 
-            if (adquisicionesUserId > 0)
+            foreach (var userId in adquisicionesUserIds.Where(id => id > 0))
             {
                 var statusText = request.DocumentStatusId == (int)DocumentStatusEnum.Aprobado
                     ? "aprobado"
@@ -180,7 +187,7 @@ namespace SistemaDigitalizacionPolizas.Application.Services.AcqusitionRequest_Se
 
                 await _mediator.Send(
                     new CreateNotificationCommand(
-                        adquisicionesUserId,
+                        userId,
                         "Revisión de documento",
                         $"El documento '{document.FileName}' fue {statusText} en la solicitud {requestNumber}",
                         document.RequestId
@@ -194,7 +201,6 @@ namespace SistemaDigitalizacionPolizas.Application.Services.AcqusitionRequest_Se
 
         // ================================
         // VALIDACIÓN DE EMAIL
-        // Verifica formato correcto
         // ================================
         private bool IsValidEmail(string? email)
         {
