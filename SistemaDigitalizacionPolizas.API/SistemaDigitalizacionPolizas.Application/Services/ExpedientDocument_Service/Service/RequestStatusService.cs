@@ -136,8 +136,7 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
                         e.Active))
                 .ToList();
 
-            var grouped = obligatorios
-                .GroupBy(x => x.DocumentTypeId);
+            var grouped = obligatorios.GroupBy(x => x.DocumentTypeId);
 
             var result = new List<DocumentGroupStatusDto>();
 
@@ -148,20 +147,40 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
                     .ToList();
 
                 int uploaded = docsOfType.Count;
-                int approved = docsOfType.Count(d =>
-                    d.IdDocumentStatus == (int)DocumentStatusEnum.Aprobado);
-
+                int approved = docsOfType.Count(d => d.IdDocumentStatus == (int)DocumentStatusEnum.Aprobado);
+                int observed = docsOfType.Count(d => d.IdDocumentStatus == (int)DocumentStatusEnum.Observado);
+                int loaded = docsOfType.Count(d => d.IdDocumentStatus == (int)DocumentStatusEnum.Cargado);
                 int required = group.Count();
 
-                string status;
+                DocumentGroupStatus status;
 
+                // 1. Pendiente — no hay ningún documento subido
                 if (uploaded == 0)
-                    status = "Pendiente";
+                {
+                    status = DocumentGroupStatus.Pendiente;
+                }
+                // 2. Observado — al menos uno está observado (máxima prioridad negativa)
+                else if (observed > 0)
+                {
+                    status = DocumentGroupStatus.Observado;
+                }
+                // 3. Cargado — al menos uno está en estado Cargado
+                //    (no importa que los demás estén aprobados)
+                else if (loaded > 0)
+                {
+                    status = DocumentGroupStatus.Cargado;
+                }
+                // 4. Completo — todos están aprobados y se cubre la cantidad requerida
                 else if (approved >= required &&
                          docsOfType.All(d => d.IdDocumentStatus == (int)DocumentStatusEnum.Aprobado))
-                    status = "Completo";
+                {
+                    status = DocumentGroupStatus.Completo;
+                }
+                // 5. Fallback — hay documentos pero ninguno encaja en los casos anteriores
                 else
-                    status = "Cargado";
+                {
+                    status = DocumentGroupStatus.Cargado;
+                }
 
                 result.Add(new DocumentGroupStatusDto
                 {

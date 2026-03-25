@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using SistemaDigitalizacionPolizas.Domain.Constants;
 using SistemaDigitalizacionPolizas.Domain.Dtos.AcquisitionRequest;
 using SistemaDigitalizacionPolizas.Domain.Enums;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Document;
@@ -30,15 +31,15 @@ namespace SistemaDigitalizacionPolizas.Application.Services.AcqusitionRequest_Se
             foreach (var document in result)
             {
                 // ================================
-                // 🔥 CALCULAR ESTADO GLOBAL
+                // CALCULAR ESTADO GLOBAL
                 // ================================
                 if (!document.RequiredByRule || document.NoApplies)
                 {
-                    document.GlobalStatus = "No aplica";
+                    document.GlobalStatus = DocumentGlobalStatus.NoAplica;
                 }
                 else if (document.Files == null || !document.Files.Any())
                 {
-                    document.GlobalStatus = "Pendiente";
+                    document.GlobalStatus = DocumentGlobalStatus.Pendiente;
                 }
                 else
                 {
@@ -48,18 +49,34 @@ namespace SistemaDigitalizacionPolizas.Application.Services.AcqusitionRequest_Se
                         f.Status != null &&
                         f.Status.Id == (int)DocumentStatusEnum.Aprobado);
 
-                    if (approved == uploaded && uploaded > 0)
+                    int observed = document.Files.Count(f =>
+                        f.Status != null &&
+                        f.Status.Id == (int)DocumentStatusEnum.Observado);
+
+                    int loaded = document.Files.Count(f =>
+                        f.Status != null &&
+                        f.Status.Id == (int)DocumentStatusEnum.Cargado);
+
+                    if (observed > 0)
                     {
-                        document.GlobalStatus = "Completo";
+                        document.GlobalStatus = DocumentGlobalStatus.Observado;
+                    }
+                    else if (loaded > 0)
+                    {
+                        document.GlobalStatus = DocumentGlobalStatus.Cargado;
+                    }
+                    else if (approved == uploaded && uploaded > 0)
+                    {
+                        document.GlobalStatus = DocumentGlobalStatus.Completo;
                     }
                     else
                     {
-                        document.GlobalStatus = "Cargado";
+                        document.GlobalStatus = DocumentGlobalStatus.Cargado;
                     }
                 }
 
                 // ================================
-                // 🔥 TU LÓGICA ACTUAL (NO TOCADA)
+                // GENERAR PREVIEW URLs (SIN CAMBIOS)
                 // ================================
                 if (document.Files != null && document.Files.Any())
                 {

@@ -7,21 +7,24 @@ using System.Threading.Tasks;
 
 namespace SistemaDigitalizacionPolizas.Application.Helpers
 {
-    public static class DocumentGroupStatusExtensions
-    {
+
 
         //AQUI SE CAMBIAN LOS NOMBRES DEL ESTADO EL DOCUMENTO ACTUAL
         //Y EL COLOR QUE SE MOSTRARA EN LA INTERFAZ DE USUARIO
-        public static (string label, string color) ToUi(this DocumentGroupStatus status)
+        public static class DocumentGroupStatusExtensions
         {
-            return status switch
+            // 🔥 Devuelve solo el label (sin color)
+            public static string ToLabel(this DocumentGroupStatus status)
             {
-                DocumentGroupStatus.Pendiente => ("Pendiente", "gray"),
-                DocumentGroupStatus.Cargado => ("Cargado", "blue"),
-                DocumentGroupStatus.EnRevision => ("En revisión", "orange"),
-                DocumentGroupStatus.Completo => ("Completo", "green"),
-                _ => ("Desconocido", "black")
-            };
-        }
+                return status switch
+                {
+                    DocumentGroupStatus.Pendiente => "Pendiente",
+                    DocumentGroupStatus.Cargado => "Cargado",
+                    DocumentGroupStatus.Observado => "Observado",
+                    DocumentGroupStatus.Completo => "Completo",
+                    _ => "Desconocido"
+                };
+            }
+        
     }
 }
