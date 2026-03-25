@@ -23,6 +23,8 @@ namespace SistemaDigitalizacionPolizas.Domain.Dtos.Pdf
         public string? Project { get; set; }                    // Proyecto
         public DateTime? RequestDate { get; set; }              // Fecha de Solicitud
 
+
+
         // ── Justificación ────────────────────────────────────
         public string? Justification { get; set; }
 

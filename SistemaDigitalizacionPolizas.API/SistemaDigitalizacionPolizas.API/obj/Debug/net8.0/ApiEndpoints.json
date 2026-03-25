@@ -1810,6 +1810,22 @@
   },
   {
     "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.PdfController",
+    "Method": "GetChecklistPdf",
+    "RelativePath": "api/Pdf/checklist/{requestId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "requestId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.PdfController",
     "Method": "GetFormPdf",
     "RelativePath": "api/Pdf/form/{id}",
     "HttpMethod": "GET",

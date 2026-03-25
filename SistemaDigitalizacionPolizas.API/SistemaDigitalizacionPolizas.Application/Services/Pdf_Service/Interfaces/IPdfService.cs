@@ -19,5 +19,10 @@ namespace SistemaDigitalizacionPolizas.Application.Services.Pdf_Service
         /// </summary>
         byte[] GenerateAcquisitionRequestFormPdf(AcquisitionRequestFormPdfDto dto);
 
+        /// <summary>
+        /// Documento 1 — Réplica del formulario físico del check list (mismo layout que el impreso).
+        /// </summary>
+        byte[] GenerateChecklistPdf(AcquisitionChecklistPdfDto dto);
+
     }
 }

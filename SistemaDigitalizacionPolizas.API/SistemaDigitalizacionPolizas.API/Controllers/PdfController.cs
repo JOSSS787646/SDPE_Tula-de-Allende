@@ -1,4 +1,5 @@
 ﻿using SistemaDigitalizacionPolizas.Application.Services.Pdf_Service.Commands.GenerateAcquisitionRequestFormPdf;
+using SistemaDigitalizacionPolizas.Application.Services.Pdf_Service.Commands.GenerateChecklistPdf;
 using SistemaDigitalizacionPolizas.Application.Services.Pdf_Service.Query.GetAcquisitionRequestPdf;
 
 namespace SistemaDigitalizacionPolizas.API.Controllers
@@ -38,6 +39,26 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
             );
 
             return File(pdf, "application/pdf", $"Formulario_{id}.pdf");
+        }
+
+
+        /// <summary>
+        /// 📄 Genera y descarga el PDF del checklist de documentos
+        /// </summary>
+        [HttpGet("checklist/{requestId}")]
+        public async Task<IActionResult> GetChecklistPdf(int requestId)
+        {
+            var pdfBytes = await _mediator
+                .Send(new GenerateChecklistPdfCommand(requestId));
+
+            if (pdfBytes == null || pdfBytes.Length == 0)
+                return NotFound("No se pudo generar el PDF");
+
+            return File(
+                pdfBytes,
+                "application/pdf",
+                $"Checklist_{requestId}.pdf"
+            );
         }
     }
 
