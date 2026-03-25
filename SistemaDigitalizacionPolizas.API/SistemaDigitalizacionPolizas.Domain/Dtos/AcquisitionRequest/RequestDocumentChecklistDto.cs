@@ -19,20 +19,34 @@ namespace SistemaDigitalizacionPolizas.Domain.Dtos.AcquisitionRequest
 
         public bool Uploaded { get; set; }
 
-        // 🔹 Observaciones al cargar
-        public List<string>? Observations { get; set; }
+        // 🔥 Todo agrupado por archivo
+        public List<DocumentFileDto> Files { get; set; } = new();
+    }
 
-        // 🔥 Observaciones cuando está OBSERVADO
-        public List<string>? ObservationsUpload { get; set; }
+    public class DocumentFileDto
+    {
+        public int FileId { get; set; }
 
-        public List<DocumentStatusDto>? Status { get; set; }
+        public string FileName { get; set; } = null!;
 
-        public List<string>? FileNames { get; set; }
+        public string FileUrl { get; set; } = null!;
 
-        public List<string>? FileUrls { get; set; }
+        public string PreviewUrl { get; set; } = null!;
 
-        public List<string>? PreviewUrls { get; set; }
+        // 🔹 Observación al cargar
+        public string? Observation { get; set; }
 
-        public List<int> FileIds { get; set; }
+        // 🔥 Observación en revisión
+        public string? ObservationUpload { get; set; }
+
+        // 🔥 Status simplificado
+        public DocumentStatusSimpleDto? Status { get; set; }
+    }
+
+    public class DocumentStatusSimpleDto
+    {
+        public int Id { get; set; }
+
+        public string Description { get; set; } = null!;
     }
 }

@@ -32,9 +32,9 @@ namespace SistemaDigitalizacionPolizas.Application.Services.SystemConfiguration_
             }
 
             return new GetSystemConfigurationStatusResponse(
-             config.Active,
-             config.NotificationStartDate?.ToString("yyyy-MM-dd HH:mm:ss") ?? ""
-             );
+             config.EmailsEnabled,
+             config.NotificationStartDate?.ToString("yyyy-MM-dd")
+            );
         }
     }
 }

@@ -7,7 +7,7 @@ using SistemaDigitalizacionPolizas.Infrastructure.Persistence.Services.UploatFil
 namespace SistemaDigitalizacionPolizas.Application.Services.AcqusitionRequest_Service.Queries.GetDocumentsChecklistByRequest
 {
     public class GetDocumentsChecklistByRequestHandler
-        : IRequestHandler<GetDocumentsChecklistByRequestQuery, List<RequestDocumentChecklistDto>>
+    : IRequestHandler<GetDocumentsChecklistByRequestQuery, List<RequestDocumentChecklistDto>>
     {
         private readonly IDocumentExpedientRepository _repository;
         private readonly IFileStorageService _fileStorageService;
@@ -26,17 +26,16 @@ namespace SistemaDigitalizacionPolizas.Application.Services.AcqusitionRequest_Se
         {
             var result = await _repository.GetChecklistByRequestAsync(request.RequestId);
 
+            // 🔥 NUEVA FORMA (por archivo)
             foreach (var document in result)
             {
-                if (document.FileUrls != null && document.FileUrls.Any())
+                if (document.Files != null && document.Files.Any())
                 {
-                    document.PreviewUrls = document.FileUrls
-                        .Select(url => _fileStorageService.GetPresignedUrl(url, 10))
-                        .ToList();
-                }
-                else
-                {
-                    document.PreviewUrls = new List<string>();
+                    foreach (var file in document.Files)
+                    {
+                        file.PreviewUrl = _fileStorageService
+                            .GetPresignedUrl(file.FileUrl, 10);
+                    }
                 }
             }
 
