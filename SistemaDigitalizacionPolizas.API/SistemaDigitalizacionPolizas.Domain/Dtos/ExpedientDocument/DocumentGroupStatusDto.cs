@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SistemaDigitalizacionPolizas.Domain.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,6 +17,10 @@ namespace SistemaDigitalizacionPolizas.Domain.Dtos.ExpedientDocument
         public int TotalUploaded { get; set; }
         public int TotalApproved { get; set; }
 
-        public string Status { get; set; }
+        public DocumentGroupStatus Status { get; set; }
+
+        // 🔥 Solo texto (sin extensión)
+        public string StatusLabel => Status.ToString();
     }
 }
+

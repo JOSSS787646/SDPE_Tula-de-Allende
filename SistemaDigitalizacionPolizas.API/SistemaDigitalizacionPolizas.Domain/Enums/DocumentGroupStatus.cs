@@ -10,7 +10,7 @@ namespace SistemaDigitalizacionPolizas.Domain.Enums
     {
         Pendiente = 1,
         Cargado = 2,
-        EnRevision = 3,
+        Observado = 3,
         Completo = 4
     }
 }
