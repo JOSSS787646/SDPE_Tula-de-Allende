@@ -80,15 +80,16 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
                 if (!docsOfType.Any())
                 {
                     allApproved = false;
-                    continue;
+                    break;
                 }
 
-                bool allOfTypeApproved = docsOfType
-                    .All(d => d.IdDocumentStatus == (int)DocumentStatusEnum.Aprobado);
+                bool hasNotApproved = docsOfType.Any(d =>
+                    d.IdDocumentStatus != (int)DocumentStatusEnum.Aprobado);
 
-                if (!allOfTypeApproved)
+                if (hasNotApproved)
                 {
                     allApproved = false;
+                    break;
                 }
             }
 
