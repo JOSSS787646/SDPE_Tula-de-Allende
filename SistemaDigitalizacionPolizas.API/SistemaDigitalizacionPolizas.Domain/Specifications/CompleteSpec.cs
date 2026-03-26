@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace SistemaDigitalizacionPolizas.Domain.Specifications
 {
-    public sealed class ObservadoSpec : IStatusSpecification
+    public sealed class CompleteSpec : IStatusSpecification
     {
-        public RequestStatusEnum TargetStatus => RequestStatusEnum.Observado;
+        public RequestStatusEnum TargetStatus => RequestStatusEnum.Completo;
 
         public bool IsSatisfiedBy(StatusEvaluationContext ctx)
-            => ctx.HasObservado;
+            => ctx.AllApproved;
     }
 }

@@ -1,11 +1,9 @@
 ﻿using SistemaDigitalizacionPolizas.Domain.Entities.Notification_Entities;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.IANotification;
-
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace SistemaDigitalizacionPolizas.Application.Services.Audit_Service
@@ -23,45 +21,53 @@ namespace SistemaDigitalizacionPolizas.Application.Services.Audit_Service
             _currentUserService = currentUserService;
         }
 
-        // 🔥 BORRADO MASIVO
+        // ============================================================
+        // 🔥 ELIMINACIÓN MASIVA (UNA SOLA FILA)
+        // ============================================================
         public async Task LogNotificationDeletionAsync(IEnumerable<Notification> notifications)
         {
             if (notifications == null || !notifications.Any())
                 return;
 
             var userId = _currentUserService.UserId;
+            var userEmail = _currentUserService.Email; // 🔥 AQUÍ
+            var first = notifications.First();
 
-            var histories = notifications.Select(n => new NotificationHistory
+            var history = new NotificationHistory
             {
-                NotificationId = n.IdNotification,
-                TargetUserId = n.UserId,
+                NotificationId = null,
+                TargetUserId = first.UserId,
 
-                Title = n.Title,
-                Message = n.Message,
+                Title = "Eliminación masiva",
+                Message = $"Se eliminaron {notifications.Count()} notificaciones",
 
-                RequestId = n.RequestId,
-                CreatedAt = n.CreatedAt,
+                RequestId = null,
+                CreatedAt = DateTime.UtcNow,
 
                 DeletedByUserId = userId,
+                DeletedByUserEmail = userEmail, // 🔥 AHORA SÍ
+
                 DeletedAt = DateTime.UtcNow,
+                Action = "DELETED_ALL"
+            };
 
-                Action = "DELETED"
-            }).ToList();
-
-            await _historyRepository.AddRangeAsync(histories);
+            await _historyRepository.AddAsync(history);
         }
 
-        // 🔥 BORRADO INDIVIDUAL
+        // ============================================================
+        // 🔥 ELIMINACIÓN INDIVIDUAL
+        // ============================================================
         public async Task LogSingleNotificationDeletionAsync(Notification notification)
         {
             if (notification == null)
                 return;
 
             var userId = _currentUserService.UserId;
+            var userEmail = _currentUserService.Email;
 
             var history = new NotificationHistory
             {
-                NotificationId = notification.IdNotification, // ✅ CORREGIDO
+                NotificationId = notification.IdNotification,
                 TargetUserId = notification.UserId,
 
                 Title = notification.Title,
@@ -71,8 +77,9 @@ namespace SistemaDigitalizacionPolizas.Application.Services.Audit_Service
                 CreatedAt = notification.CreatedAt,
 
                 DeletedByUserId = userId,
-                DeletedAt = DateTime.UtcNow,
+                DeletedByUserEmail = userEmail,
 
+                DeletedAt = DateTime.UtcNow,
                 Action = "DELETED"
             };
 

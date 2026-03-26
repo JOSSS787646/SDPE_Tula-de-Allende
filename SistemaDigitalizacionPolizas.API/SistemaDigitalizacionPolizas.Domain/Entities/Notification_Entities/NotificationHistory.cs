@@ -10,7 +10,7 @@ namespace SistemaDigitalizacionPolizas.Domain.Entities.Notification_Entities
     {
         public int Id { get; set; }
 
-        public int NotificationId { get; set; } // original IdNotificacion
+        public int? NotificationId { get; set; } // original IdNotificacion
         public int? TargetUserId { get; set; } // IdUsuarioNotificacion
         public string? TargetUserName { get; set; }
 
@@ -19,7 +19,7 @@ namespace SistemaDigitalizacionPolizas.Domain.Entities.Notification_Entities
 
         public int? RequestId { get; set; } // IdSolicitud
         public string? RequestNumber { get; set; }
-
+        public string DeletedByUserEmail { get; set; }
         public DateTime CreatedAt { get; set; }
 
         public int DeletedByUserId { get; set; }

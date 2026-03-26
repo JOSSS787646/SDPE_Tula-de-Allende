@@ -7,12 +7,14 @@ using System.Threading.Tasks;
 
 namespace SistemaDigitalizacionPolizas.Domain.Specifications
 {
-    public sealed class IncompletoSpec : IStatusSpecification
+    public sealed class UnderReviewSpec : IStatusSpecification
     {
-        public RequestStatusEnum TargetStatus => RequestStatusEnum.Incompleto;
+        public RequestStatusEnum TargetStatus => RequestStatusEnum.EnRevision;
 
         public bool IsSatisfiedBy(StatusEvaluationContext ctx)
-            => (ctx.IsExpired || ctx.HasMissing)
-               && !ctx.HasObservado;
+            => ctx.HasLoaded
+               && !ctx.HasObservado
+               && !ctx.IsExpired
+               && !ctx.AllApproved;
     }
 }
