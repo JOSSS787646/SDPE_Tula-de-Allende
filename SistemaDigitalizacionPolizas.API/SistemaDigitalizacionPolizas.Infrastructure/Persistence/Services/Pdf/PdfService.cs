@@ -11,17 +11,17 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Services
     public class PdfService : IPdfService
     {
         // ── Paleta institucional ──────────────────────────────
-        private const string CP = "#6A1B1B";   // Guinda primario
-        private const string CS = "#8B2C2C";   // Guinda secundario
-        private const string CA = "#FDF2F2";   // Fondo rosado suave
-        private const string CG = "#F5F5F5";   // Gris claro
-        private const string CT = "#6B7280";   // Texto suave
-        private const string CDB = "#C9A227";   // Dorado borde
-        private const string CDL = "#F4E4BC";   // Dorado claro fondo
-        private const string CV = "#166534";   // Verde
-        private const string CVF = "#DCFCE7";   // Verde fondo
-        private const string CN = "#92400E";   // Naranja
-        private const string CNF = "#FEF3C7";   // Naranja fondo
+        private const string CP = "#6A1B1B";
+        private const string CS = "#8B2C2C";
+        private const string CA = "#FDF2F2";
+        private const string CG = "#F5F5F5";
+        private const string CT = "#6B7280";
+        private const string CDB = "#C9A227";
+        private const string CDL = "#F4E4BC";
+        private const string CV = "#166534";
+        private const string CVF = "#DCFCE7";
+        private const string CN = "#92400E";
+        private const string CNF = "#FEF3C7";
 
         // Estados checklist
         private const string CBlue = "#1D4ED8";
@@ -101,7 +101,7 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Services
         }
 
         // ════════════════════════════════════════════════════════
-        //  DOC 3 — HEADER
+        //  DOC 3 — HEADER  (sin banda de info / sin proyecto)
         // ════════════════════════════════════════════════════════
         private void CLHeader(IContainer container, AcquisitionChecklistPdfDto dto)
         {
@@ -109,7 +109,6 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Services
 
             container.Column(col =>
             {
-                // Franja superior guinda
                 col.Item().Background(CP).Height(5);
 
                 col.Item().PaddingTop(8).PaddingBottom(8).Row(row =>
@@ -121,10 +120,10 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Services
 
                     row.ConstantItem(12);
 
-                    // Títulos
+                    // Solo título e institución — sin datos de solicitud
                     row.RelativeItem().AlignMiddle().Column(tc =>
                     {
-                        tc.Item().Text("SECRETARÍA DE LA TESORERÍA Y ADMINISTRACIÓN")
+                        tc.Item().Text("SECRETARIA DE LA TESORERIA Y ADMINISTRACION")
                             .Bold().FontSize(7).FontColor(CT).LetterSpacing(0.08f);
                         tc.Item().PaddingTop(2)
                             .Text("CHECK LIST PARA PROCESO DE ADQUISICIONES")
@@ -137,22 +136,25 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Services
 
                     row.ConstantItem(12);
 
-                    // Caja folio / fecha — compacta
+                    // Caja folio / fecha / estado global
                     row.ConstantItem(132).Background(CA).Border(1).BorderColor(CS)
                         .Padding(7).Column(ic =>
                         {
                             ic.Item().Text("FOLIO").FontSize(7).FontColor(CT).Bold();
-                            ic.Item().Text(dto.Folio ?? "—").FontSize(13).Bold().FontColor(CP);
+                            ic.Item().Text(dto.Folio ?? "—")
+                                .FontSize(13).Bold().FontColor(CP);
 
-                            ic.Item().PaddingTop(4).Text("FECHA DE SOLICITUD").FontSize(7).FontColor(CT).Bold();
+                            ic.Item().PaddingTop(4).Text("FECHA DE SOLICITUD")
+                                .FontSize(7).FontColor(CT).Bold();
                             ic.Item().Text((dto.RequestDate ?? DateTime.Now).ToString("dd/MM/yyyy"))
                                 .FontSize(9).FontColor(CP);
 
-                            // Estado GLOBAL del checklist
+                            // Estado global del checklist (ExceptionStatus)
                             if (!string.IsNullOrWhiteSpace(dto.ExceptionStatus))
                             {
                                 var (stBg, stFg) = ResolveStatusColors(dto.ExceptionStatus);
-                                ic.Item().PaddingTop(5).Background(stBg)
+                                ic.Item().PaddingTop(5)
+                                    .Background(stBg)
                                     .PaddingHorizontal(5).PaddingVertical(3)
                                     .Text(dto.ExceptionStatus.ToUpper())
                                     .FontSize(8).Bold().FontColor(stFg);
@@ -160,84 +162,39 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Services
                         });
                 });
 
-                // Banda de datos de solicitud — solo si tienen valor
-                bool hasBand = !string.IsNullOrWhiteSpace(dto.AdministrativeUnit)
-                    || !string.IsNullOrWhiteSpace(dto.ApplicantName)
-                    || !string.IsNullOrWhiteSpace(dto.Program)
-                    || !string.IsNullOrWhiteSpace(dto.Project);
-
-                if (hasBand)
-                {
-                    col.Item().Background(CG).BorderTop(1).BorderBottom(1).BorderColor("#E5E7EB")
-                        .PaddingVertical(5).PaddingHorizontal(10).Row(r =>
-                        {
-                            CLInfoChip(r, "Unidad", dto.AdministrativeUnit);
-                            r.ConstantItem(16);
-                            CLInfoChip(r, "Solicitante", dto.ApplicantName);
-                            r.ConstantItem(16);
-                            CLInfoChip(r, "Programa", dto.Program);
-                            r.ConstantItem(16);
-                            CLInfoChip(r, "Proyecto", dto.Project);
-                        });
-                }
-
                 col.Item().Background(CS).Height(2);
             });
         }
 
-        private void CLInfoChip(RowDescriptor row, string label, string? value)
-        {
-            if (string.IsNullOrWhiteSpace(value)) return;
-            row.AutoItem().Column(c =>
-            {
-                c.Item().Text(label.ToUpper()).FontSize(6).FontColor(CT).Bold().LetterSpacing(0.07f);
-                c.Item().Text(value).FontSize(8.5f).FontColor(CP);
-            });
-        }
-
         // ════════════════════════════════════════════════════════
-        //  DOC 3 — CONTENT
+        //  DOC 3 — CONTENT  (una sola tabla, no-aplica al final)
         // ════════════════════════════════════════════════════════
         private void CLContent(IContainer container, AcquisitionChecklistPdfDto dto)
         {
-            // Separar ítems: obligatorios y con excepción (NoApplies)
-            var required = dto.Checklist.Where(i => i.RequiredByRule && !i.NoApplies).OrderBy(i => i.Order).ToList();
-            var exceptions = dto.Checklist.Where(i => i.NoApplies).OrderBy(i => i.Order).ToList();
-
             container.PaddingTop(8).Column(col =>
             {
                 col.Spacing(8);
 
-                // ── Resumen de estado global ──────────────────
-                col.Item().Element(c => CLGlobalSummary(c, dto));
 
-                // ── Documentos obligatorios ───────────────────
-                if (required.Any())
-                {
-                    col.Item().Element(c => SharedSectionTitle(c, "Documentos Obligatorios"));
-                    col.Item().Element(c => CLTable(c, required));
-                }
+                // Título de sección
+                col.Item().Element(c => SharedSectionTitle(c, "Documentos Requeridos"));
 
-                // ── Documentos con excepción ──────────────────
-                if (exceptions.Any())
-                {
-                    col.Item().Element(c => SharedSectionTitle(c, "Excepciones / No Aplica"));
-                    col.Item().Element(c => CLExceptionsTable(c, exceptions));
-                }
+                // Una sola tabla: obligatorios primero, no-aplica al final en gris
+                col.Item().Element(c => CLSingleTable(c, dto.Checklist));
 
-                // ── Firmas ────────────────────────────────────
+                // Firmas
                 col.Item().PaddingTop(10).Element(c => CLSignatures(c, dto));
             });
         }
 
-        // ── Resumen global compacto ───────────────────────────
+        // ── Resumen de estadísticas ───────────────────────────
         private void CLGlobalSummary(IContainer container, AcquisitionChecklistPdfDto dto)
         {
             var items = dto.Checklist;
             int total = items.Count;
             int approved = items.Count(i => NormalizeCode(i.GlobalStatus) == "APROBADO");
             int pending = items.Count(i => !i.NoApplies
-                && NormalizeCode(i.GlobalStatus) is "PENDIENTE" or "");
+                                         && NormalizeCode(i.GlobalStatus) is "PENDIENTE" or "");
             int review = items.Count(i => NormalizeCode(i.GlobalStatus) == "EN_REVISION");
             int rejected = items.Count(i => NormalizeCode(i.GlobalStatus) == "RECHAZADO");
             int na = items.Count(i => i.NoApplies);
@@ -246,17 +203,14 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Services
 
             container.Border(1).BorderColor("#E5E7EB").Row(row =>
             {
-                // Stat boxes
                 CLStat(row, approved.ToString(), "APROBADOS", CVF, CV, "#86EFAC");
                 CLStat(row, pending.ToString(), "PENDIENTES", CNF, CN, "#FCD34D");
                 CLStat(row, review.ToString(), "EN REVISION", CBluF, CBlue, CBluB);
                 CLStat(row, rejected.ToString(), "RECHAZADOS", CRedF, CRed, CRedB);
                 CLStat(row, na.ToString(), "NO APLICA", CG, CT, "#D1D5DB");
 
-                // Barra divisora
                 row.ConstantItem(1).Background("#E5E7EB");
 
-                // Porcentaje
                 row.ConstantItem(80).Background(CA).AlignMiddle().AlignCenter().Column(c =>
                 {
                     c.Item().AlignCenter()
@@ -276,138 +230,102 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Services
                 .PaddingVertical(8).PaddingHorizontal(6).Column(c =>
                 {
                     c.Item().AlignCenter().Text(value).FontSize(18).Bold().FontColor(fg);
-                    c.Item().AlignCenter().Text(label)
-                .FontSize(6)
-                .Bold()
-                .FontColor(fg)
-                .LetterSpacing(0.05f); // ✅ CORRECTO
+                    c.Item().AlignCenter().Text(label).FontSize(6).Bold().FontColor(fg).LetterSpacing(0.05f);
                 });
         }
 
-        // ── Tabla principal de documentos obligatorios ────────
-        private void CLTable(IContainer container, List<ChecklistPdfItemDto> items)
+        // ── Tabla única: obligatorios + no-aplica al final ────
+        private void CLSingleTable(IContainer container, List<ChecklistPdfItemDto> items)
         {
+            if (items == null || !items.Any())
+            {
+                container.Border(1).BorderColor("#E5E7EB").Padding(10)
+                    .Text("Sin documentos registrados.").FontSize(9).FontColor(CT);
+                return;
+            }
+
+            // Ordenar: obligatorios primero (por Order), no-aplica al final (por Order)
+            var ordered = items.OrderBy(i => i.Order).ToList();
+
             container.Table(t =>
             {
                 t.ColumnsDefinition(cd =>
                 {
                     cd.ConstantColumn(24);   // Nº
-                    cd.RelativeColumn();     // Nombre del documento
-                    cd.ConstantColumn(95);   // Estado de validación
+                    cd.RelativeColumn();     // Documento
+                    cd.ConstantColumn(95);   // Estado
                 });
 
                 // Header
                 t.Header(h =>
                 {
                     h.Cell().Background(CP).PaddingVertical(6).PaddingHorizontal(5)
-                        .AlignCenter().Text("N°").Bold().FontSize(8).FontColor(Colors.White);
-
+                        .AlignCenter()
+                        .Text("N").Bold().FontSize(8).FontColor(Colors.White);
                     h.Cell().Background(CP).PaddingVertical(6).PaddingHorizontal(8)
                         .Text("DOCUMENTO REQUERIDO").Bold().FontSize(8).FontColor(Colors.White);
-
                     h.Cell().Background(CP).PaddingVertical(6).PaddingHorizontal(5)
-                        .AlignCenter().Text("ESTATUS").Bold().FontSize(8).FontColor(Colors.White);
+                        .AlignCenter()
+                        .Text("ESTATUS").Bold().FontSize(8).FontColor(Colors.White);
                 });
 
                 bool odd = false;
-                foreach (var item in items)
+                foreach (var item in ordered)
                 {
-                    var rowBg = odd ? "#FFFFFF" : CG;
-                    odd = !odd;
+                    // No-aplica siempre en gris fijo, independiente del alternado
+                    string rowBg;
+                    if (item.NoApplies)
+                        rowBg = "#EFEFEF";
+                    else
+                    {
+                        rowBg = odd ? "#FFFFFF" : CG;
+                        odd = !odd;
+                    }
 
-                    // Nº
+                    // ─ Nº
                     t.Cell().MinHeight(30).Background(rowBg)
                         .BorderBottom(1).BorderColor("#E5E7EB")
                         .AlignCenter().AlignMiddle()
                         .Text(item.Order.ToString())
-                        .Bold().FontSize(11).FontColor(CP);
+                        .Bold().FontSize(11)
+                        .FontColor(item.NoApplies ? CT : CP);
 
-                    // Documento + observaciones
+                    // ─ Documento + observaciones
                     t.Cell().MinHeight(30).Background(rowBg)
                         .BorderBottom(1).BorderColor("#E5E7EB")
                         .PaddingHorizontal(8).PaddingVertical(6).Column(c =>
                         {
                             c.Item().Text(item.DocumentName)
-                                .FontSize(8.5f).FontColor("#1F2937");
+                                .FontSize(8.5f)
+                                .FontColor(item.NoApplies ? CT : "#1F2937");
 
                             if (item.Observations != null)
                             {
-                                foreach (var obs in item.Observations.Where(o => !string.IsNullOrWhiteSpace(o)))
+                                foreach (var obs in item.Observations
+                                    .Where(o => !string.IsNullOrWhiteSpace(o)))
+                                {
                                     c.Item().PaddingTop(2)
                                         .Text(obs)
                                         .FontSize(7).Italic().FontColor(CT);
+                                }
                             }
                         });
 
-                    // Estado
+                    // ─ Estado
                     t.Cell().MinHeight(30).Background(rowBg)
                         .BorderBottom(1).BorderColor("#E5E7EB")
                         .AlignCenter().AlignMiddle()
-                        .Element(c => CLStatusCell(c, item.GlobalStatus, false));
+                        .Element(c => CLStatusCell(c, item.GlobalStatus, item.NoApplies));
                 }
             });
         }
 
-        // ── Tabla de excepciones ──────────────────────────────
-        private void CLExceptionsTable(IContainer container, List<ChecklistPdfItemDto> items)
-        {
-            container.Table(t =>
-            {
-                t.ColumnsDefinition(cd =>
-                {
-                    cd.ConstantColumn(24);
-                    cd.RelativeColumn();
-                    cd.ConstantColumn(95);
-                });
-
-                t.Header(h =>
-                {
-                    h.Cell().Background(CT).PaddingVertical(6).PaddingHorizontal(5)
-                        .AlignCenter().Text("N°").Bold().FontSize(8).FontColor(Colors.White);
-                    h.Cell().Background(CT).PaddingVertical(6).PaddingHorizontal(8)
-                        .Text("DOCUMENTO").Bold().FontSize(8).FontColor(Colors.White);
-                    h.Cell().Background(CT).PaddingVertical(6).PaddingHorizontal(5)
-                        .AlignCenter().Text("EXCEPCIÓN").Bold().FontSize(8).FontColor(Colors.White);
-                });
-
-                bool odd = false;
-                foreach (var item in items)
-                {
-                    var rowBg = odd ? "#FFFFFF" : CG;
-                    odd = !odd;
-
-                    t.Cell().MinHeight(26).Background(rowBg)
-                        .BorderBottom(1).BorderColor("#E5E7EB")
-                        .AlignCenter().AlignMiddle()
-                        .Text(item.Order.ToString()).Bold().FontSize(10).FontColor(CT);
-
-                    t.Cell().MinHeight(26).Background(rowBg)
-                        .BorderBottom(1).BorderColor("#E5E7EB")
-                        .PaddingHorizontal(8).PaddingVertical(5).Column(c =>
-                        {
-                            c.Item().Text(item.DocumentName).FontSize(8.5f).FontColor(CT);
-                            if (item.Observations != null)
-                            {
-                                foreach (var obs in item.Observations.Where(o => !string.IsNullOrWhiteSpace(o)))
-                                    c.Item().PaddingTop(2).Text(obs).FontSize(7).Italic().FontColor(CT);
-                            }
-                        });
-
-                    // Excepción — badge NA
-                    t.Cell().MinHeight(26).Background(rowBg)
-                        .BorderBottom(1).BorderColor("#E5E7EB")
-                        .AlignCenter().AlignMiddle()
-                        .Element(c => CLStatusCell(c, null, true));
-                }
-            });
-        }
-
-        // ── Celda de estado — sin íconos ─────────────────────
+        // ── Celda de estado ───────────────────────────────────
         private void CLStatusCell(IContainer c, string? status, bool noApplies)
         {
             if (noApplies)
             {
-                c.Background(CG).Border(1).BorderColor("#D1D5DB")
+                c.Background("#E0E0E0").Border(1).BorderColor("#D1D5DB")
                     .Width(78).PaddingVertical(5).PaddingHorizontal(4)
                     .AlignCenter().AlignMiddle()
                     .Text("NO APLICA").FontSize(7).Bold().FontColor(CT).LetterSpacing(0.05f);
@@ -1144,8 +1062,6 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Services
             if (string.IsNullOrWhiteSpace(s)) return string.Empty;
             return s.ToUpperInvariant()
                 .Replace(" ", "_")
-                .Replace("E\u0301", "E").Replace("O\u0301", "O").Replace("A\u0301", "A")
-                .Replace("I\u0301", "I").Replace("U\u0301", "U")
                 .Replace("\u00C9", "E").Replace("\u00D3", "O").Replace("\u00C1", "A")
                 .Replace("\u00CD", "I").Replace("\u00DA", "U");
         }
