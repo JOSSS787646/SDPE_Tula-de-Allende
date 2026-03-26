@@ -61,6 +61,8 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence
 
 
 
+        public DbSet<NotificationHistory> NotificationHistories { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

@@ -1,8 +1,9 @@
-﻿using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Acquisition;
+﻿using MediatR;
+using SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Service.Service;
+using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Acquisition;
+using SistemaDigitalizacionPolizas.Domain.Interfaces.Services;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace SistemaDigitalizacionPolizas.Application.Services.AcqusitionRequest_Service.Commands.UpdateMaxDate
@@ -10,10 +11,17 @@ namespace SistemaDigitalizacionPolizas.Application.Services.AcqusitionRequest_Se
     public class UpdateMaxDateHandler : IRequestHandler<UpdateMaxDateCommand, bool>
     {
         private readonly IAcquisitionRequest _repository;
+        private readonly IRequestStatusService _requestStatusService;
+        private readonly IUnitOfWorkService _unitOfWork; // 🔥 FALTABA
 
-        public UpdateMaxDateHandler(IAcquisitionRequest repository)
+        public UpdateMaxDateHandler(
+            IAcquisitionRequest repository,
+            IRequestStatusService requestStatusService,
+            IUnitOfWorkService unitOfWork) // 🔥 INYECTARLO
         {
             _repository = repository;
+            _requestStatusService = requestStatusService;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<bool> Handle(UpdateMaxDateCommand request, CancellationToken cancellationToken)
@@ -21,7 +29,14 @@ namespace SistemaDigitalizacionPolizas.Application.Services.AcqusitionRequest_Se
             if (request.NewMaxDate == default)
                 throw new Exception("Fecha inválida");
 
+            // 🔹 1. Actualizar fecha
             await _repository.UpdateMaxDateAsync(request.RequestId, request.NewMaxDate);
+
+            // 🔥 2. GUARDAR CAMBIOS (AQUÍ ESTABA TU ERROR)
+            await _unitOfWork.SaveChangesAsync();
+
+            // 🔥 3. Recalcular estado
+            await _requestStatusService.RecalculateStatus(request.RequestId);
 
             return true;
         }

@@ -10,6 +10,7 @@ namespace SistemaDigitalizacionPolizas.Domain.Enums
     {
         Incompleto = 1,
         Completo = 2,
-        EnRevision = 3
+        EnRevision = 3,
+        Observado = 4
     }
 }
