@@ -6,6 +6,7 @@ using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Acquisition;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.AdministrtiveUnit;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Community;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Document;
+using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.IANotification;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.INotification;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.IPaymentPolicy;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.ISystemConfiguration;
@@ -17,6 +18,7 @@ using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Roles;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.StatusRequest;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Suppliers;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Services;
+using SistemaDigitalizacionPolizas.Domain.Services;
 using SistemaDigitalizacionPolizas.Infrastructure.Persistence.Acquisition_Persistences;
 using SistemaDigitalizacionPolizas.Infrastructure.Persistence.AdministrativeUnit_Persistences;
 using SistemaDigitalizacionPolizas.Infrastructure.Persistence.ApplicationStatus_Persistences;
@@ -110,9 +112,9 @@ namespace SistemaDigitalizacionPolizas.Infrastructure
 
             services.AddScoped<IPdfService, PdfService>();
 
+            services.AddScoped<INotificationHistoryRepository, NotificationHistoryRepository>();
 
-
-
+            services.AddSingleton<RequestStatusEvaluator>();
 
             //Application Status Repository
             services.AddScoped<IApplicationStatusRepository, ApplicationStatusRepository>();

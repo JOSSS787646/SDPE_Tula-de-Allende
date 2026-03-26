@@ -5,6 +5,8 @@ using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Document;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.RequestingAdministration;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.StatusRequest;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Services;
+using SistemaDigitalizacionPolizas.Domain.Services;
+using SistemaDigitalizacionPolizas.Domain.Specifications;
 using SistemaDigitalizacionPolizas.Infrastructure.Persistence.Document_Persistences;
 using SSistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.StatusRequest;
 
@@ -18,14 +20,16 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
         private readonly IRequestDocumentExceptionRepository _exceptionRepository;
         private readonly IApplicationStatusRepository _statusRepository;
         private readonly IUnitOfWorkService _unitOfWork;
+        private readonly RequestStatusEvaluator _statusEvaluator;
 
         public RequestStatusService(
-            IAcquisitionRequest requestRepository,
-            IDocumentExpedientRepository documentRepository,
-            IClasificationDocumentTypeRepository classificationRepository,
-            IRequestDocumentExceptionRepository exceptionRepository,
-            IApplicationStatusRepository statusRepository,
-            IUnitOfWorkService unitOfWork)
+        IAcquisitionRequest requestRepository,
+        IDocumentExpedientRepository documentRepository,
+        IClasificationDocumentTypeRepository classificationRepository,
+        IRequestDocumentExceptionRepository exceptionRepository,
+        IApplicationStatusRepository statusRepository,
+        IUnitOfWorkService unitOfWork,
+        RequestStatusEvaluator statusEvaluator) // ✅ CORRECTO
         {
             _requestRepository = requestRepository;
             _documentRepository = documentRepository;
@@ -33,82 +37,130 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
             _exceptionRepository = exceptionRepository;
             _statusRepository = statusRepository;
             _unitOfWork = unitOfWork;
+            _statusEvaluator = statusEvaluator;
         }
 
         // ============================================================
         // 🔹 TU MÉTODO ORIGINAL (NO TOCADO)
         // ============================================================
+        // ── MÉTODO REFACTORIZADO ─────────────────────────────────────────────
         public async Task RecalculateStatus(int requestId)
         {
             var request = await _requestRepository.GetByIdAsync(requestId);
 
-            if (request == null)
-                throw new Exception("Solicitud no encontrada.");
+            if (request is null)
+                throw new Exception("Solicitud no encontrada");
 
-            bool isExpired = request.CompleteMaximeDate.HasValue &&
-                             DateTime.Now > request.CompleteMaximeDate.Value;
+            // 🔥 1. Obtener documentos subidos
+            var documents = await _documentRepository
+                .GetActiveByRequestId(requestId);
 
-            if (!request.IdAcquisitionClassification.HasValue)
-                return;
-
-            var allDocs = await _classificationRepository
+            // 🔥 2. Obtener documentos obligatorios
+            var requiredDocs = await _classificationRepository
                 .GetRequiredByClassification(request.IdAcquisitionClassification.Value);
 
             var exceptions = await _exceptionRepository
                 .GetActiveByRequestId(requestId);
 
-            var uploadedDocs = await _documentRepository
-                .GetActiveByRequestId(requestId);
-
-            var obligatorios = allDocs
+            var obligatorios = requiredDocs
                 .Where(r =>
-                    r.IsRequired == true &&
+                    r.IsRequired &&
                     !exceptions.Any(e =>
                         e.IdDocumentType == r.DocumentTypeId &&
-                        e.DoesNotApply == true &&
-                        e.Active == true))
+                        e.DoesNotApply &&
+                        e.Active))
                 .ToList();
 
+            // ============================================================
+            // 🔹 FLAGS
+            // ============================================================
+            bool hasObservado = false;
             bool allApproved = true;
+            bool allLoaded = true;
+            bool hasLoaded = false;
+            int missingCount = 0;
 
+            // ============================================================
+            // 🔹 3. VALIDAR OBLIGATORIOS (🔥 ESTA ES LA CLAVE)
+            // ============================================================
             foreach (var req in obligatorios)
             {
-                var docsOfType = uploadedDocs
+                var docsOfType = documents
                     .Where(d => d.DocumentTypeId == req.DocumentTypeId)
                     .ToList();
 
+                // ❌ NO EXISTE DOCUMENTO DE ESTE TIPO
                 if (!docsOfType.Any())
                 {
+                    missingCount++;
                     allApproved = false;
-                    break;
+                    allLoaded = false;
+                    continue;
                 }
 
-                bool hasNotApproved = docsOfType.Any(d =>
-                    d.IdDocumentStatus != (int)DocumentStatusEnum.Aprobado);
+                foreach (var doc in docsOfType)
+                {
+                    switch ((DocumentStatusEnum)doc.IdDocumentStatus)
+                    {
+                        case DocumentStatusEnum.Observado:
+                            hasObservado = true;
+                            allApproved = false;
+                            allLoaded = false;
+                            break;
 
-                if (hasNotApproved)
+                        case DocumentStatusEnum.Aprobado:
+                            allLoaded = false;
+                            break;
+
+                        case DocumentStatusEnum.Cargado:
+                            hasLoaded = true;
+                            allApproved = false;
+                            break;
+
+                        default:
+                            allApproved = false;
+                            allLoaded = false;
+                            break;
+                    }
+                }
+
+                // ❌ SI ALGUNO NO ESTÁ APROBADO → ya no es completo
+                if (docsOfType.Any(d =>
+                    d.IdDocumentStatus != (int)DocumentStatusEnum.Aprobado))
                 {
                     allApproved = false;
-                    break;
                 }
             }
 
-            if (allApproved)
-            {
-                request.IdApplicationStatus = (int)RequestStatusEnum.Completo;
-            }
-            else if (isExpired)
-            {
-                request.IdApplicationStatus = (int)RequestStatusEnum.Incompleto;
-            }
-            else
-            {
-                request.IdApplicationStatus = (int)RequestStatusEnum.EnRevision;
-            }
+            // ============================================================
+            // 🔹 4. FECHA
+            // ============================================================
+            bool isExpired = request.CompleteMaximeDate.HasValue &&
+                             DateTime.Now > request.CompleteMaximeDate.Value;
 
-            await _requestRepository.UpdateAsync(request);
+            // ============================================================
+            // 🔹 5. CONTEXTO FINAL
+            // ============================================================
+            var ctx = new StatusEvaluationContext(
+                HasObservado: hasObservado,
+                AllApproved: allApproved,
+                AllLoaded: allLoaded,
+                HasLoaded: hasLoaded,
+                HasMissing: missingCount > 0,
+                IsExpired: isExpired
+            );
+
+            var newStatus = _statusEvaluator.Evaluate(ctx);
+
+            // ============================================================
+            // 🔹 6. GUARDAR
+            // ============================================================
+            if (request.IdApplicationStatus != (int)newStatus)
+            {
+                request.IdApplicationStatus = (int)newStatus;
+                await _requestRepository.UpdateAsync(request);
+            }
         }
-
         // ============================================================
         // 🔥 NUEVO MÉTODO (ESTADO GLOBAL POR TIPO)
         // ============================================================

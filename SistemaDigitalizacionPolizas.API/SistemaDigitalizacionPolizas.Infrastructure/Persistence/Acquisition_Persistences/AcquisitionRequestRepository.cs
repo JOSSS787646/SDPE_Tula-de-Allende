@@ -67,11 +67,7 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Acquisition_Pe
             var request = await _context.AcquisitionRequests
                 .FirstOrDefaultAsync(x => x.IdRequest == requestId);
 
-            if (request == null)
-
             request.CompleteMaximeDate = newDate;
-
-            await _context.SaveChangesAsync();
         }
 
 
