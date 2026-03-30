@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Solicitudes vencidas</title>
+</head>
+
+<body style="margin:0;padding:0;background:#f0f0f0;font-family:Segoe UI,Tahoma,Geneva,Verdana,sans-serif;">
+
+    <table width="100%" cellpadding="0" cellspacing="0">
+        <tr>
+            <td align="center" style="padding:40px 10px;">
+
+                <table width="560" cellpadding="0" cellspacing="0" style="
+background:#ffffff;
+border-radius:16px;
+box-shadow:0 12px 35px rgba(0,0,0,0.18);
+overflow:hidden;
+">
+
+                    <!-- HEADER -->
+                    <tr>
+                        <td style="background: linear-gradient(135deg, #5b0b24 0%, #8b1a3a 100%);padding:28px 30px;">
+                            <h2 style="margin:0;color:#ffffff;font-size:19px;font-weight:700;">
+                                📋 Sistema de Digitalización de Pólizas
+                            </h2>
+                            <p style="margin:5px 0 0;color:rgba(255,255,255,0.75);font-size:12px;">
+                                Notificación automática · Solicitudes vencidas
+                            </p>
+                        </td>
+                    </tr>
+
+                    <!-- BODY -->
+                    <tr>
+                        <td style="padding:32px 30px;color:#333;">
+
+                            <h3 style="text-align:center;font-size:18px;font-weight:700;margin:0 0 6px;color:#2c2c2c;">
+                                ⚠ Solicitudes vencidas pendientes
+                            </h3>
+
+                            <div style="width:60px;height:3px;background:#c9980b;margin:0 auto 24px;border-radius:4px;"></div>
+
+                            <p style="font-size:14px;line-height:1.7;color:#555;margin:0 0 22px;">
+                                Hola <b>{{USER}}</b>, las siguientes solicitudes han superado la fecha límite y aún tienen documentos pendientes.
+                            </p>
+
+                            <!-- 🔥 LISTADO DINÁMICO -->
+                            {{REQUESTS_BLOCK}}
+
+                            <p style="margin-top:24px;font-size:13px;color:#777;text-align:center;">
+                                Por favor completa los documentos pendientes a la brevedad.
+                            </p>
+
+                        </td>
+                    </tr>
+
+                    <!-- FOOTER -->
+                    <tr>
+                        <td style="background:#f3f3f3;border-top:1px solid #e5e5e5;padding:16px;text-align:center;font-size:12px;color:#999;">
+                            © 2024–2027 · Sistema de Digitalización de Pólizas<br>
+                            <span style="color:#bbb;">Automatización inteligente de procesos</span>
+                        </td>
+                    </tr>
+
+                </table>
+
+            </td>
+        </tr>
+    </table>
+
+</body>
+</html>

@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using System.Net;
 using System.Net.Mail;
 using System.Reflection;
+using SistemaDigitalizacionPolizas.Domain.Dtos.AcquisitionRequest;
 
 public class EmailService : IEmailService
 {
@@ -261,5 +262,67 @@ public class EmailService : IEmailService
 
         using var smtp = BuildSmtpClient();
         await smtp.SendMailAsync(mail);
+    }
+
+
+
+    public async Task SendGroupedExpiredNotificationAsync(
+       string to,
+       string userName,
+       List<ExpiredRequestDto> requests)
+    {
+        var resourceName =
+            "SistemaDigitalizacionPolizas.Infrastructure.Persistence.Services.Email.Templates.ExpiredRequestsGrouped.html";
+
+        var htmlBody = await LoadTemplateAsync(resourceName);
+
+        var requestsBlock = BuildRequestsBlock(requests);
+
+        htmlBody = htmlBody
+            .Replace("{{USER}}", userName)
+            .Replace("{{REQUESTS_BLOCK}}", requestsBlock);
+
+        var mail = new MailMessage
+        {
+            From = new MailAddress(_configuration["Smtp:User"]!),
+            Subject = $"⚠ Solicitudes vencidas pendientes ({requests.Count})",
+            Body = htmlBody,
+            IsBodyHtml = true
+        };
+
+        mail.To.Add(to);
+
+        using var smtp = BuildSmtpClient();
+        await smtp.SendMailAsync(mail);
+    }
+
+    private static string BuildRequestsBlock(List<ExpiredRequestDto> requests)
+    {
+        return string.Join("", requests.Select(r =>
+        {
+            var docs = string.Join("", r.MissingDocuments.Select(d =>
+                $"<li style='margin-bottom:4px;'>📄 {d.DocumentName}</li>"
+            ));
+
+            return $@"
+        <div style='
+        background:#fafafa;
+        border:1px solid #e8e8e8;
+        border-left:4px solid #5b0b24;
+        border-radius:10px;
+        padding:20px;
+        margin-bottom:18px;
+        '>
+
+            <p style='margin:0 0 10px;font-size:13px;font-weight:700;color:#5b0b24;'>
+                Solicitud #{r.RequestNumber}
+            </p>
+
+            <ul style='padding-left:18px;font-size:13px;color:#444;'>
+                {docs}
+            </ul>
+
+        </div>";
+        }));
     }
 }

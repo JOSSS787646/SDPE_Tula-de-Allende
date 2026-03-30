@@ -46,21 +46,25 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
         // ── MÉTODO REFACTORIZADO ─────────────────────────────────────────────
         public async Task RecalculateStatus(int requestId)
         {
-            var request = await _requestRepository.GetByIdAsync(requestId);
-
+            var request = await _requestRepository.GetStatusDataAsync(requestId);
             if (request is null)
                 throw new Exception("Solicitud no encontrada");
 
-            // 🔥 1. Obtener documentos subidos
-            var documents = await _documentRepository
-                .GetActiveByRequestId(requestId);
+            IEnumerable<dynamic> documents;
+            try { documents = await _documentRepository.GetActiveByRequestId(requestId); }
+            catch (Exception ex) { throw new Exception("FALLA EN: GetActiveByRequestId documentos", ex); }
 
-            // 🔥 2. Obtener documentos obligatorios
-            var requiredDocs = await _classificationRepository
-                .GetRequiredByClassification(request.IdAcquisitionClassification.Value);
+            IEnumerable<dynamic> requiredDocs;
+            try
+            {
+                requiredDocs = await _classificationRepository
+                    .GetRequiredByClassification(request.IdAcquisitionClassification.Value);
+            }
+            catch (Exception ex) { throw new Exception("FALLA EN: GetRequiredByClassification", ex); }
 
-            var exceptions = await _exceptionRepository
-                .GetActiveByRequestId(requestId);
+            IEnumerable<dynamic> exceptions;
+            try { exceptions = await _exceptionRepository.GetActiveByRequestId(requestId); }
+            catch (Exception ex) { throw new Exception("FALLA EN: GetActiveByRequestId exceptions", ex); }
 
             var obligatorios = requiredDocs
                 .Where(r =>
@@ -71,25 +75,18 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
                         e.Active))
                 .ToList();
 
-            // ============================================================
-            // 🔹 FLAGS
-            // ============================================================
             bool hasObservado = false;
             bool allApproved = true;
             bool allLoaded = true;
             bool hasLoaded = false;
             int missingCount = 0;
 
-            // ============================================================
-            // 🔹 3. VALIDAR OBLIGATORIOS (🔥 ESTA ES LA CLAVE)
-            // ============================================================
             foreach (var req in obligatorios)
             {
                 var docsOfType = documents
                     .Where(d => d.DocumentTypeId == req.DocumentTypeId)
                     .ToList();
 
-                // ❌ NO EXISTE DOCUMENTO DE ESTE TIPO
                 if (!docsOfType.Any())
                 {
                     missingCount++;
@@ -107,16 +104,13 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
                             allApproved = false;
                             allLoaded = false;
                             break;
-
                         case DocumentStatusEnum.Aprobado:
                             allLoaded = false;
                             break;
-
                         case DocumentStatusEnum.Cargado:
                             hasLoaded = true;
                             allApproved = false;
                             break;
-
                         default:
                             allApproved = false;
                             allLoaded = false;
@@ -124,23 +118,13 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
                     }
                 }
 
-                // ❌ SI ALGUNO NO ESTÁ APROBADO → ya no es completo
-                if (docsOfType.Any(d =>
-                    d.IdDocumentStatus != (int)DocumentStatusEnum.Aprobado))
-                {
+                if (docsOfType.Any(d => d.IdDocumentStatus != (int)DocumentStatusEnum.Aprobado))
                     allApproved = false;
-                }
             }
 
-            // ============================================================
-            // 🔹 4. FECHA
-            // ============================================================
             bool isExpired = request.CompleteMaximeDate.HasValue &&
                              DateTime.Now > request.CompleteMaximeDate.Value;
 
-            // ============================================================
-            // 🔹 5. CONTEXTO FINAL
-            // ============================================================
             var ctx = new StatusEvaluationContext(
                 HasObservado: hasObservado,
                 AllApproved: allApproved,
@@ -152,14 +136,12 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
 
             var newStatus = _statusEvaluator.Evaluate(ctx);
 
-            // ============================================================
-            // 🔹 6. GUARDAR
-            // ============================================================
-            if (request.IdApplicationStatus != (int)newStatus)
+            try
             {
-                request.IdApplicationStatus = (int)newStatus;
-                await _requestRepository.UpdateAsync(request);
+                if (request.IdApplicationStatus != (int)newStatus)
+                    await _requestRepository.UpdateStatusAsync(requestId, (int)newStatus);
             }
+            catch (Exception ex) { throw new Exception("FALLA EN: UpdateStatusAsync", ex); }
         }
         // ============================================================
         // 🔥 NUEVO MÉTODO (ESTADO GLOBAL POR TIPO)

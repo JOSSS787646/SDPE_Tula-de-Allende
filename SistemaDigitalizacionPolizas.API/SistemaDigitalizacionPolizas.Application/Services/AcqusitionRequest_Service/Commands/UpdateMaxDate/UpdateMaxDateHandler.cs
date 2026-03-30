@@ -12,12 +12,12 @@ namespace SistemaDigitalizacionPolizas.Application.Services.AcqusitionRequest_Se
     {
         private readonly IAcquisitionRequest _repository;
         private readonly IRequestStatusService _requestStatusService;
-        private readonly IUnitOfWorkService _unitOfWork; // 🔥 FALTABA
+        private readonly IUnitOfWorkService _unitOfWork; 
 
         public UpdateMaxDateHandler(
             IAcquisitionRequest repository,
             IRequestStatusService requestStatusService,
-            IUnitOfWorkService unitOfWork) // 🔥 INYECTARLO
+            IUnitOfWorkService unitOfWork) 
         {
             _repository = repository;
             _requestStatusService = requestStatusService;
@@ -29,13 +29,8 @@ namespace SistemaDigitalizacionPolizas.Application.Services.AcqusitionRequest_Se
             if (request.NewMaxDate == default)
                 throw new Exception("Fecha inválida");
 
-            // 🔹 1. Actualizar fecha
             await _repository.UpdateMaxDateAsync(request.RequestId, request.NewMaxDate);
-
-            // 🔥 2. GUARDAR CAMBIOS (AQUÍ ESTABA TU ERROR)
             await _unitOfWork.SaveChangesAsync();
-
-            // 🔥 3. Recalcular estado
             await _requestStatusService.RecalculateStatus(request.RequestId);
 
             return true;
