@@ -14,10 +14,10 @@ namespace SistemaDigitalizacionPolizas.Domain.Services
         private static readonly IReadOnlyList<IStatusSpecification> _specs =
             new List<IStatusSpecification>
             {
-                new ObservadoSpec(),
-                new CompletoSpec(),
-                new EnRevisionSpec(),
-                new IncompletoSpec()
+                new ObservationSpec(),
+                new CompleteSpec(),
+                new UnderReviewSpec(),
+                new IncompleteSpec()
             };
 
         public RequestStatusEnum Evaluate(StatusEvaluationContext ctx)
@@ -28,7 +28,7 @@ namespace SistemaDigitalizacionPolizas.Domain.Services
                     return spec.TargetStatus;
             }
 
-            return RequestStatusEnum.Incompleto; // fallback
+            return RequestStatusEnum.Incompleto; 
         }
     }
 }
