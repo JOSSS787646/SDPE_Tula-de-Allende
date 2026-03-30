@@ -1,4 +1,6 @@
-﻿namespace SistemaDigitalizacionPolizas.Domain.Interfaces.Services
+﻿using SistemaDigitalizacionPolizas.Domain.Dtos.AcquisitionRequest;
+
+namespace SistemaDigitalizacionPolizas.Domain.Interfaces.Services
 {
     public interface IEmailService
     {
@@ -32,6 +34,13 @@
          string result,
          string? observations
         );
+
+
+
+        Task SendGroupedExpiredNotificationAsync(
+    string to,
+    string userName,
+    List<ExpiredRequestDto> requests);
     }
 
 

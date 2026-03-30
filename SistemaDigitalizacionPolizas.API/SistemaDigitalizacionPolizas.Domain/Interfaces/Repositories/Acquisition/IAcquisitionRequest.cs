@@ -29,5 +29,12 @@ namespace SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Acquisitio
         Task UpdateMaxDateAsync(int requestId, DateTime newDate);
 
         Task<AcquisitionRequest?> GetByIdWithDetailsAsync(int id);
+
+        Task<List<ExpiredRequestDto>> GetExpiredRequestsAsync();
+        Task UpdateNotificationMetadataAsync(int requestId);
+
+        Task UpdateStatusAsync(int requestId, int newStatus);
+
+        Task<AcquisitionRequestStatusDto?> GetStatusDataAsync(int requestId);
     }
 }

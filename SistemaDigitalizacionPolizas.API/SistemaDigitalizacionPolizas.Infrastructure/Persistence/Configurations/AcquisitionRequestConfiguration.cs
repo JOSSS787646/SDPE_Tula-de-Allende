@@ -103,6 +103,13 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Configurations
             builder.Property(x => x.IdPaymentPolicy)
        .HasColumnName("idPolizaPago");
 
+            builder.Property(x => x.LastNotificationSentAt)
+    .HasColumnName("FechaUltimaNotificacion");
+
+            builder.Property(x => x.NotificationCount)
+                .HasColumnName("NumeroNotificaciones")
+                .HasDefaultValue(0);
+
             // =====================================================
             // RELATIONSHIPS
             // =====================================================
