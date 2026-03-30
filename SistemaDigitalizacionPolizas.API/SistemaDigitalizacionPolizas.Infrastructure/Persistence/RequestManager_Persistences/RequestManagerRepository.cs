@@ -33,6 +33,7 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.RequestManager
                     FullName = rm.FirstName + " " + rm.LastName + " " + (rm.SecondLastName ?? ""),
 
                     RequestNumber = r.RequestNumber,
+                    Phone= rm.Phone,
 
                     Email = rm.Email,
 

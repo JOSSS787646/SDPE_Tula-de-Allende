@@ -1,9 +1,12 @@
-﻿using SistemaDigitalizacionPolizas.Domain.Enums;
+﻿using SistemaDigitalizacionPolizas.Domain.Dtos.ExpedientDocument;
+using SistemaDigitalizacionPolizas.Domain.Enums;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Acquisition;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Document;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.RequestingAdministration;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.StatusRequest;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Services;
+using SistemaDigitalizacionPolizas.Domain.Services;
+using SistemaDigitalizacionPolizas.Domain.Specifications;
 using SistemaDigitalizacionPolizas.Infrastructure.Persistence.Document_Persistences;
 using SSistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.StatusRequest;
 
@@ -17,14 +20,16 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
         private readonly IRequestDocumentExceptionRepository _exceptionRepository;
         private readonly IApplicationStatusRepository _statusRepository;
         private readonly IUnitOfWorkService _unitOfWork;
+        private readonly RequestStatusEvaluator _statusEvaluator;
 
         public RequestStatusService(
-            IAcquisitionRequest requestRepository,
-            IDocumentExpedientRepository documentRepository,
-            IClasificationDocumentTypeRepository classificationRepository,
-            IRequestDocumentExceptionRepository exceptionRepository,
-            IApplicationStatusRepository statusRepository,
-            IUnitOfWorkService unitOfWork)
+        IAcquisitionRequest requestRepository,
+        IDocumentExpedientRepository documentRepository,
+        IClasificationDocumentTypeRepository classificationRepository,
+        IRequestDocumentExceptionRepository exceptionRepository,
+        IApplicationStatusRepository statusRepository,
+        IUnitOfWorkService unitOfWork,
+        RequestStatusEvaluator statusEvaluator) // ✅ CORRECTO
         {
             _requestRepository = requestRepository;
             _documentRepository = documentRepository;
@@ -32,138 +37,216 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
             _exceptionRepository = exceptionRepository;
             _statusRepository = statusRepository;
             _unitOfWork = unitOfWork;
+            _statusEvaluator = statusEvaluator;
         }
 
+        // ============================================================
+        // 🔹 TU MÉTODO ORIGINAL (NO TOCADO)
+        // ============================================================
+        // ── MÉTODO REFACTORIZADO ─────────────────────────────────────────────
         public async Task RecalculateStatus(int requestId)
+        {
+            var request = await _requestRepository.GetByIdAsync(requestId);
+
+            if (request is null)
+                throw new Exception("Solicitud no encontrada");
+
+            // 🔥 1. Obtener documentos subidos
+            var documents = await _documentRepository
+                .GetActiveByRequestId(requestId);
+
+            // 🔥 2. Obtener documentos obligatorios
+            var requiredDocs = await _classificationRepository
+                .GetRequiredByClassification(request.IdAcquisitionClassification.Value);
+
+            var exceptions = await _exceptionRepository
+                .GetActiveByRequestId(requestId);
+
+            var obligatorios = requiredDocs
+                .Where(r =>
+                    r.IsRequired &&
+                    !exceptions.Any(e =>
+                        e.IdDocumentType == r.DocumentTypeId &&
+                        e.DoesNotApply &&
+                        e.Active))
+                .ToList();
+
+            // ============================================================
+            // 🔹 FLAGS
+            // ============================================================
+            bool hasObservado = false;
+            bool allApproved = true;
+            bool allLoaded = true;
+            bool hasLoaded = false;
+            int missingCount = 0;
+
+            // ============================================================
+            // 🔹 3. VALIDAR OBLIGATORIOS (🔥 ESTA ES LA CLAVE)
+            // ============================================================
+            foreach (var req in obligatorios)
+            {
+                var docsOfType = documents
+                    .Where(d => d.DocumentTypeId == req.DocumentTypeId)
+                    .ToList();
+
+                // ❌ NO EXISTE DOCUMENTO DE ESTE TIPO
+                if (!docsOfType.Any())
+                {
+                    missingCount++;
+                    allApproved = false;
+                    allLoaded = false;
+                    continue;
+                }
+
+                foreach (var doc in docsOfType)
+                {
+                    switch ((DocumentStatusEnum)doc.IdDocumentStatus)
+                    {
+                        case DocumentStatusEnum.Observado:
+                            hasObservado = true;
+                            allApproved = false;
+                            allLoaded = false;
+                            break;
+
+                        case DocumentStatusEnum.Aprobado:
+                            allLoaded = false;
+                            break;
+
+                        case DocumentStatusEnum.Cargado:
+                            hasLoaded = true;
+                            allApproved = false;
+                            break;
+
+                        default:
+                            allApproved = false;
+                            allLoaded = false;
+                            break;
+                    }
+                }
+
+                // ❌ SI ALGUNO NO ESTÁ APROBADO → ya no es completo
+                if (docsOfType.Any(d =>
+                    d.IdDocumentStatus != (int)DocumentStatusEnum.Aprobado))
+                {
+                    allApproved = false;
+                }
+            }
+
+            // ============================================================
+            // 🔹 4. FECHA
+            // ============================================================
+            bool isExpired = request.CompleteMaximeDate.HasValue &&
+                             DateTime.Now > request.CompleteMaximeDate.Value;
+
+            // ============================================================
+            // 🔹 5. CONTEXTO FINAL
+            // ============================================================
+            var ctx = new StatusEvaluationContext(
+                HasObservado: hasObservado,
+                AllApproved: allApproved,
+                AllLoaded: allLoaded,
+                HasLoaded: hasLoaded,
+                HasMissing: missingCount > 0,
+                IsExpired: isExpired
+            );
+
+            var newStatus = _statusEvaluator.Evaluate(ctx);
+
+            // ============================================================
+            // 🔹 6. GUARDAR
+            // ============================================================
+            if (request.IdApplicationStatus != (int)newStatus)
+            {
+                request.IdApplicationStatus = (int)newStatus;
+                await _requestRepository.UpdateAsync(request);
+            }
+        }
+        // ============================================================
+        // 🔥 NUEVO MÉTODO (ESTADO GLOBAL POR TIPO)
+        // ============================================================
+        public async Task<List<DocumentGroupStatusDto>> GetDocumentGroupStatus(int requestId)
         {
             var request = await _requestRepository.GetByIdAsync(requestId);
 
             if (request == null)
                 throw new Exception("Solicitud no encontrada.");
 
-            if (!request.IdAcquisitionClassification.HasValue)
-                return;
-
-            // 1️⃣ TODOS los documentos de la clasificación
             var allDocs = await _classificationRepository
                 .GetRequiredByClassification(request.IdAcquisitionClassification.Value);
 
-            // 2️⃣ Excepciones activas de esta solicitud
             var exceptions = await _exceptionRepository
                 .GetActiveByRequestId(requestId);
 
-            // 3️⃣ Documentos cargados activos (SIN filtrar por idEstadoDocumento)
             var uploadedDocs = await _documentRepository
                 .GetActiveByRequestId(requestId);
 
-            // 4️⃣ Separar obligatorios y no obligatorios
             var obligatorios = allDocs
                 .Where(r =>
-                    r.IsRequired == true &&
+                    r.IsRequired &&
                     !exceptions.Any(e =>
                         e.IdDocumentType == r.DocumentTypeId &&
-                        e.DoesNotApply == true &&
-                        e.Active == true))
+                        e.DoesNotApply &&
+                        e.Active))
                 .ToList();
 
-            var noObligatorios = allDocs
-                .Where(r =>
-                    r.IsRequired == false ||
-                    exceptions.Any(e =>
-                        e.IdDocumentType == r.DocumentTypeId &&
-                        e.DoesNotApply == true &&
-                        e.Active == true))
-                .ToList();
+            var grouped = obligatorios.GroupBy(x => x.DocumentTypeId);
 
-            // ---- LOGS GENERALES ----
-            Console.WriteLine("============================================");
-            Console.WriteLine($"[RecalculateStatus] RequestId: {requestId}");
-            Console.WriteLine($"  Docs TOTAL en clasificación: {allDocs.Count}");
-            Console.WriteLine($"  Obligatorios a evaluar:      {obligatorios.Count}");
-            Console.WriteLine($"  No obligatorios / excepción: {noObligatorios.Count} → AUTO-APROBADO");
-            Console.WriteLine($"  Excepciones activas:         {exceptions.Count}");
-            Console.WriteLine($"  UploadedDocs TOTAL:          {uploadedDocs.Count}");
-            Console.WriteLine("--------------------------------------------");
+            var result = new List<DocumentGroupStatusDto>();
 
-            foreach (var noReq in noObligatorios)
-            {
-                Console.WriteLine($"  DocTypeId: {noReq.DocumentTypeId}");
-                Console.WriteLine($"    No obligatorio / con excepción → ✅ AUTO-APROBADO");
-            }
-
-            bool allApproved = true;
-
-            // 5️⃣ Evaluar obligatorios — TODOS los docs del tipo deben estar Aprobados
-            foreach (var req in obligatorios)
+            foreach (var group in grouped)
             {
                 var docsOfType = uploadedDocs
-                    .Where(d => d.DocumentTypeId == req.DocumentTypeId)
+                    .Where(d => d.DocumentTypeId == group.Key)
                     .ToList();
 
-                Console.WriteLine($"  DocTypeId: {req.DocumentTypeId}");
-                Console.WriteLine($"    Docs encontrados: {docsOfType.Count}");
+                int uploaded = docsOfType.Count;
+                int approved = docsOfType.Count(d => d.IdDocumentStatus == (int)DocumentStatusEnum.Aprobado);
+                int observed = docsOfType.Count(d => d.IdDocumentStatus == (int)DocumentStatusEnum.Observado);
+                int loaded = docsOfType.Count(d => d.IdDocumentStatus == (int)DocumentStatusEnum.Cargado);
+                int required = group.Count();
 
-                // Sin documentos → incompleto
-                if (!docsOfType.Any())
+                DocumentGroupStatus status;
+
+                // 1. Pendiente — no hay ningún documento subido
+                if (uploaded == 0)
                 {
-                    allApproved = false;
-                    Console.WriteLine($"    ⚠️  SIN DOCUMENTO → incompleto");
-                    continue;
+                    status = DocumentGroupStatus.Pendiente;
                 }
-
-                // ✅ CAMBIO CLAVE: evaluar CADA documento individualmente
-                bool typeIsApproved = true;
-
-                foreach (var doc in docsOfType)
+                // 2. Observado — al menos uno está observado (máxima prioridad negativa)
+                else if (observed > 0)
                 {
-                    var statusName = doc.IdDocumentStatus switch
-                    {
-                        (int)DocumentStatusEnum.Aprobado => "Aprobado ✅",
-                        (int)DocumentStatusEnum.Cargado => "Cargado 📄",
-                        (int)DocumentStatusEnum.Observado => "Observado 👁️",
-                        _ => $"Desconocido ({doc.IdDocumentStatus})"
-                    };
-
-                    Console.WriteLine($"      DocId: {doc.Id} | Estado: {statusName}");
-
-                    // Si CUALQUIER documento del tipo NO está aprobado → el tipo falla
-                    if (doc.IdDocumentStatus != (int)DocumentStatusEnum.Aprobado)
-                    {
-                        typeIsApproved = false;
-                        Console.WriteLine($"      ❌ No aprobado → este tipo queda incompleto");
-                    }
+                    status = DocumentGroupStatus.Observado;
                 }
-
-                if (typeIsApproved)
+                // 3. Cargado — al menos uno está en estado Cargado
+                //    (no importa que los demás estén aprobados)
+                else if (loaded > 0)
                 {
-                    Console.WriteLine($"    ✅ Todos aprobados → OK");
+                    status = DocumentGroupStatus.Cargado;
                 }
+                // 4. Completo — todos están aprobados y se cubre la cantidad requerida
+                else if (approved >= required &&
+                         docsOfType.All(d => d.IdDocumentStatus == (int)DocumentStatusEnum.Aprobado))
+                {
+                    status = DocumentGroupStatus.Completo;
+                }
+                // 5. Fallback — hay documentos pero ninguno encaja en los casos anteriores
                 else
                 {
-                    allApproved = false;
-                    Console.WriteLine($"    ❌ Al menos uno sin aprobar → solicitud incompleta");
+                    status = DocumentGroupStatus.Cargado;
                 }
+
+                result.Add(new DocumentGroupStatusDto
+                {
+                    DocumentTypeId = group.Key,
+                    DocumentName = group.First().DocumentType.DocumentName,
+                    TotalRequired = required,
+                    TotalUploaded = uploaded,
+                    TotalApproved = approved,
+                    Status = status
+                });
             }
 
-            Console.WriteLine("--------------------------------------------");
-            Console.WriteLine($"  allApproved: {allApproved}");
-
-            // 6️⃣ Asignar estado de SOLICITUD
-            // EstadoSolicitud: 1 = Incompleto, 2 = Completo
-            if (allApproved)
-            {
-                request.IdApplicationStatus = 2;
-                Console.WriteLine("  🟢 ESTADO SOLICITUD → COMPLETO (id: 2)");
-            }
-            else
-            {
-                request.IdApplicationStatus = 1;
-                Console.WriteLine("  🔴 ESTADO SOLICITUD → INCOMPLETO (id: 1)");
-            }
-
-            Console.WriteLine("============================================");
-
-            await _requestRepository.UpdateAsync(request);
+            return result;
         }
     }
 }

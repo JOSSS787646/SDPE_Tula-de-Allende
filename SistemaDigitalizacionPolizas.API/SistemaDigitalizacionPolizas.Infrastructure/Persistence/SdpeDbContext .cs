@@ -1,7 +1,6 @@
 ﻿using Azure.Core;
 using SistemaDigitalizacionPolizas.Domain.Entities.Acquisition_Entities;
 using SistemaDigitalizacionPolizas.Domain.Entities.AcquisitionRequest_Entities;
-using SistemaDigitalizacionPolizas.Domain.Entities.Actions_Entities;
 using SistemaDigitalizacionPolizas.Domain.Entities.ApplicationStatus;
 using SistemaDigitalizacionPolizas.Domain.Entities.Auth_Entities;
 using SistemaDigitalizacionPolizas.Domain.Entities.Community_Entities;
@@ -33,7 +32,6 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence
         public DbSet<FundingSource> FundingSources { get; set; }
         public DbSet<Proyect> Proyects { get; set; }
         public DbSet<Prog> Progs { get; set; }
-        public DbSet <ActionsPolicy> Actions { get; set; }
         public DbSet<Community> Communities { get; set; }
         public DbSet<Beneficiary> Beneficiaries { get; set; }
         public DbSet<AcquisitionType> AcquisitionTypes { get; set; }
@@ -50,17 +48,20 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence
         public DbSet<PaymentPolicy> PaymentPolicies { get; set; }
 
         public DbSet<Notification> Notifications { get; set; }
+        public DbSet<ApplicationDetail> ApplicationDetails { get; set; }
 
         public DbSet<SystemConfiguration> SystemConfigurations { get; set; }
         public DbSet<RequestStatusHistory> RequestStatusHistories { get; set; }
         //Recuperacion de Contraseñas
         public DbSet<PasswordResetToken> PasswordResetTokens { get; set; }
-
+        public DbSet<AcquisitionRequest> AcquisitionRequestsPfd { get; set; }
 
         // Áreas
         public DbSet<AdministrativeUnit> AdministrativeUnits { get; set; }
 
 
+
+        public DbSet<NotificationHistory> NotificationHistories { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

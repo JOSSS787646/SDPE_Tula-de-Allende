@@ -14,5 +14,6 @@ namespace SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.RequestNot
         Task<RequestNotificationDto?> GetRequestNotificationInfoAsync(int requestId);
         Task<DocumentApprovedNotificationDto?> GetDocumentApprovedInfoAsync(int requestId);
         Task<DocumentObservedNotificationDto?> GetDocumentObservedInfoAsync(int requestId);
+
     }
 }

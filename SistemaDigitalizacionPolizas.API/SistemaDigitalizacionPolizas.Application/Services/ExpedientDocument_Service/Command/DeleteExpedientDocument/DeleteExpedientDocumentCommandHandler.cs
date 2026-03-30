@@ -1,4 +1,5 @@
-﻿using SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Service.Service;
+﻿using MediatR;
+using SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Service.Service;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Document;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Services;
 using SistemaDigitalizacionPolizas.Infrastructure.Persistence.Services.UploatFile;
@@ -62,14 +63,27 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
 
             try
             {
+                // ==========================================
+                // 1. Eliminar documento
+                // ==========================================
                 _repository.Delete(entity);
 
-                // 🔥 recalcular estado de la solicitud
+                // 🔥 IMPORTANTE: persistir antes de recalcular
+                await _unitOfWork.SaveChangesAsync();
+
+                // ==========================================
+                // 2. Recalcular estado
+                // ==========================================
                 await _requestStatusService.RecalculateStatus(requestId);
 
+                // ==========================================
+                // 3. Confirmar transacción
+                // ==========================================
                 await _unitOfWork.CommitAsync();
 
-                // eliminar archivo físico
+                // ==========================================
+                // 4. Eliminar archivo físico (fuera de transacción)
+                // ==========================================
                 if (!string.IsNullOrEmpty(filePath))
                     await _fileStorageService.DeleteAsync(filePath);
 

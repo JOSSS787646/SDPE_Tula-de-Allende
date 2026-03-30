@@ -16,5 +16,6 @@ namespace SistemaDigitalizacionPolizas.Domain.Dtos.RequestManager
         public string Email { get; set; } = null!;
 
         public string? AdministrativeUnit { get; set; }
+        public string? Phone { get; set; }
     }
 }

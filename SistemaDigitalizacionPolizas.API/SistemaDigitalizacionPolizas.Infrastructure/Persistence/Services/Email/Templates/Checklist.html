@@ -1,0 +1,45 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial;
+            font-size: 12px;
+        }
+
+        .header {
+            font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .item {
+            margin-bottom: 10px;
+        }
+
+        .status {
+            font-weight: bold;
+        }
+
+        .file {
+            margin-left: 15px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="header">
+        CHECKLIST DE DOCUMENTOS - Solicitud #{{REQUEST}}
+    </div>
+
+    <p><strong>Unidad:</strong> {{UNIT}}</p>
+    <p><strong>Fecha:</strong> {{DATE}}</p>
+
+    <hr>
+
+    {{ITEMS}}
+
+</body>
+</html>

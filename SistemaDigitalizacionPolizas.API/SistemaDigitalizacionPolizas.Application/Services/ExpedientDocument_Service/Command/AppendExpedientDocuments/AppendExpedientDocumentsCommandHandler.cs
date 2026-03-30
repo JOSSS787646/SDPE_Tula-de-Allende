@@ -8,22 +8,10 @@ using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.StatusRequest;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.RequestNotification;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Services;
 using SistemaDigitalizacionPolizas.Infrastructure.Persistence.Services.UploatFile;
+using SistemaDigitalizacionPolizas.Application.Services.Notification_Service.Commands.CreateNotification;
 
 namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Service.Command.AppendExpedientDocuments
 {
-    /// <summary>
-    /// Permite agregar nuevos documentos a un expediente existente.
-    ///
-    /// Flujo:
-    /// 1. Valida archivos enviados
-    /// 2. Inicia transacción
-    /// 3. Sube archivos al almacenamiento
-    /// 4. Crea entidades ExpedientDocument
-    /// 5. Guarda en base de datos
-    /// 6. Recalcula estado de la solicitud
-    /// 7. Confirma transacción
-    /// 8. Envía notificación por cola (worker)
-    /// </summary>
     public class AppendExpedientDocumentsCommandHandler
         : IRequestHandler<AppendExpedientDocumentsCommand, List<int>>
     {
@@ -38,6 +26,7 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
         private readonly IUserRepository _userRepository;
         private readonly IEmailService _emailService;
         private readonly IEmailQueue _emailQueue;
+        private readonly IMediator _mediator;
 
         public AppendExpedientDocumentsCommandHandler(
             IDocumentExpedientRepository repository,
@@ -50,7 +39,8 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
             IRequestStatusService requestStatusService,
             IUserRepository userRepository,
             IEmailService emailService,
-            IEmailQueue emailQueue)
+            IEmailQueue emailQueue,
+            IMediator mediator)
         {
             _repository = repository;
             _statusRepository = statusRepository;
@@ -63,12 +53,16 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
             _userRepository = userRepository;
             _emailService = emailService;
             _emailQueue = emailQueue;
+            _mediator = mediator;
         }
 
         public async Task<List<int>> Handle(
             AppendExpedientDocumentsCommand request,
             CancellationToken cancellationToken)
         {
+            // ================================
+            // VALIDACIONES DE ENTRADA
+            // ================================
             if (request.Files == null || !request.Files.Any())
                 throw new Exception("Debe enviar al menos un archivo.");
 
@@ -83,13 +77,18 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
 
             try
             {
-                // Obtener estado "Cargado"
+                // ================================
+                // OBTENER ESTADO BASE (CARGADO)
+                // ================================
                 var cargadoStatus = await _statusRepository
                     .GetByCodeAsync((int)DocumentStatusEnum.Cargado);
 
                 if (cargadoStatus == null)
                     throw new Exception("No existe estado 'Cargado' configurado.");
 
+                // ================================
+                // SUBIDA Y CREACIÓN DE ENTIDADES
+                // ================================
                 foreach (var file in request.Files)
                 {
                     if (file == null || file.Length == 0)
@@ -122,30 +121,33 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
                     });
                 }
 
-                // Guardar documentos
+                // ================================
+                // PERSISTENCIA
+                // ================================
                 await _repository.AddRangeAsync(entities);
 
-                // Recalcular estado de la solicitud
+                // Importante: guardar antes de recalcular estado
+                await _unitOfWork.SaveChangesAsync();
+
+                // ================================
+                // REGLA DE NEGOCIO:
+                // RECALCULAR ESTADO DE LA SOLICITUD
+                // ================================
                 await _requestStatusService.RecalculateStatus(request.RequestId);
 
                 await _unitOfWork.CommitAsync();
 
-                // =====================================
-                // VALIDAR NOTIFICACIÓN
-                // =====================================
+                // ================================
+                // OBTENER DATOS PARA NOTIFICACIONES
+                // ================================
 
-                var shouldSendNotification =
-                    await _notificationPolicyService
-                        .ShouldSendNotificationAsync(request.RequestId);
+                // *** CORRECCIÓN PRINCIPAL ***
+                // Se obtienen TODOS los emails e IDs del rol ReadView, no solo uno
+                var reviewerEmails = await _userRepository
+                    .GetEmailsByRoleAsync((int)SystemRolesEnum.ReadView);
 
-                if (!shouldSendNotification)
-                    return entities.Select(x => x.Id).ToList();
-
-                var reviewerEmail = await _userRepository
-                    .GetEmailByRoleAsync((int)SystemRolesEnum.ReadView);
-
-                if (string.IsNullOrEmpty(reviewerEmail))
-                    return entities.Select(x => x.Id).ToList();
+                var reviewerUserIds = await _userRepository
+                    .GetUserIdsByRoleAsync((int)SystemRolesEnum.ReadView);
 
                 var requestInfo = await _notificationRepository
                     .GetRequestNotificationInfoAsync(request.RequestId);
@@ -158,23 +160,59 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
                 var administrativeUnitName = requestInfo?.AdministrativeUnitName ?? "No especificada";
                 var requestDescription = requestInfo?.Justification ?? "Sin justificación";
 
-                // Enviar correo mediante cola (worker)
-                _emailQueue.Enqueue(() =>
-                    _emailService.SendDocumentsUploadedAsync(
-                        reviewerEmail,
-                        _currentUserService.Email,
-                        requestNumber,
-                        administrativeUnitName,
-                        requestDescription,
-                        DateTime.Now,
-                        documentList
-                    )
-                );
+                // ================================
+                // ENVÍO DE CORREO (CONDICIONAL)
+                // Se itera sobre TODOS los revisores con el rol
+                // ================================
+                var shouldSendEmail =
+                    await _notificationPolicyService
+                        .ShouldSendNotificationAsync(request.RequestId);
+
+                if (shouldSendEmail && reviewerEmails.Any())
+                {
+                    foreach (var email in reviewerEmails.Where(e => !string.IsNullOrEmpty(e)))
+                    {
+                        // Captura local para evitar closure bug en el loop
+                        var capturedEmail = email;
+
+                        _emailQueue.Enqueue(() =>
+                            _emailService.SendDocumentsUploadedAsync(
+                                capturedEmail,
+                                _currentUserService.Email,
+                                requestNumber,
+                                administrativeUnitName,
+                                requestDescription,
+                                DateTime.Now,
+                                documentList
+                            )
+                        );
+                    }
+                }
+
+                // ================================
+                // NOTIFICACIÓN IN-APP
+                // Se itera sobre TODOS los revisores con el rol
+                // ================================
+                foreach (var reviewerUserId in reviewerUserIds.Where(id => id > 0))
+                {
+                    await _mediator.Send(
+                        new CreateNotificationCommand(
+                            reviewerUserId,
+                            "Documentos agregados",
+                            $"Se agregaron {entities.Count} documento(s) a la solicitud {requestNumber}",
+                            request.RequestId
+                        ),
+                        cancellationToken
+                    );
+                }
 
                 return entities.Select(x => x.Id).ToList();
             }
             catch
             {
+                // ================================
+                // ROLLBACK + LIMPIEZA DE ARCHIVOS
+                // ================================
                 await _unitOfWork.RollbackAsync();
 
                 foreach (var path in uploadedPaths)

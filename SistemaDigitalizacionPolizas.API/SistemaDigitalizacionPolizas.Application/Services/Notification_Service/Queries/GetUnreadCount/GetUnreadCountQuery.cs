@@ -6,6 +6,5 @@ using System.Threading.Tasks;
 
 namespace SistemaDigitalizacionPolizas.Application.Services.Notification_Service.Queries.GetUnreadCount
 {
-    public record GetUnreadCountQuery(int UserId)
-         : IRequest<int>;
+    public record GetUnreadCountQuery(int UserId) : IRequest<int>;
 }

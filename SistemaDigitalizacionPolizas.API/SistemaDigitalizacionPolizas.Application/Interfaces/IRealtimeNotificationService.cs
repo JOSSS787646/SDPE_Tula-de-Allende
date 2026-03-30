@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SistemaDigitalizacionPolizas.Domain.Entities.Notification_Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,6 @@ namespace SistemaDigitalizacionPolizas.Application.Interfaces
 {
     public interface IRealtimeNotificationService
     {
-        Task SendAsync(int userId, string title, string message);
+        Task SendAsync(Notification notification);
     }
 }

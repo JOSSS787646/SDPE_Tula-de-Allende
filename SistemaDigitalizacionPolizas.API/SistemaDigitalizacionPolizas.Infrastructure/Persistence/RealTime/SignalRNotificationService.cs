@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using SistemaDigitalizacionPolizas.API.SignalR;
 using SistemaDigitalizacionPolizas.Application.Interfaces;
+using SistemaDigitalizacionPolizas.Domain.Entities.Notification_Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,14 +20,17 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.RealTime
             _hub = hub;
         }
 
-        public async Task SendAsync(int userId, string title, string message)
+        public async Task SendAsync(Notification notification)
         {
             await _hub.Clients
-                .User(userId.ToString())
+                .User(notification.UserId.ToString())
                 .SendAsync("ReceiveNotification", new
                 {
-                    title,
-                    message
+                    id = notification.IdNotification,
+                    title = notification.Title,
+                    message = notification.Message,
+                    requestId = notification.RequestId, 
+                    createdAt = notification.CreatedAt
                 });
         }
     }

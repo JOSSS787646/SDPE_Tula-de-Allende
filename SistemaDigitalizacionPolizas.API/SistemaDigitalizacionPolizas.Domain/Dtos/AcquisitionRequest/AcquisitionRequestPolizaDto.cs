@@ -27,5 +27,7 @@ namespace SistemaDigitalizacionPolizas.Domain.Dtos.AcquisitionRequest
         public string? PolicyNumber { get; set; }
 
         public string? CFDI { get; set; }
+
+        public DateTime? CompleteMaximeDate { get; set; }
     }
 }

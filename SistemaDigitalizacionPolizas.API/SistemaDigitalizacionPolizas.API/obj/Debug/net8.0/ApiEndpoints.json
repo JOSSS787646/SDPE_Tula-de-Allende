@@ -241,6 +241,22 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.AcquisitionRequestController",
+    "Method": "UpdateMaxDate",
+    "RelativePath": "api/AcquisitionRequest/update-max-date",
+    "HttpMethod": "PATCH",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "SistemaDigitalizacionPolizas.Domain.Dtos.AcquisitionRequest.UpdateMaxDateDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.AcquisitionTypeController",
     "Method": "Create",
     "RelativePath": "api/AcquisitionType",
@@ -335,100 +351,6 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.ActionsPolicyController",
-    "Method": "Create",
-    "RelativePath": "api/ActionsPolicy",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "command",
-        "Type": "SistemaDigitalizacionPolizas.Application.Services.ActionPolicy_Service.Commands.CreateActionPolicy.CreateActionPolicyCommand",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "System.Int32",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.ActionsPolicyController",
-    "Method": "GetAll",
-    "RelativePath": "api/ActionsPolicy",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.ActionsPolicyController",
-    "Method": "GetByCode",
-    "RelativePath": "api/ActionsPolicy/{code}",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "code",
-        "Type": "System.Int32",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.ActionsPolicyController",
-    "Method": "ChangeStatus",
-    "RelativePath": "api/ActionsPolicy/{code}/active",
-    "HttpMethod": "PATCH",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "code",
-        "Type": "System.Int32",
-        "IsRequired": true
-      },
-      {
-        "Name": "active",
-        "Type": "System.Boolean",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.ActionsPolicyController",
-    "Method": "Update",
-    "RelativePath": "api/ActionsPolicy/{id}",
-    "HttpMethod": "PUT",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "id",
-        "Type": "System.Int32",
-        "IsRequired": true
-      },
-      {
-        "Name": "command",
-        "Type": "SistemaDigitalizacionPolizas.Application.Services.ActionPolicy_Service.Commands.UpdateActionPolicy.UpdateActionPolicyCommand",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
     "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.AdministrativeUnitController",
     "Method": "Create",
     "RelativePath": "api/AdministrativeUnit",
@@ -517,6 +439,38 @@
       {
         "Name": "dto",
         "Type": "SistemaDigitalizacionPolizas.Domain.Dtos.AdministrativeUnit.AdministrativeUnitDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.ApplicationDetailsController",
+    "Method": "Delete",
+    "RelativePath": "api/ApplicationDetails/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.ApplicationDetailsController",
+    "Method": "UpsertDetails",
+    "RelativePath": "api/ApplicationDetails/upsert",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "SistemaDigitalizacionPolizas.Application.Services.ApplicationDetails_Services.Commands.UpsertApplicationDetails.UpsertApplicationDetailsCommand",
         "IsRequired": true
       }
     ],
@@ -1552,8 +1506,50 @@
   },
   {
     "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.NotificationsController",
-    "Method": "GetNotifications",
-    "RelativePath": "api/notifications/{userId}",
+    "Method": "Create",
+    "RelativePath": "api/notifications",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "command",
+        "Type": "SistemaDigitalizacionPolizas.Application.Services.Notification_Service.Commands.CreateNotification.CreateNotificationCommand",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Int32",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.NotificationsController",
+    "Method": "Delete",
+    "RelativePath": "api/notifications/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.NotificationsController",
+    "Method": "GetAllByUser",
+    "RelativePath": "api/notifications/all/{userId}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -1564,7 +1560,17 @@
         "IsRequired": true
       }
     ],
-    "ReturnTypes": []
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.List\u00601[[SistemaDigitalizacionPolizas.Domain.Dtos.Notificacion.NotificationDto, SistemaDigitalizacionPolizas.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
   },
   {
     "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.NotificationsController",
@@ -1585,13 +1591,13 @@
   {
     "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.NotificationsController",
     "Method": "MarkAsRead",
-    "RelativePath": "api/notifications/read/{notificationId}",
+    "RelativePath": "api/notifications/read/{id}",
     "HttpMethod": "PUT",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "notificationId",
+        "Name": "id",
         "Type": "System.Int32",
         "IsRequired": true
       }
@@ -1600,9 +1606,61 @@
   },
   {
     "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.NotificationsController",
-    "Method": "GetUnreadCount",
+    "Method": "GetUnreadByUser",
     "RelativePath": "api/notifications/unread/{userId}",
     "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "userId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.List\u00601[[SistemaDigitalizacionPolizas.Domain.Dtos.Notificacion.NotificationDto, SistemaDigitalizacionPolizas.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.NotificationsController",
+    "Method": "GetUnreadCount",
+    "RelativePath": "api/notifications/unread/count/{userId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "userId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Int32",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.NotificationsController",
+    "Method": "DeleteAllByUser",
+    "RelativePath": "api/notifications/user/{userId}",
+    "HttpMethod": "DELETE",
     "IsController": true,
     "Order": 0,
     "Parameters": [
@@ -1730,6 +1788,54 @@
         "Name": "pageSize",
         "Type": "System.Int32",
         "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.PdfController",
+    "Method": "GetPdf",
+    "RelativePath": "api/Pdf/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.PdfController",
+    "Method": "GetChecklistPdf",
+    "RelativePath": "api/Pdf/checklist/{requestId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "requestId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.PdfController",
+    "Method": "GetFormPdf",
+    "RelativePath": "api/Pdf/form/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
       }
     ],
     "ReturnTypes": []
@@ -2236,6 +2342,16 @@
         "IsRequired": true
       }
     ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.SystemConfigurationController",
+    "Method": "GetStatus",
+    "RelativePath": "api/system-configuration/status",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
     "ReturnTypes": []
   },
   {

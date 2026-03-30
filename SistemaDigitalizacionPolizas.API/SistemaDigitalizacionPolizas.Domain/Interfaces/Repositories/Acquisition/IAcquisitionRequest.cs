@@ -17,7 +17,7 @@ namespace SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Acquisitio
         Task<AcquisitionRequest?> GetByIdAsync(int id);
 
         Task<(IEnumerable<AcquisitionRequestPolizaDto> Data, int TotalRecords)>
-            GetAllPolizaInfoPaginatedAsync(int pageNumber, int pageSize);
+        GetAllPolizaInfoPaginatedAsync(int pageNumber, int pageSize);
 
         Task UpdateAsync(AcquisitionRequest entity);
         Task DeleteCascadeAsync(int solicitudId);
@@ -25,5 +25,9 @@ namespace SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Acquisitio
         Task<bool> ExistsByRequestNumberAsync(string requestNumber);
 
         Task RemovePaymentPolicyFromRequests(int paymentPolicyId);
+
+        Task UpdateMaxDateAsync(int requestId, DateTime newDate);
+
+        Task<AcquisitionRequest?> GetByIdWithDetailsAsync(int id);
     }
 }

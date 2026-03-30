@@ -1,7 +1,7 @@
 ﻿using MediatR;
-using Microsoft.Extensions.Logging;
 using SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Service.Service;
 using SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Service.Service.Gmail_Services;
+using SistemaDigitalizacionPolizas.Application.Services.Notification_Service.Commands.CreateNotification;
 using SistemaDigitalizacionPolizas.Domain.Enums;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Document;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.RequestNotification;
@@ -15,111 +15,86 @@ namespace SistemaDigitalizacionPolizas.Application.Services.AcqusitionRequest_Se
     {
         private readonly IDocumentExpedientRepository _repository;
         private readonly IRequestStatusService _requestStatusService;
+        private readonly IUnitOfWorkService _unitOfWork;
 
         private readonly INotificationPolicyService _notificationPolicyService;
         private readonly IRequestNotificationRepository _notificationRepository;
         private readonly IEmailService _emailService;
         private readonly IUserRepository _userRepository;
         private readonly IEmailQueue _emailQueue;
-
-        private readonly ILogger<ReviewDocumentCommandHandler> _logger;
+        private readonly IMediator _mediator;
+        private readonly ICurrentUserService _currentUserService;
 
         public ReviewDocumentCommandHandler(
             IDocumentExpedientRepository repository,
             IRequestStatusService requestStatusService,
+            IUnitOfWorkService unitOfWork,
             INotificationPolicyService notificationPolicyService,
             IRequestNotificationRepository notificationRepository,
             IEmailService emailService,
             IUserRepository userRepository,
             IEmailQueue emailQueue,
-            ILogger<ReviewDocumentCommandHandler> logger)
+            IMediator mediator,
+            ICurrentUserService currentUserService)
         {
             _repository = repository;
             _requestStatusService = requestStatusService;
+            _unitOfWork = unitOfWork;
 
             _notificationPolicyService = notificationPolicyService;
             _notificationRepository = notificationRepository;
             _emailService = emailService;
             _userRepository = userRepository;
             _emailQueue = emailQueue;
-
-            _logger = logger;
+            _mediator = mediator;
+            _currentUserService = currentUserService;
         }
 
         public async Task<bool> Handle(
             ReviewDocumentCommand request,
             CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Iniciando revisión de documento {DocumentId}", request.DocumentId);
-
+            // ================================
+            // OBTENER DOCUMENTO
+            // ================================
             var document = await _repository.GetByIdAsync(request.DocumentId);
 
             if (document == null)
-            {
-                _logger.LogWarning("Documento no encontrado {DocumentId}", request.DocumentId);
                 throw new Exception("Documento no encontrado.");
-            }
 
-            _logger.LogInformation(
-                "Documento encontrado: {FileName}, SolicitudId: {RequestId}",
-                document.FileName,
-                document.RequestId
-            );
-
+            // ================================
+            // VALIDACIÓN DE NEGOCIO
+            // ================================
             if (request.DocumentStatusId == (int)DocumentStatusEnum.Observado &&
-                string.IsNullOrWhiteSpace(request.Observations))
+                string.IsNullOrWhiteSpace(request.ObservationsUpload))
             {
                 throw new Exception("Debe agregar observaciones cuando el documento es observado.");
             }
 
-            // =====================================
+            // ================================
             // ACTUALIZAR DOCUMENTO
-            // =====================================
-
+            // ================================
             document.IdDocumentStatus = request.DocumentStatusId;
-            document.Observations = request.Observations;
+            document.ObservationsUpload = request.ObservationsUpload;
 
             await _repository.UpdateAsync(document);
 
-            // =====================================
-            // RECALCULAR ESTADO SOLICITUD
-            // =====================================
+            await _unitOfWork.SaveChangesAsync();
 
+            // ================================
+            // RECALCULAR ESTADO
+            // ================================
             await _requestStatusService.RecalculateStatus(document.RequestId);
 
-            // =====================================
-            // VALIDAR POLÍTICA DE CORREO
-            // =====================================
-
-            var shouldSendNotification =
-                await _notificationPolicyService.ShouldSendNotificationAsync(document.RequestId);
-
-            if (!shouldSendNotification)
-            {
-                _logger.LogInformation("Correo bloqueado por política de notificaciones.");
-                return true;
-            }
-
-            // =====================================
-            // OBTENER REVISOR
-            // =====================================
-
-            var reviewerEmail = await _userRepository
-                .GetEmailByRoleAsync((int)SystemRolesEnum.ReadView);
-
-            if (string.IsNullOrEmpty(reviewerEmail))
-                reviewerEmail = "readview@system.local";
-
+            // ================================
+            // DATOS PARA NOTIFICACIÓN
+            // ================================
             var result = request.DocumentStatusId == (int)DocumentStatusEnum.Aprobado
                 ? "Aprobado"
                 : "Observado";
 
-            // =====================================
-            // OBTENER INFO DE NOTIFICACIÓN
-            // =====================================
-
             string? managerEmail = null;
-            string? adminEmail = null;
+            List<string> adminEmails = new();
             string requestNumber = "";
 
             if (request.DocumentStatusId == (int)DocumentStatusEnum.Aprobado)
@@ -127,61 +102,106 @@ namespace SistemaDigitalizacionPolizas.Application.Services.AcqusitionRequest_Se
                 var info = await _notificationRepository
                     .GetDocumentApprovedInfoAsync(document.RequestId);
 
-                if (info == null)
-                    return true;
+                if (info != null)
+                {
+                    managerEmail = info.ManagerEmail;
+                    requestNumber = info.RequestNumber;
 
-                managerEmail = info.ManagerEmail;
-                requestNumber = info.RequestNumber;
-
-                adminEmail = await _userRepository
-                    .GetEmailByRoleAsync((int)SystemRolesEnum.AdministradorAdquisiciones);
+                    // 🔥 AQUÍ YA TRAES TODOS LOS ADMINS
+                    adminEmails = await _userRepository
+                        .GetEmailsByRoleAsync((int)SystemRolesEnum.AdministradorAdquisiciones);
+                }
             }
             else
             {
                 var info = await _notificationRepository
                     .GetDocumentObservedInfoAsync(document.RequestId);
 
-                if (info == null)
-                    return true;
+                if (info != null)
+                {
+                    managerEmail = info.ManagerEmail;
+                    requestNumber = info.RequestNumber;
 
-                managerEmail = info.ManagerEmail;
-                adminEmail = info.AdminEmail;
-                requestNumber = info.RequestNumber;
+                    // si aquí también quieres múltiples admins:
+                    adminEmails = await _userRepository
+                        .GetEmailsByRoleAsync((int)SystemRolesEnum.AdministradorAdquisiciones);
+                }
             }
 
-            // =====================================
-            // ENCOLAR CORREOS
-            // =====================================
+            // ================================
+            // NORMALIZAR DESTINATARIOS
+            // ================================
+            var recipients = new List<string>();
 
             if (IsValidEmail(managerEmail))
+                recipients.Add(managerEmail!);
+
+            // 🔥 CLAVE: agregar TODOS los admins
+            recipients.AddRange(adminEmails);
+
+            recipients = recipients
+                .Where(e => !string.IsNullOrWhiteSpace(e))
+                .Distinct()
+                .ToList();
+
+            // DEBUG (opcional)
+            // Console.WriteLine($"Correos a enviar: {recipients.Count}");
+
+            // ================================
+            // ENVÍO DE CORREOS
+            // ================================
+            var shouldSendEmail =
+                await _notificationPolicyService
+                    .ShouldSendNotificationAsync(document.RequestId);
+
+            if (shouldSendEmail && recipients.Any())
             {
-                _emailQueue.Enqueue(() =>
-                    _emailService.SendDocumentReviewedAsync(
-                        managerEmail,
-                        reviewerEmail,
-                        requestNumber,
-                        document.FileName,
-                        result,
-                        document.Observations
-                ));
+                foreach (var email in recipients)
+                {
+                    var capturedEmail = email;
+
+                    _emailQueue.Enqueue(() =>
+                        _emailService.SendDocumentReviewedAsync(
+                            capturedEmail,
+                            _currentUserService.Email,
+                            requestNumber,
+                            document.FileName ?? "Documento no identificado",
+                            result,
+                            document.ObservationsUpload
+                        )
+                    );
+                }
             }
 
-            if (IsValidEmail(adminEmail))
+            // ================================
+            // NOTIFICACIONES IN-APP (MULTI)
+            // ================================
+            var adquisicionesUserIds = await _userRepository
+                .GetUserIdsByRoleAsync((int)SystemRolesEnum.AdministradorAdquisiciones);
+
+            foreach (var userId in adquisicionesUserIds.Where(id => id > 0))
             {
-                _emailQueue.Enqueue(() =>
-    _emailService.SendDocumentReviewedAsync(
-        managerEmail,
-        reviewerEmail,
-        requestNumber,
-        document.FileName ?? "Documento no identificado",
-        result,
-        document.Observations
-));
+                var statusText = request.DocumentStatusId == (int)DocumentStatusEnum.Aprobado
+                    ? "aprobado"
+                    : "observado";
+
+                await _mediator.Send(
+                    new CreateNotificationCommand(
+                        userId,
+                        "Revisión de documento",
+                        $"El documento '{document.FileName}' fue {statusText} en la solicitud {requestNumber}",
+                        document.RequestId
+                    ),
+                    cancellationToken
+                );
             }
 
             return true;
         }
 
+        // ================================
+        // VALIDACIÓN DE EMAIL
+        // ================================
         private bool IsValidEmail(string? email)
         {
             if (string.IsNullOrWhiteSpace(email))

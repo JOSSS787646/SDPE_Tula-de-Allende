@@ -14,6 +14,8 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Acquisition_Pe
     {
         private readonly SdpeDbContext _context;
 
+
+
         public AcquisitionRequestRepository(SdpeDbContext context)
         {
             _context = context;
@@ -30,6 +32,7 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Acquisition_Pe
         public async Task<AcquisitionRequest?> GetByIdAsync(int id)
         {
             return await _context.AcquisitionRequests
+                .AsNoTracking() 
                 .FirstOrDefaultAsync(x => x.IdRequest == id);
         }
 
@@ -55,9 +58,17 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Acquisition_Pe
 
         public async Task UpdateAsync(AcquisitionRequest entity)
         {
+            _context.AcquisitionRequests.Update(entity); 
             await _context.SaveChangesAsync();
         }
 
+        public async Task UpdateMaxDateAsync(int requestId, DateTime newDate)
+        {
+            var request = await _context.AcquisitionRequests
+                .FirstOrDefaultAsync(x => x.IdRequest == requestId);
+
+            request.CompleteMaximeDate = newDate;
+        }
 
 
 
@@ -75,13 +86,12 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Acquisition_Pe
                     Justification = x.Justification,
                     AuthorizationDate = x.AuthorizationDate,
                     Observations = x.Observations,
+                    CompleteMaximeDate = x.CompleteMaximeDate,
 
-                    // 🔹 NUEVO
                     PolicyNumber = x.PaymentPolicy != null
                         ? x.PaymentPolicy.PolicyCode
                         : null,
 
-                    // 🔹 NUEVO
                     CFDI = x.CFDI,
 
                     AdministrativeUnit = x.AdministrativeUnit == null ? null : new SimpleCatalogDto
@@ -148,15 +158,33 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Acquisition_Pe
                     {
                         Id = x.ApplicationStatus.IdApplicationStatus,
                         Name = x.ApplicationStatus.Description
-                    }
+                    },
+
+                    // 🔥🔥🔥 AQUÍ LO NUEVO → DETALLES
+                    Details = x.Details.Select(d => new ApplicationDetailDto
+                    {
+                        IdDetail = d.IdDetail,
+
+                        // 🔥 COG con nombre
+                        Cog = d.Cog == null ? null : new SimpleCatalogDto
+                        {
+                            Id = d.Cog.idCog,
+                            Name = d.Cog.Description
+                        },
+
+                        Quantity = d.Quantity,
+                        UnitMeasure = d.UnitMeasure,
+                        Description = d.Description,
+                        UnitAmount = d.UnitAmount,
+                        TotalAmount = d.TotalAmount
+
+                    }).ToList()
                 })
                 .FirstOrDefaultAsync();
         }
 
 
-
-        public async Task<(IEnumerable<AcquisitionRequestPolizaDto> Data, int TotalRecords)>
- GetAllPolizaInfoPaginatedAsync(int pageNumber, int pageSize)
+        public async Task<(IEnumerable<AcquisitionRequestPolizaDto> Data, int TotalRecords)>GetAllPolizaInfoPaginatedAsync(int pageNumber, int pageSize)
         {
             var query = _context.AcquisitionRequests
                 .AsNoTracking();
@@ -198,29 +226,52 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Acquisition_Pe
 
             try
             {
-
-                // 1️⃣ Obtener la póliza asociada
+                // ==========================================
+                // 1️⃣ Obtener la póliza asociada (si la necesitas después)
+                // ==========================================
                 var policyId = await _context.AcquisitionRequests
                     .Where(x => x.IdRequest == solicitudId)
                     .Select(x => x.IdPaymentPolicy)
                     .FirstOrDefaultAsync();
 
+                // ==========================================
+                // 2️⃣ ELIMINAR DETALLES 🔥 (LO QUE TE FALTABA)
+                // ==========================================
+                await _context.ApplicationDetails
+                    .Where(x => x.ApplicationId == solicitudId)
+                    .ExecuteDeleteAsync();
+
+                // ==========================================
+                // 3️⃣ Documentos
+                // ==========================================
                 await _context.ExpedientDocuments
                     .Where(x => x.RequestId == solicitudId)
                     .ExecuteDeleteAsync();
 
+                // ==========================================
+                // 4️⃣ Managers
+                // ==========================================
                 await _context.RequestManagers
                     .Where(x => x.IdRequest == solicitudId)
                     .ExecuteDeleteAsync();
 
+                // ==========================================
+                // 5️⃣ Excepciones
+                // ==========================================
                 await _context.RequestDocumentExceptions
                     .Where(x => x.IdRequest == solicitudId)
                     .ExecuteDeleteAsync();
 
+                // ==========================================
+                // 6️⃣ Finalmente la solicitud
+                // ==========================================
                 await _context.AcquisitionRequests
                     .Where(x => x.IdRequest == solicitudId)
                     .ExecuteDeleteAsync();
 
+                // ==========================================
+                // COMMIT
+                // ==========================================
                 await transaction.CommitAsync();
             }
             catch
@@ -228,6 +279,26 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Acquisition_Pe
                 await transaction.RollbackAsync();
                 throw;
             }
+        }
+
+        public async Task<AcquisitionRequest?> GetByIdWithDetailsAsync(int id)
+        {
+            return await _context.AcquisitionRequests
+                .AsNoTracking()
+                .Include(x => x.AdministrativeUnit)
+                .Include(x => x.Program)
+                .Include(x => x.Project)
+                .Include(x => x.FundingSource)
+                .Include(x => x.AcquisitionType)
+                .Include(x => x.AcquisitionClassification)
+                .Include(x => x.Supplier)
+                .Include(x => x.PaymentPolicy)
+                .Include(x => x.Community)
+                .Include(x => x.Beneficiary)
+                .Include(x => x.ApplicationStatus)
+                .Include(x => x.Details)
+                    .ThenInclude(d => d.Cog)
+                .FirstOrDefaultAsync(x => x.IdRequest == id);
         }
 
     }

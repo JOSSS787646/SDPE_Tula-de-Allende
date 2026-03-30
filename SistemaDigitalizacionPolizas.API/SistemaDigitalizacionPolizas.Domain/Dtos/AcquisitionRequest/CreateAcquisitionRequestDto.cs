@@ -20,6 +20,8 @@ namespace SistemaDigitalizacionPolizas.Domain.Dtos.AcquisitionRequest
 
         public string? Observations { get; set; }
 
+        public DateTime? CompleteMaximeDate { get; set; }
+
         public string? CFDI { get; set; }
 
         // ===============================
@@ -37,5 +39,7 @@ namespace SistemaDigitalizacionPolizas.Domain.Dtos.AcquisitionRequest
         public int? IdCommunity { get; set; }
         public int? IdBeneficiary { get; set; }
         public int? IdPayementPolicy { get; set; }
+
+        public List<CreateApplicationDetailDto> Details { get; set; } = new();
     }
 }

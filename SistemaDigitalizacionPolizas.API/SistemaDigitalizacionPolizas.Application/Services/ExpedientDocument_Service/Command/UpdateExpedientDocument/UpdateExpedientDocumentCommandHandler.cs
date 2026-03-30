@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Service.Service;
 using SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Service.Service.Gmail_Services;
+using SistemaDigitalizacionPolizas.Application.Services.Notification_Service.Commands.CreateNotification;
 using SistemaDigitalizacionPolizas.Domain.Enums;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Document;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.RequestNotification;
@@ -9,25 +10,6 @@ using SistemaDigitalizacionPolizas.Infrastructure.Persistence.Services.UploatFil
 
 namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Service.Command.UpdateExpedientDocument
 {
-    /// <summary>
-    /// Permite actualizar un documento existente dentro de un expediente.
-    ///
-    /// Flujo del proceso:
-    /// 1. Obtiene el documento existente desde base de datos
-    /// 2. Inicia una transacción
-    /// 3. Si se envía un nuevo archivo:
-    ///     - se sube al almacenamiento
-    ///     - se actualiza el nombre y la ruta
-    ///     - se cambia el estado del documento a "Cargado"
-    /// 4. Actualiza observaciones si se proporcionan
-    /// 5. Recalcula el estado de la solicitud
-    /// 6. Confirma la transacción
-    /// 7. Elimina el archivo anterior si fue reemplazado
-    /// 8. Si la política lo permite, envía notificación por cola (worker)
-    ///
-    /// El correo no se envía directamente, se coloca en EmailQueue
-    /// para que el EmailBackgroundWorker lo procese con reintentos.
-    /// </summary>
     public class UpdateExpedientDocumentCommandHandler
        : IRequestHandler<UpdateExpedientDocumentCommand, bool>
     {
@@ -41,6 +23,7 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
         private readonly IEmailService _emailService;
         private readonly IUserRepository _userRepository;
         private readonly IEmailQueue _emailQueue;
+        private readonly IMediator _mediator;
 
         private readonly ICurrentUserService _currentUserService;
 
@@ -54,7 +37,8 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
             IEmailService emailService,
             IUserRepository userRepository,
             IEmailQueue emailQueue,
-            ICurrentUserService currentUserService)
+            ICurrentUserService currentUserService,
+            IMediator mediator)
         {
             _repository = repository;
             _fileStorageService = fileStorageService;
@@ -68,12 +52,16 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
             _emailQueue = emailQueue;
 
             _currentUserService = currentUserService;
+            _mediator = mediator;
         }
 
         public async Task<bool> Handle(
             UpdateExpedientDocumentCommand request,
             CancellationToken cancellationToken)
         {
+            // ================================
+            // OBTENER DOCUMENTO
+            // ================================
             var entity = await _repository.GetByIdAsync(request.Id);
 
             if (entity == null)
@@ -86,10 +74,10 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
 
             try
             {
-                // ====================================
-                // SUBIR NUEVO ARCHIVO SI SE ENVÍA
-                // ====================================
-
+                // ================================
+                // ACTUALIZACIÓN DE ARCHIVO (OPCIONAL)
+                // Si viene archivo nuevo, se reemplaza
+                // ================================
                 if (request.NewFile != null)
                 {
                     await using var stream = request.NewFile.OpenReadStream();
@@ -107,45 +95,40 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
                     entity.IdDocumentStatus = (int)DocumentStatusEnum.Cargado;
                 }
 
-                // ====================================
+                // ================================
                 // ACTUALIZAR OBSERVACIONES
-                // ====================================
-
+                // ================================
                 if (request.Observations != null)
                     entity.Observations = request.Observations;
 
                 _repository.Update(entity);
 
-                // ====================================
-                // RECALCULAR ESTADO DE SOLICITUD
-                // ====================================
+                // Importante: persistir antes de recalcular estado
+                await _unitOfWork.SaveChangesAsync();
 
+                // ================================
+                // REGLA DE NEGOCIO:
+                // RECALCULAR ESTADO DE LA SOLICITUD
+                // ================================
                 await _requestStatusService.RecalculateStatus(entity.RequestId);
 
                 await _unitOfWork.CommitAsync();
 
-                // ====================================
-                // ELIMINAR ARCHIVO ANTERIOR
-                // ====================================
-
+                // ================================
+                // LIMPIEZA DE ARCHIVO ANTERIOR
+                // Solo si se subió uno nuevo
+                // ================================
                 if (newFilePath != null && !string.IsNullOrEmpty(oldFilePath))
                     await _fileStorageService.DeleteAsync(oldFilePath);
 
-                // ====================================
-                // VALIDAR ENVÍO DE NOTIFICACIÓN
-                // ====================================
-
-                var shouldSendNotification =
-                    await _notificationPolicyService.ShouldSendNotificationAsync(entity.RequestId);
-
-                if (!shouldSendNotification)
-                    return true;
-
+                // ================================
+                // OBTENER DATOS PARA NOTIFICACIONES
+                // ================================
                 var reviewerEmail =
                     await _userRepository.GetEmailByRoleAsync((int)SystemRolesEnum.ReadView);
 
-                if (string.IsNullOrEmpty(reviewerEmail))
-                    return true;
+                var reviewerUserId =
+                    await _userRepository.GetUserIdByRoleAsync((int)SystemRolesEnum.ReadView);
 
                 var requestInfo =
                     await _notificationRepository.GetRequestNotificationInfoAsync(entity.RequestId);
@@ -154,26 +137,52 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
                 var administrativeUnitName = requestInfo?.AdministrativeUnitName ?? "No especificada";
                 var requestDescription = requestInfo?.Justification ?? "Sin justificación";
 
-                // ====================================
-                // ENCOLAR CORREO (WORKER)
-                // ====================================
+                // ================================
+                // ENVÍO DE CORREO (CONDICIONAL)
+                // Depende de política + email válido
+                // ================================
+                var shouldSendEmail =
+                    await _notificationPolicyService.ShouldSendNotificationAsync(entity.RequestId);
 
-                _emailQueue.Enqueue(() =>
-                    _emailService.SendDocumentsUploadedAsync(
-                        reviewerEmail,
-                        _currentUserService.Email,
-                        requestNumber,
-                        administrativeUnitName,
-                        requestDescription,
-                        DateTime.Now,
-                        $"<div>• Documento actualizado: {entity.FileName}</div>"
-                    )
-                );
+                if (shouldSendEmail && !string.IsNullOrEmpty(reviewerEmail))
+                {
+                    _emailQueue.Enqueue(() =>
+                        _emailService.SendDocumentsUploadedAsync(
+                            reviewerEmail,
+                            _currentUserService.Email,
+                            requestNumber,
+                            administrativeUnitName,
+                            requestDescription,
+                            DateTime.Now,
+                            $"<div>• Documento actualizado: {entity.FileName}</div>"
+                        )
+                    );
+                }
+
+                // ================================
+                // NOTIFICACIÓN (SIEMPRE SE INTENTA)
+                // Independiente del correo y política
+                // ================================
+                if (reviewerUserId > 0)
+                {
+                    await _mediator.Send(
+                        new CreateNotificationCommand(
+                            reviewerUserId,
+                            "Documento actualizado",
+                            $"Se actualizó el documento '{entity.FileName}' en la solicitud {requestNumber}",
+                            entity.RequestId
+                        ),
+                        cancellationToken
+                    );
+                }
 
                 return true;
             }
             catch
             {
+                // ================================
+                // ROLLBACK + LIMPIEZA
+                // ================================
                 await _unitOfWork.RollbackAsync();
 
                 if (newFilePath != null)

@@ -8,13 +8,16 @@
 
   <ItemGroup>
     <None Remove="Persistence\Services\Email\Templates\PasswordRecovery.html" />
+    <None Remove="Resources\Images\LogoPresidencia.webp" />
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Persistence\Services\Email\Templates\Checklist.html" />
     <EmbeddedResource Include="Persistence\Services\Email\Templates\DocumentReviewed.html" />
     <EmbeddedResource Include="Persistence\Services\Email\Templates\DocumentReviewNotification.html" />
     <EmbeddedResource Include="Persistence\Services\Email\Templates\DocumentsUploaded.html" />
     <EmbeddedResource Include="Persistence\Services\Email\Templates\PasswordRecovery.html" />
+    <EmbeddedResource Include="Resources\Images\LogoPresidencia.webp" />
   </ItemGroup>
 
   <ItemGroup>
@@ -29,6 +32,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="10.0.2" />
+    <PackageReference Include="QuestPDF" Version="2026.2.2" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.9.0" />
   </ItemGroup>
 

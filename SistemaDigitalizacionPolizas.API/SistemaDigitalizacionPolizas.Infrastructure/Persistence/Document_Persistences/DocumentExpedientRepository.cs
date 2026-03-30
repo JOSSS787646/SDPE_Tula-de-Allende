@@ -1,4 +1,5 @@
 ﻿using SistemaDigitalizacionPolizas.Domain.Dtos.AcquisitionRequest;
+using SistemaDigitalizacionPolizas.Domain.Dtos.ApplicationStatus;
 using SistemaDigitalizacionPolizas.Domain.Dtos.ExpedientDocument;
 using SistemaDigitalizacionPolizas.Domain.Entities.Document_Entities;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Document;
@@ -57,7 +58,9 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Document_Persi
         public async Task<List<ExpedientDocument>> GetActiveByRequestId(int requestId)
         {
             return await _context.ExpedientDocuments
+                 .AsNoTracking()
                 .Where(x =>
+
                     x.RequestId == requestId &&
                     x.Active == true)
                 .ToListAsync();
@@ -94,8 +97,7 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Document_Persi
         }
 
 
-        public async Task<(List<ExpedientDocument> Items, int Total)>
-     GetByClassificationAsync(int classificationId, int page, int pageSize)
+        public async Task<(List<ExpedientDocument> Items, int Total)> GetByClassificationAsync(int classificationId, int page, int pageSize)
         {
             var query = _context.ExpedientDocuments
                 .AsNoTracking()
@@ -128,19 +130,20 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Document_Persi
             if (classificationId == null)
                 return new List<RequestDocumentChecklistDto>();
 
-            // 1️⃣ Traer documentos del expediente UNA vez
+            // 1️⃣ Documentos del expediente
             var expedientDocs = await _context.ExpedientDocuments
                 .Where(x => x.RequestId == requestId && x.Active == true)
+                .Include(x => x.DocumentStatus)
                 .AsNoTracking()
                 .ToListAsync();
 
-            // 2️⃣ Traer excepciones UNA vez
+            // 2️⃣ Excepciones
             var exceptions = await _context.RequestDocumentExceptions
                 .Where(x => x.IdRequest == requestId)
                 .AsNoTracking()
                 .ToListAsync();
 
-            // 3️⃣ Reglas de documentos por clasificación
+            // 3️⃣ Reglas
             var documentRules = await (
                 from tcd in _context.ClasificationDocumentTypes
                 join td in _context.Documents
@@ -156,9 +159,9 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Document_Persi
                 }
             )
             .AsNoTracking()
-               .ToListAsync();
+            .ToListAsync();
 
-            // 4️⃣ Construir DTO respetando tu modelo
+            // 🔥 RESULTADO FINAL BIEN ESTRUCTURADO
             var result = documentRules.Select(rule =>
             {
                 var docs = expedientDocs
@@ -177,23 +180,33 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Document_Persi
 
                     Uploaded = docs.Any(),
 
-                    Observations = docs
-                        .Select(x => x.Observations)
-                        .FirstOrDefault(),
+                    // 🔥 AQUÍ ESTÁ LA CLAVE (todo por archivo)
+                    Files = docs.Select(x => new DocumentFileDto
+                    {
+                        FileId = x.Id,
+                        FileName = x.FileName,
+                        FileUrl = x.FilePath,
 
-                    FileIds = docs
-                        .Select(x => x.Id)
-                        .ToList(),
+                        // Se llena en el handler
+                        PreviewUrl = string.Empty,
 
-                    FileNames = docs
-                        .Select(x => x.FileName)
-                        .ToList(),
+                        Observation = string.IsNullOrWhiteSpace(x.Observations)
+                            ? null
+                            : x.Observations,
 
-                    FileUrls = docs
-                        .Select(x => x.FilePath)
-                        .ToList(),
+                        ObservationUpload = string.IsNullOrWhiteSpace(x.ObservationsUpload)
+                            ? null
+                            : x.ObservationsUpload,
 
-                    PreviewUrls = null
+                        Status = x.DocumentStatus == null
+                            ? null
+                            : new DocumentStatusSimpleDto
+                            {
+                                Id = x.DocumentStatus.idDocumentStatus,
+                                Description = x.DocumentStatus.Description
+                            }
+
+                    }).ToList()
                 };
             }).ToList();
 

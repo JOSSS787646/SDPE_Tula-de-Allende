@@ -33,6 +33,28 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Permissions_Pe
         }
 
 
+        // ── Retorna los emails de TODOS los usuarios activos con el rol dado ──
+        public async Task<List<string>> GetEmailsByRoleAsync(int roleId)
+        {
+            return await _context.Users
+                .Where(u => u.IdRole == roleId
+                         && u.Asset == true
+                         && !string.IsNullOrEmpty(u.Email))
+                .Select(u => u.Email!)
+                .ToListAsync();
+        }
+
+        // ── Retorna los IDs de TODOS los usuarios activos con el rol dado ──
+        public async Task<List<int>> GetUserIdsByRoleAsync(int roleId)
+        {
+            return await _context.Users
+                .Where(u => u.IdRole == roleId
+                         && u.Asset == true)
+                .Select(u => u.IdUser)
+                .ToListAsync();
+        }
+
+
         public async Task<string?> GetEmailByRoleAsync(int roleId)
         {
             return await _context.Users
@@ -105,6 +127,7 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Permissions_Pe
                     Role = u.Role.RolName,
                     idRole=u.IdRole,
                     AdministrativeUnit = u.AdministrativeUnit.Description,
+                    IdAdministrativeUnit=u.IdAdministrativeUnit,
                     Asset = u.Asset
                 })
                 .ToListAsync();

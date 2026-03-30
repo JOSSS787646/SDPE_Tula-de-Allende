@@ -1,5 +1,7 @@
 ﻿using MediatR;
+using SistemaDigitalizacionPolizas.Domain.Constants;
 using SistemaDigitalizacionPolizas.Domain.Dtos.AcquisitionRequest;
+using SistemaDigitalizacionPolizas.Domain.Enums;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Document;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Services;
 using SistemaDigitalizacionPolizas.Infrastructure.Persistence.Services.UploatFile;
@@ -28,15 +30,61 @@ namespace SistemaDigitalizacionPolizas.Application.Services.AcqusitionRequest_Se
 
             foreach (var document in result)
             {
-                if (document.FileUrls != null && document.FileUrls.Any())
+                // ================================
+                // CALCULAR ESTADO GLOBAL
+                // ================================
+                if (!document.RequiredByRule || document.NoApplies)
                 {
-                    document.PreviewUrls = document.FileUrls
-                        .Select(url => _fileStorageService.GetPresignedUrl(url, 10))
-                        .ToList();
+                    document.GlobalStatus = DocumentGlobalStatus.NoAplica;
+                }
+                else if (document.Files == null || !document.Files.Any())
+                {
+                    document.GlobalStatus = DocumentGlobalStatus.Pendiente;
                 }
                 else
                 {
-                    document.PreviewUrls = new List<string>();
+                    int uploaded = document.Files.Count;
+
+                    int approved = document.Files.Count(f =>
+                        f.Status != null &&
+                        f.Status.Id == (int)DocumentStatusEnum.Aprobado);
+
+                    int observed = document.Files.Count(f =>
+                        f.Status != null &&
+                        f.Status.Id == (int)DocumentStatusEnum.Observado);
+
+                    int loaded = document.Files.Count(f =>
+                        f.Status != null &&
+                        f.Status.Id == (int)DocumentStatusEnum.Cargado);
+
+                    if (observed > 0)
+                    {
+                        document.GlobalStatus = DocumentGlobalStatus.Observado;
+                    }
+                    else if (loaded > 0)
+                    {
+                        document.GlobalStatus = DocumentGlobalStatus.Cargado;
+                    }
+                    else if (approved == uploaded && uploaded > 0)
+                    {
+                        document.GlobalStatus = DocumentGlobalStatus.Completo;
+                    }
+                    else
+                    {
+                        document.GlobalStatus = DocumentGlobalStatus.Cargado;
+                    }
+                }
+
+                // ================================
+                // GENERAR PREVIEW URLs (SIN CAMBIOS)
+                // ================================
+                if (document.Files != null && document.Files.Any())
+                {
+                    foreach (var file in document.Files)
+                    {
+                        file.PreviewUrl = _fileStorageService
+                            .GetPresignedUrl(file.FileUrl, 10);
+                    }
                 }
             }
 

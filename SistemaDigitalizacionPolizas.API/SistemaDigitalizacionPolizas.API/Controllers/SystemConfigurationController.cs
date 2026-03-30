@@ -1,4 +1,5 @@
 ﻿using SistemaDigitalizacionPolizas.Application.Services.SystemConfiguration_Service.Commands.UpsertSystemConfiguration;
+using SistemaDigitalizacionPolizas.Application.Services.SystemConfiguration_Service.Queries.GetSystemConfigurationStatus;
 
 namespace SistemaDigitalizacionPolizas.API.Controllers
 {
@@ -23,6 +24,14 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
                 message = "Configuration saved successfully",
                 idConfiguration = id
             });
+        }
+
+
+        [HttpGet("status")]
+        public async Task<IActionResult> GetStatus()
+        {
+            var result = await _mediator.Send(new GetSystemConfigurationStatusCommand());
+            return Ok(result);
         }
     }
 }
