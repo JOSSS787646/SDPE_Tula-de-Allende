@@ -242,6 +242,16 @@
   },
   {
     "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.AcquisitionRequestController",
+    "Method": "TestExpiredRequests",
+    "RelativePath": "api/AcquisitionRequest/test-expired-requests",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.AcquisitionRequestController",
     "Method": "UpdateMaxDate",
     "RelativePath": "api/AcquisitionRequest/update-max-date",
     "HttpMethod": "PATCH",

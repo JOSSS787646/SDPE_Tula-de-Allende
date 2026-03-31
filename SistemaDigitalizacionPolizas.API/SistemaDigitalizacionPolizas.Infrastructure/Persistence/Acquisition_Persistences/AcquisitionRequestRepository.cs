@@ -71,6 +71,9 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Acquisition_Pe
             if (rows == 0)
                 throw new Exception("No existe");
         }
+
+
+
         public async Task UpdateStatusAsync(int requestId, int newStatus)
         {
             await _context.AcquisitionRequests
@@ -337,21 +340,26 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Acquisition_Pe
                 from s in _context.AcquisitionRequests
 
                 join de in _context.ExpedientDocuments
-                    on s.IdRequest equals de.RequestId
+                    on s.IdRequest equals de.RequestId into deGroup
+                from de in deGroup.DefaultIfEmpty()
 
                 join ed in _context.DocumentStatuses
-                    on de.IdDocumentStatus equals ed.idDocumentStatus
+                    on de.IdDocumentStatus equals ed.idDocumentStatus into edGroup
+                from ed in edGroup.DefaultIfEmpty()
 
-                // 🔥 CORRECCIÓN: usar DocumentTypes directamente
                 join td in _context.Documents
-                    on de.DocumentTypeId equals td.IdDocumentType
+                    on de.DocumentTypeId equals td.IdDocumentType into tdGroup
+                from td in tdGroup.DefaultIfEmpty()
 
-                // 🔥 Encargados (correcto para notificaciones)
                 join e in _context.RequestManagers
-                    on s.IdRequest equals e.IdRequest
+                    on s.IdRequest equals e.IdRequest into em
+                from e in em.DefaultIfEmpty()
 
                 where s.CompleteMaximeDate < today
-                    && ed.Description != "Aprobado"
+
+                    // 🔥 FILTRO SEGURO
+                    && (ed == null || ed.Description != "Aprobado")
+
                     && (
                         s.LastNotificationSentAt == null ||
                         s.LastNotificationSentAt <= today.AddDays(-7)
@@ -363,17 +371,19 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Acquisition_Pe
                     s.RequestNumber,
                     s.LastNotificationSentAt,
 
-                    UserEmail = e.Email,
-                    UserName = e.FirstName,
+                    UserEmail = e != null ? (e.Email ?? "") : "",
+                    UserName = e != null ? (e.FirstName ?? "Usuario") : "Usuario",
 
-                    // 🔥 YA ES STRING
-                    DocumentName = td.DocumentName,
-                    Status = ed.Description
+                    DocumentName = td != null ? (td.DocumentName ?? "Documento") : "Documento",
+                    Status = ed != null ? (ed.Description ?? "Pendiente") : "Pendiente"
                 }
             ).ToListAsync();
 
-            // 🔥 AGRUPAR POR SOLICITUD + USUARIO
-            var result = data
+            var filtered = data
+                .Where(x => !string.IsNullOrEmpty(x.UserEmail))
+                .ToList();
+
+            var result = filtered
                 .GroupBy(x => new { x.IdRequest, x.UserEmail })
                 .Select(g => new ExpiredRequestDto
                 {
@@ -397,13 +407,28 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Acquisition_Pe
         public async Task UpdateNotificationMetadataAsync(int requestId)
         {
             var request = await _context.AcquisitionRequests
-                .FirstOrDefaultAsync(x => x.IdRequest == requestId);
+                .Where(x => x.IdRequest == requestId)
+                .Select(x => new
+                {
+                    x.IdRequest,
+                    x.NotificationCount
+                })
+                .FirstOrDefaultAsync();
 
             if (request == null)
                 return;
 
-            request.LastNotificationSentAt = DateTime.UtcNow;
-            request.NotificationCount += 1;
+            var entity = new AcquisitionRequest
+            {
+                IdRequest = request.IdRequest,
+                LastNotificationSentAt = DateTime.UtcNow,
+                NotificationCount = (request.NotificationCount) + 1
+            };
+
+            _context.AcquisitionRequests.Attach(entity);
+
+            _context.Entry(entity).Property(x => x.LastNotificationSentAt).IsModified = true;
+            _context.Entry(entity).Property(x => x.NotificationCount).IsModified = true;
 
             await _context.SaveChangesAsync();
         }

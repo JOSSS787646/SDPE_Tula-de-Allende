@@ -105,7 +105,7 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
                             allLoaded = false;
                             break;
                         case DocumentStatusEnum.Aprobado:
-                            allLoaded = false;
+                           
                             break;
                         case DocumentStatusEnum.Cargado:
                             hasLoaded = true;

@@ -12,7 +12,7 @@ namespace SistemaDigitalizacionPolizas.Domain.Specifications
         public RequestStatusEnum TargetStatus => RequestStatusEnum.Incompleto;
 
         public bool IsSatisfiedBy(StatusEvaluationContext ctx)
-            => (ctx.IsExpired || ctx.HasMissing)
+            => (ctx.IsExpired || ctx.HasMissing || !ctx.AllLoaded) 
                && !ctx.HasObservado;
     }
 }

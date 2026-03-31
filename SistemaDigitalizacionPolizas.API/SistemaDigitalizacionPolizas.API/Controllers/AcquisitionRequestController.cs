@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using SistemaDigitalizacionPolizas.Application.Services.AcqusitionRequest_Service.Commands.CreateRequest;
 using SistemaDigitalizacionPolizas.Application.Services.AcqusitionRequest_Service.Commands.DeleteRequest;
+using SistemaDigitalizacionPolizas.Application.Services.AcqusitionRequest_Service.Commands.ProcessExpiredRequests;
 using SistemaDigitalizacionPolizas.Application.Services.AcqusitionRequest_Service.Commands.UpdateAcqusitionRequest;
 using SistemaDigitalizacionPolizas.Application.Services.AcqusitionRequest_Service.Commands.UpdateCFDI;
 using SistemaDigitalizacionPolizas.Application.Services.AcqusitionRequest_Service.Commands.UpdateMaxDate;
@@ -127,6 +128,15 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
             await _mediator.Send(command);
 
             return Ok(new { message = "Fecha actualizada correctamente" });
+        }
+
+
+
+        [HttpPost("test-expired-requests")]
+        public async Task<IActionResult> TestExpiredRequests()
+        {
+            await _mediator.Send(new ProcessExpiredRequestsCommand());
+            return Ok("Ejecutado");
         }
     }
 }

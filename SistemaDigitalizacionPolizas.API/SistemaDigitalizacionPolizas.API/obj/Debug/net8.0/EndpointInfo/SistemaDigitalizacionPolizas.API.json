@@ -472,6 +472,18 @@
         }
       }
     },
+    "/api/AcquisitionRequest/test-expired-requests": {
+      "post": {
+        "tags": [
+          "AcquisitionRequest"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/AcquisitionType": {
       "post": {
         "tags": [
