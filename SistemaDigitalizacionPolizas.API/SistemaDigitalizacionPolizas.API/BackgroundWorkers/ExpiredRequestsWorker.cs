@@ -5,24 +5,74 @@ namespace SistemaDigitalizacionPolizas.API.BackgroundWorkers
     public class ExpiredRequestsWorker : BackgroundService
     {
         private readonly IServiceScopeFactory _scopeFactory;
+        private readonly ILogger<ExpiredRequestsWorker> _logger;
 
-        public ExpiredRequestsWorker(IServiceScopeFactory scopeFactory)
+        public ExpiredRequestsWorker(
+            IServiceScopeFactory scopeFactory,
+            ILogger<ExpiredRequestsWorker> logger)
         {
             _scopeFactory = scopeFactory;
+            _logger = logger;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
+            _logger.LogInformation("[ExpiredRequestsWorker] Worker iniciado: {Time}", DateTimeOffset.UtcNow);
+
+            // Espera 30s al arrancar para que la app termine de inicializarse
+            await Task.Delay(TimeSpan.FromSeconds(30), stoppingToken);
+
             while (!stoppingToken.IsCancellationRequested)
             {
-                using var scope = _scopeFactory.CreateScope();
+                _logger.LogInformation("[ExpiredRequestsWorker] Iniciando ciclo: {Time}", DateTimeOffset.UtcNow);
 
-                var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+                try
+                {
+                    using var scope = _scopeFactory.CreateScope();
+                    var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
 
-                await mediator.Send(new ProcessExpiredRequestsCommand());
+                    // Timeout de 5 minutos por si el proceso se cuelga
+                    using var cts = CancellationTokenSource.CreateLinkedTokenSource(stoppingToken);
+                    cts.CancelAfter(TimeSpan.FromMinutes(5));
 
-                await Task.Delay(TimeSpan.FromHours(24), stoppingToken);
+                    await mediator.Send(new ProcessExpiredRequestsCommand(), cts.Token);
+
+                    _logger.LogInformation("[ExpiredRequestsWorker] Ciclo completado exitosamente: {Time}", DateTimeOffset.UtcNow);
+                }
+                catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested)
+                {
+                    // Apagado limpio de la app, no es error
+                    _logger.LogInformation("[ExpiredRequestsWorker] Worker detenido por señal de apagado.");
+                    break;
+                }
+                catch (OperationCanceledException)
+                {
+                    // Timeout de 5 minutos
+                    _logger.LogError("[ExpiredRequestsWorker] El proceso excedió el tiempo límite de 5 minutos.");
+                }
+                catch (Exception ex)
+                {
+                    // Error inesperado — loguea pero NO detiene el worker
+                    _logger.LogError(ex, "[ExpiredRequestsWorker] Error en el ciclo. Se reintentará en el próximo intervalo.");
+                }
+                finally
+                {
+                    _logger.LogInformation("[ExpiredRequestsWorker] Próxima ejecución en 24 horas: {Time}",
+                        DateTimeOffset.UtcNow.AddHours(24));
+                }
+
+                try
+                {
+                    await Task.Delay(TimeSpan.FromHours(24), stoppingToken);
+                }
+                catch (OperationCanceledException)
+                {
+                    // App se está apagando durante el Delay, salir limpio
+                    break;
+                }
             }
+
+            _logger.LogInformation("[ExpiredRequestsWorker] Worker finalizado: {Time}", DateTimeOffset.UtcNow);
         }
     }
 }

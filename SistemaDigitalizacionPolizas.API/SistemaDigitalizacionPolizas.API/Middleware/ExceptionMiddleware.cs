@@ -1,48 +1,63 @@
-﻿namespace SistemaDigitalizacionPolizas.API.Middleware
-{/*
-        public class ExceptionMiddleware
-        {
+﻿using System.Text.Json;
 
-
-        
-        //Permite lanzar los errores de UnauthorizedAccessException como 403 Forbidden
+namespace SistemaDigitalizacionPolizas.API.Middleware
+{
+    public class ExceptionMiddleware
+    {
         private readonly RequestDelegate _next;
+        private readonly ILogger<ExceptionMiddleware> _logger;
 
-            public ExceptionMiddleware(RequestDelegate next)
+        public ExceptionMiddleware(RequestDelegate next, ILogger<ExceptionMiddleware> logger)
+        {
+            _next = next;
+            _logger = logger;
+        }
+
+        public async Task Invoke(HttpContext context)
+        {
+            try
             {
-                _next = next;
+                await _next(context);
             }
-
-            public async Task Invoke(HttpContext context)
+            catch (UnauthorizedAccessException ex)
             {
-                try
-                {
-                    await _next(context);
-                }
-                catch (UnauthorizedAccessException ex)
-                {
-                    context.Response.StatusCode = StatusCodes.Status403Forbidden;
-                    context.Response.ContentType = "application/json";
-
-                    await context.Response.WriteAsync(JsonSerializer.Serialize(new
-                    {
-                        success = false,
-                        message = ex.Message
-                    }));
-                }
-                catch (Exception)
-                {
-                    context.Response.StatusCode = StatusCodes.Status500InternalServerError;
-                    context.Response.ContentType = "application/json";
-
-                    await context.Response.WriteAsync(JsonSerializer.Serialize(new
-                    {
-                        success = false,
-                        message = "Error interno del servidor"
-                    }));
-                }
+                _logger.LogWarning(ex, "[Middleware] Acceso no autorizado: {Path}", context.Request.Path);
+                await WriteResponse(context, StatusCodes.Status403Forbidden, "No tienes permisos para realizar esta acción.");
             }
-        }*/
+            catch (KeyNotFoundException ex)
+            {
+                _logger.LogWarning(ex, "[Middleware] Recurso no encontrado: {Path}", context.Request.Path);
+                await WriteResponse(context, StatusCodes.Status404NotFound, "El recurso solicitado no existe.");
+            }
+            catch (ArgumentException ex)
+            {
+                _logger.LogWarning(ex, "[Middleware] Argumento inválido: {Path}", context.Request.Path);
+                await WriteResponse(context, StatusCodes.Status400BadRequest, ex.Message);
+            }
+            catch (Exception ex)
+            {
+                // ✅ TÚ ves el error completo en los logs
+                // ❌ El cliente solo ve "Error interno del servidor"
+                _logger.LogError(ex, "[Middleware] Error no controlado en: {Method} {Path}",
+                    context.Request.Method, context.Request.Path);
+
+                await WriteResponse(context, StatusCodes.Status500InternalServerError, "Error interno del servidor.");
+            }
+        }
+
+        private static async Task WriteResponse(HttpContext context, int statusCode, string message)
+        {
+            if (context.Response.HasStarted)
+                return;
+
+            context.Response.StatusCode = statusCode;
+            context.Response.ContentType = "application/json";
+
+            await context.Response.WriteAsync(JsonSerializer.Serialize(new
+            {
+                success = false,
+                message
+            }));
+        }
+    }
 }
-
-

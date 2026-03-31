@@ -411,7 +411,7 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Acquisition_Pe
                 .Select(x => new
                 {
                     x.IdRequest,
-                    x.NotificationCount
+                    NotificationCount = (int?)x.NotificationCount ?? 0 // Cast a nullable
                 })
                 .FirstOrDefaultAsync();
 
@@ -422,11 +422,10 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Acquisition_Pe
             {
                 IdRequest = request.IdRequest,
                 LastNotificationSentAt = DateTime.UtcNow,
-                NotificationCount = (request.NotificationCount) + 1
+                NotificationCount = request.NotificationCount + 1
             };
 
             _context.AcquisitionRequests.Attach(entity);
-
             _context.Entry(entity).Property(x => x.LastNotificationSentAt).IsModified = true;
             _context.Entry(entity).Property(x => x.NotificationCount).IsModified = true;
 

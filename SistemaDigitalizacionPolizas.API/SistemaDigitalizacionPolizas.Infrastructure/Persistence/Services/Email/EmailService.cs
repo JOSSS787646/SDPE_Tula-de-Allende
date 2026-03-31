@@ -300,9 +300,7 @@ public class EmailService : IEmailService
     {
         return string.Join("", requests.Select(r =>
         {
-            var docs = string.Join("", r.MissingDocuments.Select(d =>
-                $"<li style='margin-bottom:4px;'>📄 {d.DocumentName}</li>"
-            ));
+          
 
             return $@"
         <div style='
@@ -319,7 +317,7 @@ public class EmailService : IEmailService
             </p>
 
             <ul style='padding-left:18px;font-size:13px;color:#444;'>
-                {docs}
+            
             </ul>
 
         </div>";

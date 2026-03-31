@@ -105,11 +105,12 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
                             allLoaded = false;
                             break;
                         case DocumentStatusEnum.Aprobado:
-                           
+                            // cuenta como cargado también
                             break;
                         case DocumentStatusEnum.Cargado:
                             hasLoaded = true;
                             allApproved = false;
+                            // ✅ NO tocar allLoaded aquí
                             break;
                         default:
                             allApproved = false;
@@ -118,8 +119,13 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
                     }
                 }
 
-                if (docsOfType.Any(d => d.IdDocumentStatus != (int)DocumentStatusEnum.Aprobado))
-                    allApproved = false;
+                // ✅ allLoaded = true solo si TODOS son Cargado o Aprobado
+                bool typeFullyLoaded = docsOfType.All(d =>
+                    d.IdDocumentStatus == (int)DocumentStatusEnum.Cargado ||
+                    d.IdDocumentStatus == (int)DocumentStatusEnum.Aprobado);
+
+                if (!typeFullyLoaded)
+                    allLoaded = false;
             }
 
             bool isExpired = request.CompleteMaximeDate.HasValue &&

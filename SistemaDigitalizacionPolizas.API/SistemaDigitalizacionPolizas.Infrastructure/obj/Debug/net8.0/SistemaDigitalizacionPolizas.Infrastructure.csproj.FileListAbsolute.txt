@@ -221,6 +221,12 @@ C:\Estadia Ingenieria\Marzo\Sprint92\SistemaDigitalizacionPolizas.API\SistemaDig
 C:\Estadia Ingenieria\Marzo\Sprint92\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Infrastructure\obj\Debug\net8.0\SistemaDigitalizacionPolizas.Infrastructure.pdb
 C:\Estadia Ingenieria\Marzo\Sprint92\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Infrastructure\obj\Debug\net8.0\SistemaDigitalizacionPolizas.Infrastructure.genruntimeconfig.cache
 C:\Estadia Ingenieria\Marzo\Sprint92\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Infrastructure\obj\Debug\net8.0\ref\SistemaDigitalizacionPolizas.Infrastructure.dll
+C:\Estadia Ingenieria\Marzo\Sprint10\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Infrastructure\obj\Debug\net8.0\SistemaDigitalizacionPolizas.Infrastructure.csproj.AssemblyReference.cache
+C:\Estadia Ingenieria\Marzo\Sprint10\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Infrastructure\obj\Debug\net8.0\SistemaDigitalizacionPolizas.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+C:\Estadia Ingenieria\Marzo\Sprint10\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Infrastructure\obj\Debug\net8.0\SistemaDigitalizacionPolizas.Infrastructure.AssemblyInfoInputs.cache
+C:\Estadia Ingenieria\Marzo\Sprint10\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Infrastructure\obj\Debug\net8.0\SistemaDigitalizacionPolizas.Infrastructure.AssemblyInfo.cs
+C:\Estadia Ingenieria\Marzo\Sprint10\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Infrastructure\obj\Debug\net8.0\SistemaDigitalizacionPolizas.Infrastructure.csproj.CoreCompileInputs.cache
+C:\Estadia Ingenieria\Marzo\Sprint10\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Infrastructure\obj\Debug\net8.0\SistemaDigitalizacionPolizas.Infrastructure.sourcelink.json
 C:\Estadia Ingenieria\Marzo\Sprint10\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Infrastructure\bin\Debug\net8.0\LatoFont\Lato-Black.ttf
 C:\Estadia Ingenieria\Marzo\Sprint10\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Infrastructure\bin\Debug\net8.0\LatoFont\Lato-BlackItalic.ttf
 C:\Estadia Ingenieria\Marzo\Sprint10\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Infrastructure\bin\Debug\net8.0\LatoFont\Lato-Bold.ttf
@@ -248,12 +254,6 @@ C:\Estadia Ingenieria\Marzo\Sprint10\SistemaDigitalizacionPolizas.API\SistemaDig
 C:\Estadia Ingenieria\Marzo\Sprint10\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Infrastructure\bin\Debug\net8.0\SistemaDigitalizacionPolizas.Domain.dll
 C:\Estadia Ingenieria\Marzo\Sprint10\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Infrastructure\bin\Debug\net8.0\SistemaDigitalizacionPolizas.Application.pdb
 C:\Estadia Ingenieria\Marzo\Sprint10\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Infrastructure\bin\Debug\net8.0\SistemaDigitalizacionPolizas.Domain.pdb
-C:\Estadia Ingenieria\Marzo\Sprint10\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Infrastructure\obj\Debug\net8.0\SistemaDigitalizacionPolizas.Infrastructure.csproj.AssemblyReference.cache
-C:\Estadia Ingenieria\Marzo\Sprint10\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Infrastructure\obj\Debug\net8.0\SistemaDigitalizacionPolizas.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
-C:\Estadia Ingenieria\Marzo\Sprint10\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Infrastructure\obj\Debug\net8.0\SistemaDigitalizacionPolizas.Infrastructure.AssemblyInfoInputs.cache
-C:\Estadia Ingenieria\Marzo\Sprint10\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Infrastructure\obj\Debug\net8.0\SistemaDigitalizacionPolizas.Infrastructure.AssemblyInfo.cs
-C:\Estadia Ingenieria\Marzo\Sprint10\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Infrastructure\obj\Debug\net8.0\SistemaDigitalizacionPolizas.Infrastructure.csproj.CoreCompileInputs.cache
-C:\Estadia Ingenieria\Marzo\Sprint10\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Infrastructure\obj\Debug\net8.0\SistemaDigitalizacionPolizas.Infrastructure.sourcelink.json
 C:\Estadia Ingenieria\Marzo\Sprint10\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Infrastructure\obj\Debug\net8.0\SistemaD.91879B73.Up2Date
 C:\Estadia Ingenieria\Marzo\Sprint10\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Infrastructure\obj\Debug\net8.0\SistemaDigitalizacionPolizas.Infrastructure.dll
 C:\Estadia Ingenieria\Marzo\Sprint10\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Infrastructure\obj\Debug\net8.0\refint\SistemaDigitalizacionPolizas.Infrastructure.dll
