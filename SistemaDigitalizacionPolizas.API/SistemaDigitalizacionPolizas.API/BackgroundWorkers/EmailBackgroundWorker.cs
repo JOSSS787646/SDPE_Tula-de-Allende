@@ -1,5 +1,21 @@
 ﻿using SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Service.Service.Gmail_Services;
 
+
+
+/// <summary>
+/// Worker en segundo plano encargado de procesar y enviar correos electrónicos
+/// desde una cola (EmailQueue).
+/// 
+/// Ejecuta continuamente tareas de envío de correos, aplicando reintentos
+/// automáticos en caso de fallo (hasta 3 intentos con backoff exponencial).
+/// 
+/// Su objetivo es desacoplar el envío de correos del flujo principal de la API,
+/// evitando bloqueos y mejorando el rendimiento.
+/// 
+/// Maneja errores, cancelación de la aplicación y registro de eventos.
+/// </summary>
+/// 
+
 namespace SistemaDigitalizacionPolizas.API.BackgroundWorkers
 {
     public class EmailBackgroundWorker : BackgroundService

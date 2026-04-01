@@ -8,18 +8,43 @@ using System.Threading.Tasks;
 
 namespace SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.RequestingAdministration
 {
+    /// <summary>
+    /// Interfaz que define el repositorio para la gestión de programas (Prog).
+    ///
+    /// Permite realizar operaciones CRUD sobre los programas,
+    /// incluyendo consultas por identificador y código, así como eliminación lógica.
+    /// </summary>
     public interface IProgRepository
     {
-        //Agregar un nuevo Prog
+        /// <summary>
+        /// Agrega un nuevo programa.
+        /// </summary>
         Task<Prog?> AddAsync(Prog unit);
-        //Obtener un Prog por su codigo
+
+        /// <summary>
+        /// Obtiene un programa mediante su código.
+        /// </summary>
         Task<Prog?> GetByCodeAsync(int code);
-        //Obtener todos los Prog
+
+        /// <summary>
+        /// Obtiene todos los programas registrados.
+        /// </summary>
         Task<IEnumerable<Prog>> GetAllAsync();
-        //Actualizar la informacion de un Prog
+
+        /// <summary>
+        /// Actualiza la información de un programa existente.
+        /// </summary>
         Task<bool> UpdateAsync(Prog unit);
-        //Desactivar un Prog
+
+        /// <summary>
+        /// Realiza una eliminación lógica del programa,
+        /// registrando el usuario que ejecuta la acción.
+        /// </summary>
         Task<bool> DeleteAsync(int code, int userId);
+
+        /// <summary>
+        /// Obtiene un programa por su identificador.
+        /// </summary>
         Task<Prog?> GetByIdAsync(int id);
     }
 }

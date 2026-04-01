@@ -2,6 +2,19 @@
 using System.Security.Claims;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Services;
 
+
+/// <summary>
+/// Servicio que obtiene la información del usuario autenticado actual
+/// desde el HttpContext.
+///
+/// Permite acceder al Id, correo y rol del usuario a partir de los claims
+/// del token JWT, sin depender directamente del HttpContext en otras capas.
+///
+/// Se utiliza principalmente para auditoría, validaciones y lógica de negocio
+/// basada en el usuario autenticado.
+/// </summary>
+/// 
+
 namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Services.Auditory
 {
     public class CurrentUserService : ICurrentUserService

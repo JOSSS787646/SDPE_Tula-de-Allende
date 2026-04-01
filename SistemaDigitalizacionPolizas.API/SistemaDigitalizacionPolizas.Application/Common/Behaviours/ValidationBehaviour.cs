@@ -1,5 +1,21 @@
 ﻿using FluentValidation;
 
+
+/// <summary>
+/// Comportamiento de pipeline en MediatR que ejecuta validaciones
+/// automáticas usando FluentValidation antes de que una solicitud
+/// sea procesada por su handler.
+///
+/// Recorre todos los validadores asociados al request, ejecuta sus reglas
+/// y, si encuentra errores, lanza una excepción de validación deteniendo
+/// la ejecución.
+///
+/// Su propósito es centralizar la validación y evitar duplicarla en los handlers,
+/// asegurando que solo se procesen solicitudes válidas.
+/// </summary>
+/// 
+
+
 namespace SistemaDigitalizacionPolizas.Application.Common.Behaviours
 {
     public class ValidationBehaviour<TRequest, TResponse>

@@ -1,6 +1,6 @@
 ﻿using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.IPaymentPolicy;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Services;
-using SistemaDigitalizacionPolizas.Infrastructure.Persistence.Services.UploatFile;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -1,6 +1,18 @@
 ﻿using Microsoft.OpenApi.Models;
 
 
+/// <summary>
+/// Clase de extensión que configura y habilita Swagger de forma condicional.
+/// 
+/// Permite registrar la documentación de la API y su interfaz (Swagger UI)
+/// solo si está activado en la configuración ("Swagger:Enabled").
+/// 
+/// Incluye soporte para autenticación JWT (Bearer), facilitando pruebas
+/// de endpoints protegidos.
+/// 
+/// Se utiliza en Program.cs para mantener una configuración limpia y centralizada.
+/// </summary>
+
 namespace SistemaDigitalizacionPolizas.API.Extensions
 {
     public static class SwaggerExtensions

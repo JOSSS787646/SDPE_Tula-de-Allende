@@ -1,5 +1,23 @@
 ﻿using SistemaDigitalizacionPolizas.Application.Services.AcqusitionRequest_Service.Commands.ProcessExpiredRequests;
 
+
+/// <summary>
+/// Worker en segundo plano que ejecuta diariamente el procesamiento
+/// de solicitudes vencidas.
+///
+/// Crea un scope de dependencias para ejecutar el comando
+/// ProcessExpiredRequestsCommand mediante MediatR, asegurando
+/// aislamiento por ejecución.
+///
+/// Incluye control de tiempo (timeout de 5 minutos), manejo de errores
+/// y ejecución periódica cada 24 horas.
+///
+/// Su objetivo es automatizar la actualización de solicitudes expiradas
+/// sin intervención manual.
+/// </summary>
+/// 
+
+
 namespace SistemaDigitalizacionPolizas.API.BackgroundWorkers
 {
     public class ExpiredRequestsWorker : BackgroundService

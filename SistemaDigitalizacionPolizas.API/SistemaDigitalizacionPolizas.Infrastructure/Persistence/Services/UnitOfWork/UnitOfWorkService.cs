@@ -6,6 +6,21 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
+/// <summary>
+/// Implementación del patrón Unit of Work para el manejo de transacciones.
+///
+/// Permite agrupar múltiples operaciones sobre la base de datos dentro
+/// de una misma transacción, asegurando consistencia mediante commit
+/// o rollback.
+///
+/// Controla el ciclo de vida de la transacción y la persistencia de cambios
+/// usando el DbContext de Entity Framework.
+/// </summary>
+/// 
+
+
+
 namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Services.UnitOfWork
 {
     public class UnitOfWorkService: IUnitOfWorkService
@@ -40,17 +55,17 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Services.UnitO
             await _transaction.CommitAsync();
 
             await _transaction.DisposeAsync();
-            _transaction = null; // 🔥 IMPORTANTE
+            _transaction = null; 
         }
 
         public async Task RollbackAsync()
         {
             if (_transaction == null)
-                return; // 🔥 NO INTENTAR ROLLBACK SI YA MURIÓ
+                return;
 
             await _transaction.RollbackAsync();
             await _transaction.DisposeAsync();
-            _transaction = null; // 🔥 IMPORTANTE
+            _transaction = null; 
         }
     }
 }

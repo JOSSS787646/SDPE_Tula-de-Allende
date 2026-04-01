@@ -7,7 +7,7 @@ using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Document;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.StatusRequest;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.RequestNotification;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Services;
-using SistemaDigitalizacionPolizas.Infrastructure.Persistence.Services.UploatFile;
+
 using SistemaDigitalizacionPolizas.Application.Services.Notification_Service.Commands.CreateNotification;
 
 namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Service.Command.AppendExpedientDocuments
