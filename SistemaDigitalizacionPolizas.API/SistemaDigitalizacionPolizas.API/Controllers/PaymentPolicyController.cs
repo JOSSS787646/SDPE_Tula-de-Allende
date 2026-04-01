@@ -72,14 +72,7 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
         }
 
 
-        [HttpDelete("payment-policies")]
-        public async Task<IActionResult> DeletePaymentPolicy(
-    [FromBody] DeletePaymentPolicyCommand command)
-        {
-            var result = await _mediator.Send(command);
-
-            return Ok(result);
-        }
+      
 
         [HttpGet("payment-policies/{id}/download")]
         public async Task<IActionResult> DownloadPaymentPolicy(int id)
@@ -94,3 +87,4 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
         }
     }
 }
+

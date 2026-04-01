@@ -7,7 +7,9 @@ using SistemaDigitalizacionPolizas.Application.Services.DocumentStatus_Service.Q
 
 namespace SistemaDigitalizacionPolizas.API.Controllers
 {
-
+    /// <summary>
+    /// Gestiona los estados de documento (crear, consultar y actualizar).
+    /// </summary>
     [Authorize]
     [ApiController]
     [Route("api/[controller]")]
@@ -20,67 +22,75 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
             _mediator = mediator;
         }
 
+        /// <summary>
+        /// Crear estado de documento.
+        /// </summary>
         [HttpPost]
-        public async Task<IActionResult> Create(
-            [FromBody] CreateDocumentStatusCommand command)
+        public async Task<ActionResult<int>> Create([FromBody] CreateDocumentStatusCommand command)
         {
             var id = await _mediator.Send(command);
 
             if (id == 0)
                 return Conflict("Ya existe un estado de documento con ese código.");
 
-            return Ok(new { id });
+            return CreatedAtAction(nameof(GetByCode), new { code = command.Code }, id);
         }
 
-
+        /// <summary>
+        /// Obtener todos los estados de documento.
+        /// </summary>
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
             var result = await _mediator.Send(new GetAllDocumentStatusQuery());
+
             return Ok(result);
         }
 
+        /// <summary>
+        /// Obtener estado de documento por código.
+        /// </summary>
         [HttpGet("code/{code:int}")]
-        public async Task<IActionResult> GetByCode([FromRoute] int code)
+        public async Task<IActionResult> GetByCode(int code)
         {
             var result = await _mediator.Send(new GetDocumentStatusByCodeQuery(code));
 
-            if (result == null)
-                return NotFound("No se encontró un estado de documento con ese código.");
+            if (result is null)
+                return NotFound("No existe un estado de documento con ese código.");
 
             return Ok(result);
         }
 
-
+        /// <summary>
+        /// Actualizar estado de documento.
+        /// </summary>
         [HttpPut("{id:int}")]
-        public async Task<IActionResult> Update(
-            [FromRoute] int id,
-            [FromBody] UpdateDocumentStatusCommand command)
+        public async Task<IActionResult> Update(int id, [FromBody] UpdateDocumentStatusCommand command)
         {
-            // 🔐 Forzamos el Id desde la URL, ignorando el del body
             var fixedCommand = command with { IdDocumentStatus = id };
 
-            var updated = await _mediator.Send(fixedCommand);
+            var success = await _mediator.Send(fixedCommand);
 
-            if (!updated)
-                return NotFound("No se encontró el estado de documento con ese id.");
+            if (!success)
+                return NotFound($"No existe un estado de documento con id {id}.");
 
-            return Ok("Estado de documento actualizado correctamente.");
+            return NoContent();
         }
 
-        [HttpPatch("{code:int}/active")]
-        public async Task<IActionResult> PatchActive(
-         [FromRoute] int code,
-         [FromBody] bool active)
+        /// <summary>
+        /// Cambiar estatus (activo/inactivo).
+        /// </summary>
+        [HttpPatch("{code:int}/status")]
+        public async Task<IActionResult> ChangeStatus(int code, [FromBody] bool active)
         {
-            var command = new DocumentStatusActiveCommand(code, active);
+            var success = await _mediator.Send(
+                new DocumentStatusActiveCommand(code, active)
+            );
 
-            var updated = await _mediator.Send(command);
+            if (!success)
+                return NotFound($"No existe un estado de documento con código {code}.");
 
-            if (!updated)
-                return NotFound("No se encontró el estado de documento con ese código.");
-
-            return Ok("Estado de documento actualizado (Active) correctamente.");
+            return NoContent();
         }
     }
 }

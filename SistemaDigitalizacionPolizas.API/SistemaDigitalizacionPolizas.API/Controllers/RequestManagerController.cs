@@ -6,10 +6,13 @@ using SistemaDigitalizacionPolizas.Application.Services.CreateRequestManager_Ser
 namespace SistemaDigitalizacionPolizas.API.Controllers
 {
 
-   [Authorize]
+    /// <summary>
+    /// Gestiona los responsables de solicitudes (crear, consultar y actualizar).
+    /// </summary>
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
-    public class RequestManagerController: ControllerBase
+    public class RequestManagerController : ControllerBase
     {
         private readonly IMediator _mediator;
 
@@ -18,7 +21,9 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
             _mediator = mediator;
         }
 
-
+        /// <summary>
+        /// Crear un responsable de solicitud.
+        /// </summary>
         [HttpPost]
         public async Task<IActionResult> Create(CreateRequestManagerCommand command)
         {
@@ -27,6 +32,9 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
             return Ok(id);
         }
 
+        /// <summary>
+        /// Obtener todos los responsables de solicitudes.
+        /// </summary>
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
@@ -35,6 +43,9 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
             return Ok(result);
         }
 
+        /// <summary>
+        /// Actualizar un responsable de solicitud.
+        /// </summary>
         [HttpPut]
         public async Task<IActionResult> Update(UpdateRequestManagerCommand command)
         {
@@ -45,7 +56,6 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
 
             return Ok("Updated successfully");
         }
-
 
     }
 }

@@ -8,12 +8,16 @@ using SistemaDigitalizacionPolizas.Domain.Dtos.Supplier;
 
 namespace SistemaDigitalizacionPolizas.API.Controllers
 {
+    /// <summary>
+    /// Gestiona proveedores (crear, consultar, actualizar y cambiar estatus).
+    /// </summary>
     [Authorize]
     [ApiController]
     [Route("api/[controller]")]
-    public class SupplierController: ControllerBase
+    public class SupplierController : ControllerBase
     {
         private readonly IMediator _mediator;
+
         public SupplierController(IMediator mediator)
         {
             _mediator = mediator;
@@ -38,7 +42,9 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
             return StatusCode(StatusCodes.Status201Created, id);
         }
 
-        // GET: api/suppliers?page=1
+        /// <summary>
+        /// Obtener proveedores paginados.
+        /// </summary>
         [HttpGet]
         public async Task<IActionResult> GetAll([FromQuery] int page = 1)
         {
@@ -46,7 +52,9 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
             return Ok(result);
         }
 
-        // GET: api/suppliers/by-rfc/XAXX010101000
+        /// <summary>
+        /// Obtener proveedor por RFC.
+        /// </summary>
         [HttpGet("by-rfc/{rfc}")]
         public async Task<IActionResult> GetByRfc(string rfc)
         {
@@ -58,10 +66,13 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
             return Ok(supplier);
         }
 
+        /// <summary>
+        /// Actualizar proveedor.
+        /// </summary>
         [HttpPut("{id:int}")]
         public async Task<IActionResult> Update(int id, [FromBody] SupplierDto dto)
         {
-            dto.IdSupplier = id; 
+            dto.IdSupplier = id;
 
             var success = await _mediator.Send(new UpdateSupplierCommand(dto));
 
@@ -70,7 +81,10 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
 
             return NoContent();
         }
-        // PATCH: api/suppliers/by-rfc/XAXX010101000/status
+
+        /// <summary>
+        /// Cambiar estatus (activo/inactivo) por RFC.
+        /// </summary>
         [HttpPatch("by-rfc/{rfc}/status")]
         public async Task<IActionResult> UpdateStatusByRfc(string rfc, [FromBody] bool active)
         {
@@ -81,7 +95,5 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
 
             return NoContent();
         }
-
-
     }
 }

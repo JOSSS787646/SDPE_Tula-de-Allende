@@ -4,6 +4,9 @@ using SistemaDigitalizacionPolizas.Application.Services.Pdf_Service.Query.GetAcq
 
 namespace SistemaDigitalizacionPolizas.API.Controllers
 {
+    /// <summary>
+    /// Genera y descarga PDFs relacionados a solicitudes (expediente, formulario y checklist).
+    /// </summary>
     [ApiController]
     [Route("api/[controller]")]
     public class PdfController : ControllerBase
@@ -15,7 +18,9 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
             _mediator = mediator;
         }
 
-        // 🔥 GET: api/pdf/5
+        /// <summary>
+        /// Descargar PDF del expediente por id.
+        /// </summary>
         [HttpGet("{id}")]
         public async Task<IActionResult> GetPdf(int id)
         {
@@ -30,7 +35,9 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
             );
         }
 
-
+        /// <summary>
+        /// Descargar PDF del formulario de la solicitud.
+        /// </summary>
         [HttpGet("form/{id}")]
         public async Task<IActionResult> GetFormPdf(int id)
         {
@@ -41,9 +48,8 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
             return File(pdf, "application/pdf", $"Formulario_{id}.pdf");
         }
 
-
         /// <summary>
-        /// 📄 Genera y descarga el PDF del checklist de documentos
+        /// Descargar PDF del checklist de documentos.
         /// </summary>
         [HttpGet("checklist/{requestId}")]
         public async Task<IActionResult> GetChecklistPdf(int requestId)
@@ -61,5 +67,4 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
             );
         }
     }
-
 }

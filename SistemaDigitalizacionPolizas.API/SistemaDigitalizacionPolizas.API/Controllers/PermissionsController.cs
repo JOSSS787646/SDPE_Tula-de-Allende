@@ -4,7 +4,9 @@ using SistemaDigitalizacionPolizas.Application.Services.Permission_Service.Queri
 
 namespace SistemaDigitalizacionPolizas.API.Controllers
 {
-
+    /// <summary>
+    /// Gestiona los permisos asignados a los roles del sistema.
+    /// </summary>
     [Authorize]
     [ApiController]
     [Route("api/[controller]")]
@@ -16,16 +18,22 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
         {
             _mediator = mediator;
         }
-        //Actualiza o agrega permisos a un rol
+
+        /// <summary>
+        /// Actualizar o agregar permisos a un rol.
+        /// </summary>
         [HttpPost("update")]
         public async Task<IActionResult> ActualizarPermisos(
-        [FromBody] UpdatePermissionByRoleCommand command)
+            [FromBody] UpdatePermissionByRoleCommand command)
         {
             await _mediator.Send(command);
+
             return Ok("Permisos actualizados correctamente");
         }
 
-        //Obtiene los permisos asignados a un rol
+        /// <summary>
+        /// Obtener permisos asignados a un rol.
+        /// </summary>
         [HttpGet("{idRol}")]
         public async Task<IActionResult> GetPermissionsByRole(int idRol)
         {

@@ -4,13 +4,14 @@ using SistemaDigitalizacionPolizas.Application.Services.ClasificationDocumentTyp
 
 namespace SistemaDigitalizacionPolizas.API.Controllers
 {
+    /// <summary>
+    /// Gestiona la asignación y consulta de tipos de documento por clasificación.
+    /// </summary>
     [Authorize]
     [ApiController]
     [Route("api/[controller]")]
-    public class ClasificationDocumentTypeController: ControllerBase
+    public class ClasificationDocumentTypeController : ControllerBase
     {
-
-
         private readonly IMediator _mediator;
 
         public ClasificationDocumentTypeController(IMediator mediator)
@@ -19,46 +20,33 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
         }
 
         /// <summary>
-        /// Asigna múltiples tipos de documento a una clasificación
-        /// (carga masiva - reemplaza los actuales).
+        /// Asignar documentos a una clasificación (reemplazo masivo).
         /// </summary>
         [HttpPost("assign")]
-        public async Task<IActionResult> AssignDocuments(
-            [FromBody] AssignDocumentsToClassificationCommand command)
+        public async Task<IActionResult> AssignDocuments([FromBody] AssignDocumentsToClassificationCommand command)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+            var success = await _mediator.Send(command);
 
-            var result = await _mediator.Send(command);
-
-            if (!result)
+            if (!success)
                 return BadRequest("No se pudieron asignar los documentos.");
 
-            return Ok(new
-            {
-                message = "Documentos asignados correctamente."
-            });
+            return Ok("Documentos asignados correctamente.");
         }
 
         /// <summary>
-        /// Obtiene todos los tipos de documento asignados a una clasificación de adquisición
+        /// Obtener documentos por clasificación.
         /// </summary>
-        [HttpGet("by-classification/{acquisitionClassificationId}")]
+        [HttpGet("by-classification/{acquisitionClassificationId:int}")]
         public async Task<IActionResult> GetByClassification(int acquisitionClassificationId)
         {
-            if (acquisitionClassificationId <= 0)
-                return BadRequest("El id de la clasificación es inválido.");
-
             var result = await _mediator.Send(
-                new GetDocumentsByClassificationQuery(acquisitionClassificationId));
+                new GetDocumentsByClassificationQuery(acquisitionClassificationId)
+            );
 
-            if (result == null || !result.Any())
-                return NotFound();
-                    
+            if (result is null || !result.Any())
+                return NotFound("No hay documentos para esta clasificación.");
+
             return Ok(result);
         }
-
-
-
     }
 }

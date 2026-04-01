@@ -2,6 +2,10 @@
 
 namespace SistemaDigitalizacionPolizas.API.Middleware
 {
+    /// <summary>
+    /// Middleware para manejar excepciones globalmente.
+    /// Captura errores y devuelve respuestas JSON estandarizadas.
+    /// </summary>
     public class ExceptionMiddleware
     {
         private readonly RequestDelegate _next;
@@ -13,6 +17,9 @@ namespace SistemaDigitalizacionPolizas.API.Middleware
             _logger = logger;
         }
 
+        /// <summary>
+        /// Ejecuta la petición y captura excepciones del pipeline.
+        /// </summary>
         public async Task Invoke(HttpContext context)
         {
             try
@@ -21,23 +28,25 @@ namespace SistemaDigitalizacionPolizas.API.Middleware
             }
             catch (UnauthorizedAccessException ex)
             {
+                // Permisos insuficientes
                 _logger.LogWarning(ex, "[Middleware] Acceso no autorizado: {Path}", context.Request.Path);
                 await WriteResponse(context, StatusCodes.Status403Forbidden, "No tienes permisos para realizar esta acción.");
             }
             catch (KeyNotFoundException ex)
             {
+                // Recurso inexistente
                 _logger.LogWarning(ex, "[Middleware] Recurso no encontrado: {Path}", context.Request.Path);
                 await WriteResponse(context, StatusCodes.Status404NotFound, "El recurso solicitado no existe.");
             }
             catch (ArgumentException ex)
             {
+                // Datos inválidos
                 _logger.LogWarning(ex, "[Middleware] Argumento inválido: {Path}", context.Request.Path);
                 await WriteResponse(context, StatusCodes.Status400BadRequest, ex.Message);
             }
             catch (Exception ex)
             {
-                // ✅ TÚ ves el error completo en los logs
-                // ❌ El cliente solo ve "Error interno del servidor"
+                // Error inesperado del sistema
                 _logger.LogError(ex, "[Middleware] Error no controlado en: {Method} {Path}",
                     context.Request.Method, context.Request.Path);
 
@@ -45,6 +54,9 @@ namespace SistemaDigitalizacionPolizas.API.Middleware
             }
         }
 
+        /// <summary>
+        /// Construye la respuesta JSON de error.
+        /// </summary>
         private static async Task WriteResponse(HttpContext context, int statusCode, string message)
         {
             if (context.Response.HasStarted)
