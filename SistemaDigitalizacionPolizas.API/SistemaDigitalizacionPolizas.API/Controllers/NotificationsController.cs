@@ -11,9 +11,12 @@ using SistemaDigitalizacionPolizas.Domain.Dtos.Notificacion;
 
 namespace SistemaDigitalizacionPolizas.API.Controllers
 {
+    /// <summary>
+    /// Gestiona notificaciones (consulta, creación y actualización de lectura).
+    /// </summary>
+    [Authorize]
     [ApiController]
     [Route("api/notifications")]
-    //[Authorize]
     public class NotificationsController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -23,44 +26,46 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
             _mediator = mediator;
         }
 
-        // 🔔 Obtener notificaciones NO leídas
+        /// <summary>
+        /// Obtener notificaciones no leídas.
+        /// </summary>
         [HttpGet("unread/{userId}")]
-        public async Task<ActionResult<List<NotificationDto>>> GetUnreadByUser(int userId)
+        public async Task<ActionResult<List<NotificationDto>>> GetUnread(int userId)
         {
             var result = await _mediator.Send(
                 new GetUnreadNotificationsByUserQuery(userId)
             );
 
-            // 🔥 puedes decidir cómo responder
-            if (result == null || result.Count == 0)
-                return Ok(new List<NotificationDto>()); // mejor que NoContent
-
-            return Ok(result);
+            return Ok(result ?? new List<NotificationDto>());
         }
 
-
-        // 📚 Historial de notificaciones (todas)
+        /// <summary>
+        /// Obtener todas las notificaciones.
+        /// </summary>
         [HttpGet("all/{userId}")]
-        public async Task<ActionResult<List<NotificationDto>>> GetAllByUser(int userId)
+        public async Task<ActionResult<List<NotificationDto>>> GetAll(int userId)
         {
             var result = await _mediator.Send(
                 new GetAllNotificationsByUserQuery(userId)
             );
 
-            return Ok(result); // siempre lista (aunque esté vacía)
+            return Ok(result);
         }
 
-
-        // ✔ Marcar como leída
-        [HttpPut("read/{id}")]
+        /// <summary>
+        /// Marcar notificación como leída.
+        /// </summary>
+        [HttpPut("{id:int}/read")]
         public async Task<IActionResult> MarkAsRead(int id)
         {
             await _mediator.Send(new MarkNotificationAsReadCommand(id));
 
-            return NoContent(); // 204 OK
+            return NoContent();
         }
 
-        // ✔ Marcar TODAS como leídas
+        /// <summary>
+        /// Marcar todas como leídas.
+        /// </summary>
         [HttpPut("read-all/{userId}")]
         public async Task<IActionResult> MarkAllAsRead(int userId)
         {
@@ -69,7 +74,9 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
             return NoContent();
         }
 
-        // 🔔 Contador de no leídas
+        /// <summary>
+        /// Obtener cantidad de no leídas.
+        /// </summary>
         [HttpGet("unread/count/{userId}")]
         public async Task<ActionResult<int>> GetUnreadCount(int userId)
         {
@@ -78,33 +85,37 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
             return Ok(count);
         }
 
-
-        // ➕ Crear notificación
+        /// <summary>
+        /// Crear notificación.
+        /// </summary>
         [HttpPost]
         public async Task<ActionResult<int>> Create([FromBody] CreateNotificationCommand command)
         {
             var id = await _mediator.Send(command);
 
-            return Ok(id); 
+            return Ok(id);
         }
 
-        //Eliminar la notificación
-
-        [HttpDelete("{id}")]
+        /// <summary>
+        /// Eliminar notificación.
+        /// </summary>
+        [HttpDelete("{id:int}")]
         public async Task<IActionResult> Delete(int id)
         {
             await _mediator.Send(new DeleteNotificationCommand(id));
 
-            return NoContent(); 
+            return NoContent();
         }
 
-
+        /// <summary>
+        /// Eliminar todas las notificaciones de un usuario.
+        /// </summary>
         [HttpDelete("user/{userId}")]
         public async Task<IActionResult> DeleteAllByUser(int userId)
         {
             await _mediator.Send(new DeleteAllNotificationsByUserCommand(userId));
 
-            return NoContent(); 
+            return NoContent();
         }
     }
 }

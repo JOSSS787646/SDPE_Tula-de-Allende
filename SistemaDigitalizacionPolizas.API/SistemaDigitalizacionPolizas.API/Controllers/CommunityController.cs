@@ -4,22 +4,17 @@ using SistemaDigitalizacionPolizas.Application.Services.Community_Service.Comman
 using SistemaDigitalizacionPolizas.Application.Services.Community_Service.Commands.UpdateStatusCommunity;
 using SistemaDigitalizacionPolizas.Application.Services.Community_Service.Queries.GetAllCommunity;
 using SistemaDigitalizacionPolizas.Application.Services.Community_Service.Queries.GetCommunityByCode;
-using SistemaDigitalizacionPolizas.Application.Services.RequestingAdministration_Service.FundingSource_Service.Commands.UpdateFundingSource;
-using SistemaDigitalizacionPolizas.Application.Services.RequestingAdministration_Service.FundingSource_Service.Commands.UpdateStateFunding;
-using SistemaDigitalizacionPolizas.Application.Services.RequestingAdministration_Service.FundingSource_Service.Queries.GetAllFundingSource;
-using SistemaDigitalizacionPolizas.Application.Services.RequestingAdministration_Service.FundingSource_Service.Queries.GetByCodeFundingSource;
 using SistemaDigitalizacionPolizas.Domain.Dtos.Community;
-using SistemaDigitalizacionPolizas.Domain.Dtos.RequestingAdministration;
-
 
 namespace SistemaDigitalizacionPolizas.API.Controllers
 {
-
+    /// <summary>
+    /// Gestiona comunidades: creación, consulta, actualización y cambio de estatus.
+    /// </summary>
     [Authorize]
     [ApiController]
     [Route("api/[controller]")]
-
-    public class CommunityController: ControllerBase
+    public class CommunityController : ControllerBase
     {
         private readonly IMediator _mediator;
 
@@ -28,71 +23,72 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
             _mediator = mediator;
         }
 
-        // Crear una comunidad
+        /// <summary>
+        /// Crear una comunidad.
+        /// </summary>
         [HttpPost]
         public async Task<ActionResult<int>> Create([FromBody] CreateCommunityCommand command)
         {
             var id = await _mediator.Send(command);
+
             return CreatedAtAction(nameof(GetByCode), new { code = command.Code }, id);
         }
 
-        // Obteiene todas las comunidades
+        /// <summary>
+        /// Obtener todas las comunidades registradas.
+        /// </summary>
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var result = await _mediator.Send(
-                new GetAllCommunityQuery()
-            );
+            var result = await _mediator.Send(new GetAllCommunityQuery());
 
             return Ok(result);
         }
 
-        // Obtener una comunidad por su código
+        /// <summary>
+        /// Obtener una comunidad por su código.
+        /// </summary>
         [HttpGet("{code:int}")]
         public async Task<ActionResult<CommunityDto>> GetByCode(int code)
         {
             var result = await _mediator.Send(new GetCommunityByCodeQuery(code));
 
-            if (result == null)
-                return NotFound($"No existe un fondo de financiamiento con código {code}");
+            if (result is null)
+                return NotFound($"No existe una comunidad con código {code}.");
 
             return Ok(result);
         }
 
-        //Actualiza un fondo de financiamiento
+        /// <summary>
+        /// Actualizar una comunidad por id.
+        /// </summary>
         [HttpPut("{id:int}")]
-        public async Task<IActionResult> Update(
- int id,
- [FromBody] UpdateCommunityCommand command)
+        public async Task<IActionResult> Update(int id, [FromBody] UpdateCommunityCommand command)
         {
-            // Forzamos el ID desde la URL
             var fixedCommand = command with { idCommunity = id };
 
             var success = await _mediator.Send(fixedCommand);
 
             if (!success)
-                return NotFound($"No existe una oomunidad con {id}");
+                return NotFound($"No existe una comunidad con id {id}.");
 
             return NoContent();
         }
 
-
-
-
-        [HttpPatch("{code:int}/active")]
-        public async Task<IActionResult> ChangeStatus(
-         int code,
-         [FromBody] bool active)
+        /// <summary>
+        /// Cambiar estatus (activo/inactivo) de una comunidad.
+        /// </summary>
+        [HttpPatch("{code:int}/status")]
+        public async Task<IActionResult> ChangeStatus(int code, [FromBody] bool active)
         {
             var success = await _mediator.Send(
                 new UpdateStatusCommunityCommand(code, active)
             );
 
             if (!success)
-                return NotFound($"No existe una comunidad con código {code}");
+                return NotFound($"No existe una comunidad con código {code}.");
 
             return NoContent();
         }
-
     }
 }

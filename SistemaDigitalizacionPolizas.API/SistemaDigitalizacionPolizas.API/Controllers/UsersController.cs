@@ -7,7 +7,10 @@ using SistemaDigitalizacionPolizas.Domain.Dtos.User;
 
 namespace SistemaDigitalizacionPolizas.API.Controllers
 {
-   // [Authorize]
+    /// <summary>
+    /// Gestiona usuarios del sistema (crear, consultar y actualizar).
+    /// </summary>
+    //[Authorize]
     [ApiController]
     [Route("api/users")]
     public class UsersController : ControllerBase
@@ -18,8 +21,10 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
         {
             _mediator = mediator;
         }
-        //Permite crear un usuario
 
+        /// <summary>
+        /// Crear un usuario.
+        /// </summary>
         [HttpPost]
         public async Task<IActionResult> CreateUser([FromBody] CreateUserRequest request)
         {
@@ -38,7 +43,9 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
             });
         }
 
-        //Obtiene todos los usuarios paginados
+        /// <summary>
+        /// Obtener usuarios paginados.
+        /// </summary>
         [HttpGet("paged")]
         public async Task<IActionResult> GetUsers(
          [FromQuery] int page = 1,
@@ -51,7 +58,9 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
             return Ok(result);
         }
 
-        //Actualiza el estado
+        /// <summary>
+        /// Actualizar estado de usuario.
+        /// </summary>
         [HttpPut("change-status")]
         public async Task<IActionResult> ChangeStatus(
         [FromBody] UpdateUserStatusDto dto)
@@ -66,8 +75,9 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
             return Ok("Estado actualizado correctamente");
         }
 
-
-
+        /// <summary>
+        /// Actualizar datos de usuario.
+        /// </summary>
         [HttpPut("update")]
         public async Task<IActionResult> UpdateUserData(
           [FromBody] UpdateUserDataCommand command)

@@ -2,7 +2,7 @@
 using SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Service.Service;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Document;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Services;
-using SistemaDigitalizacionPolizas.Infrastructure.Persistence.Services.UploatFile;
+
 
 namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Service.Command.DeleteExpedientDocument
 {

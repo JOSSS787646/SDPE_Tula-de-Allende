@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <EmbeddedResource Include="Persistence\Services\Email\Templates\Checklist.html" />
+    <EmbeddedResource Include="Persistence\Services\Email\Templates\ExpiredRequestsGrouped.html" />
     <EmbeddedResource Include="Persistence\Services\Email\Templates\DocumentReviewed.html" />
     <EmbeddedResource Include="Persistence\Services\Email\Templates\DocumentReviewNotification.html" />
     <EmbeddedResource Include="Persistence\Services\Email\Templates\DocumentsUploaded.html" />

@@ -35,6 +35,10 @@ namespace SistemaDigitalizacionPolizas.Domain.Entities.AcquisitionRequest_Entiti
 
         public string? CFDI { get; set; }
 
+        public DateTime? LastNotificationSentAt { get; set; }
+
+        public int? NotificationCount { get; set; } = 0;
+
         // ===============================
         // Foreign Keys
         // ===============================
@@ -88,7 +92,7 @@ namespace SistemaDigitalizacionPolizas.Domain.Entities.AcquisitionRequest_Entiti
         // Auditoría
         // ===============================
 
-        public int CreatedBy { get; set; }
+        public int? CreatedBy { get; set; } 
         public DateTime CreatedAt { get; set; }
 
         public int? UpdatedBy { get; set; }

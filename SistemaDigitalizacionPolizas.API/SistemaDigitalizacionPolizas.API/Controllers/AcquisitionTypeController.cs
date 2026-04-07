@@ -7,12 +7,11 @@ using SistemaDigitalizacionPolizas.Application.Services.Acquisition_Service.Acqu
 using SistemaDigitalizacionPolizas.Application.Services.Acquisition_Service.AcquisitionType_Service.Queries.GetAcquisitionTypeByCode;
 using SistemaDigitalizacionPolizas.Application.Services.Acquisition_Service.AcquisitionType_Service.Queries.GetAllAcqusitionType;
 
-
 namespace SistemaDigitalizacionPolizas.API.Controllers
 {
     /// <summary>
-    /// Controlador para la gestión del catálogo de Tipos de Adquisición.
-    /// Permite crear, consultar, actualizar y activar/desactivar tipos de adquisición.
+    /// Gestión de Tipos de Adquisición.
+    /// Permite crear, consultar, actualizar y cambiar estatus.
     /// </summary>
     [Authorize]
     [ApiController]
@@ -27,12 +26,9 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
         }
 
         /// <summary>
-        /// Crea un nuevo Tipo de Adquisición.
+        /// Crear tipo de adquisición.
         /// </summary>
-        /// <param name="command">Datos del tipo de adquisición a crear.</param>
-        /// <returns>Id del registro creado.</returns>
-        /// <response code="201">Tipo de adquisición creado correctamente.</response>
-        /// <response code="409">Ya existe un tipo de adquisición con el mismo código.</response>
+
         [HttpPost]
         public async Task<ActionResult<int>> Create([FromBody] CreateAcquisitionTypeCommand command)
         {
@@ -45,10 +41,9 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
         }
 
         /// <summary>
-        /// Obtiene todos los Tipos de Adquisición.
+        /// Obtener todos los tipos de adquisición.
         /// </summary>
-        /// <returns>Listado de tipos de adquisición.</returns>
-        /// <response code="200">Listado obtenido correctamente.</response>
+
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
@@ -57,12 +52,9 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
         }
 
         /// <summary>
-        /// Obtiene un Tipo de Adquisición por su código.
+        /// Obtener tipo de adquisición por código.
         /// </summary>
-        /// <param name="code">Código del tipo de adquisición.</param>
-        /// <returns>Tipo de adquisición encontrado.</returns>
-        /// <response code="200">Tipo de adquisición encontrado.</response>
-        /// <response code="404">No se encontró el tipo de adquisición.</response>
+
         [HttpGet("{code:int}")]
         public async Task<IActionResult> GetByCode(int code)
         {
@@ -75,16 +67,12 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
         }
 
         /// <summary>
-        /// Actualiza la información de un Tipo de Adquisición por su Id.
+        /// Actualizar tipo de adquisición.
         /// </summary>
-        /// <param name="id">Id del tipo de adquisición.</param>
-        /// <param name="command">Datos actualizados.</param>
-        /// <response code="204">Tipo de adquisición actualizado correctamente.</response>
-        /// <response code="404">No se encontró el tipo de adquisición.</response>
+
         [HttpPut("{id:int}")]
         public async Task<IActionResult> Update(int id, [FromBody] UpdateAcquisitionTypeCommand command)
         {
-            // Forzamos el ID desde la URL para evitar inconsistencias
             var fixedCommand = command with { idUpdateAcquisitionType = id };
 
             var success = await _mediator.Send(fixedCommand);
@@ -96,13 +84,10 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
         }
 
         /// <summary>
-        /// Activa o desactiva (soft delete) un Tipo de Adquisición por su código.
+        /// Cambiar estatus (activo/inactivo).
         /// </summary>
-        /// <param name="code">Código del tipo de adquisición.</param>
-        /// <param name="active">Estado a asignar (true = activo, false = inactivo).</param>
-        /// <response code="204">Estatus actualizado correctamente.</response>
-        /// <response code="404">No se encontró el tipo de adquisición.</response>
-        [HttpPatch("{code:int}/active")]
+ 
+        [HttpPatch("{code:int}/status")]
         public async Task<IActionResult> ChangeStatus(int code, [FromBody] bool active)
         {
             var success = await _mediator.Send(new UpdateStatusAcquisitionTypeCommand(code, active));

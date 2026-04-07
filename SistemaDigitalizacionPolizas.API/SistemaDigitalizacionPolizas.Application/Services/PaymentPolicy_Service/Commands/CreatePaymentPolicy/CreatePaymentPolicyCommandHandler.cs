@@ -3,7 +3,7 @@ using SistemaDigitalizacionPolizas.Domain.Entities.PaymentPolicy_Entities;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.IPaymentPolicy;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Services;
-using SistemaDigitalizacionPolizas.Infrastructure.Persistence.Services.UploatFile;
+
 
 namespace SistemaDigitalizacionPolizas.Application.Services.PaymentPolicy_Service.Commands.CreatePaymentPolicy
 {

@@ -7,66 +7,77 @@ using SistemaDigitalizacionPolizas.Application.Services.Beneficiary_Service.Quer
 
 namespace SistemaDigitalizacionPolizas.API.Controllers
 {
-
-
+    /// <summary>
+    /// Gestiona los beneficiarios (crear, consultar y actualizar).
+    /// </summary>
     [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class BeneficiaryController : ControllerBase
     {
-
         private readonly IMediator _mediator;
 
         public BeneficiaryController(IMediator mediator)
         {
             _mediator = mediator;
-
-
         }
 
-        // POST: api/Beneficiary
+        /// <summary>
+        /// Crear beneficiario.
+        /// </summary>
         [HttpPost]
-
         public async Task<IActionResult> Create([FromBody] CreateBeneficiaryCommand command)
         {
             await _mediator.Send(command);
-            return Ok(new { message = "Beneficiario creado correctamente." });
+
+            return Ok("Beneficiario creado correctamente.");
         }
 
+        /// <summary>
+        /// Obtener todos los beneficiarios.
+        /// </summary>
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
             var result = await _mediator.Send(new GetAllBeneficiariesQuery());
+
             return Ok(result);
         }
 
+        /// <summary>
+        /// Obtener beneficiario por CURP.
+        /// </summary>
         [HttpGet("by-curp/{curp}")]
         public async Task<IActionResult> GetByCurp(string curp)
         {
             var result = await _mediator.Send(new GetBeneficiaryByCurpQuery(curp));
 
             if (result is null)
-                return NotFound();
+                return NotFound("Beneficiario no encontrado.");
 
             return Ok(result);
         }
 
-        // PUT: api/Beneficiary/{id}
+        /// <summary>
+        /// Actualizar beneficiario.
+        /// </summary>
         [HttpPut("{id:int}")]
         public async Task<IActionResult> Update(int id, [FromBody] UpdateBeneficiaryCommand command)
         {
             if (id != command.IdBeneficiary)
-                return BadRequest("El id de la ruta no coincide con el del cuerpo.");
+                return BadRequest("El id no coincide.");
 
             var success = await _mediator.Send(command);
 
             if (!success)
                 return NotFound("No se pudo actualizar el beneficiario.");
 
-            return Ok(new { message = "Beneficiario actualizado correctamente." });
+            return NoContent();
         }
 
-        // PATCH: api/Beneficiary/by-curp/{curp}/status
+        /// <summary>
+        /// Cambiar estatus (activo/inactivo) por CURP.
+        /// </summary>
         [HttpPatch("by-curp/{curp}/status")]
         public async Task<IActionResult> UpdateStatusByCurp(string curp, [FromBody] bool active)
         {
@@ -75,17 +86,9 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
             );
 
             if (!success)
-                return NotFound("No se pudo actualizar el estatus del beneficiario.");
+                return NotFound("No se pudo actualizar el estatus.");
 
-            return Ok(new
-            {
-                message = $"Beneficiario {(active ? "activado" : "desactivado")} correctamente."
-            });
+            return NoContent();
         }
-
-
-
-
-
     }
 }

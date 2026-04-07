@@ -1,10 +1,4 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using SistemaDigitalizacionPolizas.Application.Services.RequestingAdministration_Service.Cod_Service.Commands.CreateCog;
-using SistemaDigitalizacionPolizas.Application.Services.RequestingAdministration_Service.Cod_Service.Commands.UpdateCog;
-using SistemaDigitalizacionPolizas.Application.Services.RequestingAdministration_Service.Cod_Service.Commands.UpdateStateCog;
-using SistemaDigitalizacionPolizas.Application.Services.RequestingAdministration_Service.Cod_Service.Queries.GetAllCog;
-using SistemaDigitalizacionPolizas.Application.Services.RequestingAdministration_Service.Cod_Service.Queries.GetCogByCode;
-using SistemaDigitalizacionPolizas.Application.Services.RequestingAdministration_Service.Prog.Commands.UpdateProg;
 using SistemaDigitalizacionPolizas.Application.Services.RequestingAdministration_Service.Proyect_Service.Commands.CreatedProyect;
 using SistemaDigitalizacionPolizas.Application.Services.RequestingAdministration_Service.Proyect_Service.Commands.UpdateProyect;
 using SistemaDigitalizacionPolizas.Application.Services.RequestingAdministration_Service.Proyect_Service.Commands.UpdateStatusProyect;
@@ -14,13 +8,14 @@ using SistemaDigitalizacionPolizas.Domain.Dtos.RequestingAdministration;
 
 namespace SistemaDigitalizacionPolizas.API.Controllers
 {
-
+    /// <summary>
+    /// Gestiona los proyectos (crear, consultar y actualizar).
+    /// </summary>
     [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class ProyectController : ControllerBase
     {
-
         private readonly IMediator _mediator;
 
         public ProyectController(IMediator mediator)
@@ -28,27 +23,31 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
             _mediator = mediator;
         }
 
-
-        // Crear un nuevo proyecto
+        /// <summary>
+        /// Crear un nuevo proyecto.
+        /// </summary>
         [HttpPost]
         public async Task<ActionResult<int>> Create([FromBody] CreatedProyectCommand command)
         {
             var id = await _mediator.Send(command);
+
             return CreatedAtAction(nameof(GetByCode), new { code = command.Code }, id);
         }
 
-        // Obtener todos los proyectos
+        /// <summary>
+        /// Obtener todos los proyectos.
+        /// </summary>
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var result = await _mediator.Send(
-                new GetAllProyectQuery()
-            );
+            var result = await _mediator.Send(new GetAllProyectQuery());
 
             return Ok(result);
         }
 
-        //Obtiene un proyecto por su codigo
+        /// <summary>
+        /// Obtener proyecto por código.
+        /// </summary>
         [HttpGet("{code:int}")]
         public async Task<ActionResult<ProyectDto>> GetByCode(int code)
         {
@@ -60,14 +59,12 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
             return Ok(result);
         }
 
-        //Actualiza la data de un proyecto
-
+        /// <summary>
+        /// Actualizar proyecto.
+        /// </summary>
         [HttpPut("{id:int}")]
-        public async Task<IActionResult> Update(
-int id,
-[FromBody] UpdateProyectCommand command)
+        public async Task<IActionResult> Update(int id, [FromBody] UpdateProyectCommand command)
         {
-            // Forzamos el ID desde la URL
             var fixedCommand = command with { idProyect = id };
 
             var success = await _mediator.Send(fixedCommand);
@@ -78,15 +75,11 @@ int id,
             return NoContent();
         }
 
-
-
-        // --------------------------------------------------
-        // Cambia el estado (activar / desactivar) de un Proyecto
-        // --------------------------------------------------
+        /// <summary>
+        /// Cambiar estatus (activo/inactivo) del proyecto.
+        /// </summary>
         [HttpPatch("{code:int}/active")]
-        public async Task<IActionResult> ChangeStatus(
-            int code,
-            [FromBody] bool active)
+        public async Task<IActionResult> ChangeStatus(int code, [FromBody] bool active)
         {
             var success = await _mediator.Send(
                 new UpdateStatusProyectCommand(code, active)
@@ -97,12 +90,5 @@ int id,
 
             return NoContent();
         }
-
     }
-
-
-
-
-
 }
-

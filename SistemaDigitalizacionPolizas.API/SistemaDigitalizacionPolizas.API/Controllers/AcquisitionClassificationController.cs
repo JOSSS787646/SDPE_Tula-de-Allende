@@ -10,8 +10,8 @@ using SistemaDigitalizacionPolizas.Application.Services.Acquisition_Service.Acqu
 namespace SistemaDigitalizacionPolizas.API.Controllers
 {
     /// <summary>
-    /// Controlador para la gestión del catálogo de Clasificación de Adquisiciones.
-    /// Permite crear, consultar, actualizar y activar/desactivar clasificaciones.
+    /// Controlador para gestionar clasificaciones de adquisición.
+    /// Permite crear, consultar, actualizar y cambiar estatus.
     /// </summary>
     [Authorize]
     [ApiController]
@@ -26,17 +26,14 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
         }
 
         /// <summary>
-        /// Crea una nueva Clasificación de Adquisición.
+        /// Crea una nueva clasificación.
         /// </summary>
-        /// <param name="command">Datos de la clasificación a crear.</param>
-        /// <returns>Id del registro creado.</returns>
-        /// <response code="201">Clasificación creada correctamente.</response>
-        /// <response code="409">Ya existe una clasificación con el mismo código.</response>
         [HttpPost]
         public async Task<ActionResult<int>> Create([FromBody] AddAcquisitionClassificationCmd command)
         {
             var id = await _mediator.Send(command);
 
+            // Si ya existe el código
             if (id == 0)
                 return Conflict("Ya existe una clasificación de adquisición con ese código.");
 
@@ -44,10 +41,8 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
         }
 
         /// <summary>
-        /// Obtiene todas las Clasificaciones de Adquisiciones.
+        /// Obtiene todas las clasificaciones.
         /// </summary>
-        /// <returns>Listado de clasificaciones.</returns>
-        /// <response code="200">Listado obtenido correctamente.</response>
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
@@ -56,12 +51,8 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
         }
 
         /// <summary>
-        /// Obtiene una Clasificación de Adquisición por su código.
+        /// Obtiene una clasificación por código.
         /// </summary>
-        /// <param name="code">Código de la clasificación.</param>
-        /// <returns>Clasificación encontrada.</returns>
-        /// <response code="200">Clasificación encontrada.</response>
-        /// <response code="404">No se encontró la clasificación.</response>
         [HttpGet("{code:int}")]
         public async Task<IActionResult> GetByCode(int code)
         {
@@ -74,40 +65,32 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
         }
 
         /// <summary>
-        /// Actualiza la información de una Clasificación de Adquisición por su Id.
+        /// Actualiza una clasificación por Id.
         /// </summary>
-        /// <param name="id">Id de la clasificación.</param>
-        /// <param name="command">Datos actualizados.</param>
-        /// <response code="204">Clasificación actualizada correctamente.</response>
-        /// <response code="404">No se encontró la clasificación.</response>
         [HttpPut("{id:int}")]
         public async Task<IActionResult> Update(int id, [FromBody] UpdateAcqClassificationCmd command)
         {
-            // Forzamos el ID desde la URL para evitar inconsistencias
+            // Asegura que el ID venga desde la URL
             var fixedCommand = command with { idUpdateAcquisitionClassification = id };
 
             var success = await _mediator.Send(fixedCommand);
 
             if (!success)
-                return NotFound($"No existe una clasificación de adquisición con id {id}.");
+                return NotFound($"No existe una clasificación con id {id}.");
 
             return NoContent();
         }
 
         /// <summary>
-        /// Activa o desactiva (soft delete) una Clasificación de Adquisición por su código.
+        /// Cambia el estatus (activo/inactivo).
         /// </summary>
-        /// <param name="code">Código de la clasificación.</param>
-        /// <param name="active">Estado a asignar (true = activo, false = inactivo).</param>
-        /// <response code="204">Estatus actualizado correctamente.</response>
-        /// <response code="404">No se encontró la clasificación.</response>
         [HttpPatch("{code:int}/active")]
         public async Task<IActionResult> ChangeStatus(int code, [FromBody] bool active)
         {
             var success = await _mediator.Send(new UpdateStatusAcqClassificationCmd(code, active));
 
             if (!success)
-                return NotFound($"No existe una clasificación de adquisición con código {code}.");
+                return NotFound($"No existe una clasificación con código {code}.");
 
             return NoContent();
         }

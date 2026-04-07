@@ -4,7 +4,7 @@ using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Document;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Services;
 using BCrypt.Net;
 using SistemaDigitalizacionPolizas.Application.Services.AcqusitionRequest_Service.Commands.DeleteRequest;
-using SistemaDigitalizacionPolizas.Infrastructure.Persistence.Services.UploatFile;
+
 
 public class DeleteRequestCommandHandler
     : IRequestHandler<DeleteRequestCommand, bool>
