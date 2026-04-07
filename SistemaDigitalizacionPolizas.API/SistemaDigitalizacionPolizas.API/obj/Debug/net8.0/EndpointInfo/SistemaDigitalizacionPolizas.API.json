@@ -610,7 +610,7 @@
         }
       }
     },
-    "/api/AcquisitionType/{code}/active": {
+    "/api/AcquisitionType/{code}/status": {
       "patch": {
         "tags": [
           "AcquisitionType"
@@ -778,7 +778,7 @@
         }
       }
     },
-    "/api/AdministrativeUnit/{code}/active": {
+    "/api/AdministrativeUnit/{code}/status": {
       "patch": {
         "tags": [
           "AdministrativeUnit"
@@ -1000,7 +1000,7 @@
         }
       }
     },
-    "/api/ApplicationStatus/code/{code}/state": {
+    "/api/ApplicationStatus/code/{code}/status": {
       "patch": {
         "tags": [
           "ApplicationStatus"
@@ -1546,7 +1546,7 @@
         }
       }
     },
-    "/api/Cog/{code}/active": {
+    "/api/Cog/{code}/status": {
       "patch": {
         "tags": [
           "Cog"
@@ -1731,7 +1731,7 @@
         }
       }
     },
-    "/api/Community/{code}/active": {
+    "/api/Community/{code}/status": {
       "patch": {
         "tags": [
           "Community"
@@ -1799,7 +1799,27 @@
         },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            }
           }
         }
       },
@@ -1879,7 +1899,7 @@
         }
       }
     },
-    "/api/DocumentStatus/{code}/active": {
+    "/api/DocumentStatus/{code}/status": {
       "patch": {
         "tags": [
           "DocumentStatus"
@@ -2172,33 +2192,7 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/ExpedientDocumentDto"
-                  }
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/ExpedientDocumentDto"
-                  }
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/ExpedientDocumentDto"
-                  }
-                }
-              }
-            }
+            "description": "OK"
           }
         }
       }
@@ -2232,14 +2226,14 @@
         }
       }
     },
-    "/api/expedient-documents/{expedientDocumentId}/download": {
+    "/api/expedient-documents/{id}/download": {
       "get": {
         "tags": [
           "ExpedientDocument"
         ],
         "parameters": [
           {
-            "name": "expedientDocumentId",
+            "name": "id",
             "in": "path",
             "required": true,
             "schema": {
@@ -2372,36 +2366,7 @@
         },
         "responses": {
           "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "integer",
-                    "format": "int32"
-                  }
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "integer",
-                    "format": "int32"
-                  }
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "integer",
-                    "format": "int32"
-                  }
-                }
-              }
-            }
+            "description": "OK"
           }
         }
       }
@@ -2502,7 +2467,7 @@
         }
       }
     },
-    "/api/expedient-documents/expedient-documents/{id}/review": {
+    "/api/expedient-documents/{id}/review": {
       "post": {
         "tags": [
           "ExpedientDocument"
@@ -2687,7 +2652,7 @@
         }
       }
     },
-    "/api/FundingSource/{code}/active": {
+    "/api/FundingSource/{code}/status": {
       "patch": {
         "tags": [
           "FundingSource"
@@ -2827,7 +2792,7 @@
         }
       }
     },
-    "/api/notifications/read/{id}": {
+    "/api/notifications/{id}/read": {
       "put": {
         "tags": [
           "Notifications"
@@ -3141,35 +3106,6 @@
                 "File": {
                   "style": "form"
                 }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      },
-      "delete": {
-        "tags": [
-          "PaymentPolicy"
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/DeletePaymentPolicyCommand"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/DeletePaymentPolicyCommand"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/DeletePaymentPolicyCommand"
               }
             }
           }
@@ -5132,20 +5068,6 @@
         },
         "additionalProperties": false
       },
-      "DeletePaymentPolicyCommand": {
-        "type": "object",
-        "properties": {
-          "idPaymentPolicy": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "password": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
       "DeleteRequestRequestDto": {
         "type": "object",
         "properties": {
@@ -5213,55 +5135,6 @@
             "format": "int32"
           },
           "description": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "ExpedientDocumentDto": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "fileName": {
-            "type": "string",
-            "nullable": true
-          },
-          "filePath": {
-            "type": "string",
-            "nullable": true
-          },
-          "uploadDate": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "active": {
-            "type": "boolean",
-            "nullable": true
-          },
-          "observations": {
-            "type": "string",
-            "nullable": true
-          },
-          "documentTypeId": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "documentTypeName": {
-            "type": "string",
-            "nullable": true
-          },
-          "documentStatusId": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "documentStatusDescription": {
             "type": "string",
             "nullable": true
           }

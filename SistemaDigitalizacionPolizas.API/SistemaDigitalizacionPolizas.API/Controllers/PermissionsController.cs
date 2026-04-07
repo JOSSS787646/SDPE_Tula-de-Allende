@@ -7,7 +7,7 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
     /// <summary>
     /// Gestiona los permisos asignados a los roles del sistema.
     /// </summary>
-    [Authorize]
+    //[Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class PermissionsController : ControllerBase

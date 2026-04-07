@@ -10,7 +10,7 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
     /// <summary>
     /// Gestiona usuarios del sistema (crear, consultar y actualizar).
     /// </summary>
-    [Authorize]
+    //[Authorize]
     [ApiController]
     [Route("api/users")]
     public class UsersController : ControllerBase

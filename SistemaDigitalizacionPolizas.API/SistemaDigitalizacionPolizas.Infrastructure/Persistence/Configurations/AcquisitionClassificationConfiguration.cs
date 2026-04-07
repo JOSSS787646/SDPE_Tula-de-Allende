@@ -9,7 +9,7 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Configurations
     {
         public void Configure(EntityTypeBuilder<AcquisitionClassification> builder)
         {
-            builder.ToTable("clasificacionAdquisiciones");
+            builder.ToTable("ClasificacionAdquisiciones");
 
             builder.HasKey(x => x.idAcquisitionClassification);
 
