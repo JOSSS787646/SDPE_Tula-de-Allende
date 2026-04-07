@@ -4,7 +4,7 @@ using SistemaDigitalizacionPolizas.Domain.Dtos.AcquisitionRequest;
 using SistemaDigitalizacionPolizas.Domain.Enums;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Document;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Services;
-using SistemaDigitalizacionPolizas.Infrastructure.Persistence.Services.UploatFile;
+
 
 namespace SistemaDigitalizacionPolizas.Application.Services.AcqusitionRequest_Service.Queries.GetDocumentsChecklistByRequest
 {

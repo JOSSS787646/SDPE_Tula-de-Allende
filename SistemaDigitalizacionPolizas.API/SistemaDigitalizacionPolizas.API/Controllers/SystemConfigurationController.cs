@@ -3,6 +3,9 @@ using SistemaDigitalizacionPolizas.Application.Services.SystemConfiguration_Serv
 
 namespace SistemaDigitalizacionPolizas.API.Controllers
 {
+    /// <summary>
+    /// Gestiona la configuración general del sistema.
+    /// </summary>
     [ApiController]
     [Route("api/system-configuration")]
     public class SystemConfigurationController : ControllerBase
@@ -14,6 +17,9 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
             _mediator = mediator;
         }
 
+        /// <summary>
+        /// Crear o actualizar la configuración del sistema.
+        /// </summary>
         [HttpPost("upsert")]
         public async Task<IActionResult> Upsert([FromBody] UpsertSystemConfigurationCommand command)
         {
@@ -21,12 +27,14 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
 
             return Ok(new
             {
-                message = "Configuration saved successfully",
+                message = "Configuración guardada correctamente",
                 idConfiguration = id
             });
         }
 
-
+        /// <summary>
+        /// Obtener el estado de la configuración del sistema.
+        /// </summary>
         [HttpGet("status")]
         public async Task<IActionResult> GetStatus()
         {

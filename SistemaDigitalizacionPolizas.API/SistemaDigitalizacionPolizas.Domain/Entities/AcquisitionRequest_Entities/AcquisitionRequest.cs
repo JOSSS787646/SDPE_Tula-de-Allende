@@ -37,7 +37,7 @@ namespace SistemaDigitalizacionPolizas.Domain.Entities.AcquisitionRequest_Entiti
 
         public DateTime? LastNotificationSentAt { get; set; }
 
-        public int NotificationCount { get; set; } = 0;
+        public int? NotificationCount { get; set; } = 0;
 
         // ===============================
         // Foreign Keys

@@ -9,11 +9,20 @@ namespace SistemaDigitalizacionPolizas.Application.Helpers
 {
 
 
-        //AQUI SE CAMBIAN LOS NOMBRES DEL ESTADO EL DOCUMENTO ACTUAL
-        //Y EL COLOR QUE SE MOSTRARA EN LA INTERFAZ DE USUARIO
-        public static class DocumentGroupStatusExtensions
+    /// <summary>
+    /// Clase de extensión para convertir el enum DocumentGroupStatus
+    /// a su representación en texto (label).
+    ///
+    /// Centraliza los nombres visibles de los estados de documentos,
+    /// evitando el uso de strings hardcodeados en la aplicación.
+    ///
+    /// Se utiliza principalmente para mostrar estados en la UI o respuestas,
+    /// manteniendo consistencia en los valores mostrados.
+    /// </summary>
+
+    public static class DocumentGroupStatusExtensions
         {
-            // 🔥 Devuelve solo el label (sin color)
+          
             public static string ToLabel(this DocumentGroupStatus status)
             {
                 return status switch

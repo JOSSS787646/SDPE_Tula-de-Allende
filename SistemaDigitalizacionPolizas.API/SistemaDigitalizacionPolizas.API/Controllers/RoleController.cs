@@ -9,6 +9,9 @@ using SistemaDigitalizacionPolizas.Application.Services.Role_Service.Queries.Get
 namespace SistemaDigitalizacionPolizas.API.Controllers
 {
 
+    /// <summary>
+    /// Gestiona roles del sistema (crear, consultar, actualizar y eliminar).
+    /// </summary>
     [Authorize]
     [ApiController]
     [Route("api/[controller]")]
@@ -22,7 +25,9 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
             _mediator = mediator;
         }
 
-        //Edpoint para crear un rol
+        /// <summary>
+        /// Crear un rol.
+        /// </summary>
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateRoleCommand command)
         {
@@ -35,8 +40,9 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
             });
         }
 
-
-        //Endpoint que permite buscar por nombre de rol
+        /// <summary>
+        /// Obtener rol por nombre.
+        /// </summary>
         [HttpGet("by-name/{name}")]
         public async Task<IActionResult> GetByName(string name)
         {
@@ -50,8 +56,9 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
             return Ok(result);
         }
 
-
-        //Endpoint que permite buscar por id de rol
+        /// <summary>
+        /// Obtener rol por id.
+        /// </summary>
         [HttpGet("{idRol}")]
         public async Task<IActionResult> GetById(int idRol)
         {
@@ -64,7 +71,10 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
 
             return Ok(result);
         }
-        //Obtener todos los roles
+
+        /// <summary>
+        /// Obtener todos los roles.
+        /// </summary>
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
@@ -75,7 +85,9 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
             return Ok(result);
         }
 
-        //Actulizar un rol por id
+        /// <summary>
+        /// Actualizar un rol.
+        /// </summary>
         [HttpPut]
         public async Task<IActionResult> Update([FromBody] UpdateRoleCommand command)
         {
@@ -87,8 +99,9 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
             return Ok("Rol actualizado correctamente");
         }
 
-        //Eliminar un rol por id
-
+        /// <summary>
+        /// Eliminar (desactivar) un rol.
+        /// </summary>
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
@@ -101,8 +114,6 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
 
             return Ok("Rol desactivado correctamente");
         }
-
-
 
     }
 }

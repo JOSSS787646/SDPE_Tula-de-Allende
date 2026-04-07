@@ -1,0 +1,12 @@
+{
+  "Version": 1,
+  "Hash": "QG/Ule4lrSJSVuRxQxVURaXQynmdqISXZ5RgvoCgDAo=",
+  "Source": "SistemaDigitalizacionPolizas.API",
+  "BasePath": "_content/SistemaDigitalizacionPolizas.API",
+  "Mode": "Default",
+  "ManifestType": "Publish",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": [],
+  "Endpoints": []
+}

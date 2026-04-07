@@ -6,10 +6,13 @@ using SistemaDigitalizacionPolizas.Application.Services.RequestDocumentException
 
 namespace SistemaDigitalizacionPolizas.API.Controllers
 {
-    //[Authorize]
+    /// <summary>
+    /// Gestiona excepciones de documentos en solicitudes.
+    /// </summary>
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
-    public class RequestDocumentExceptionController: ControllerBase
+    public class RequestDocumentExceptionController : ControllerBase
     {
 
         private IMediator _mediator;
@@ -19,7 +22,9 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
             _mediator = mediator;
         }
 
-
+        /// <summary>
+        /// Crear o actualizar una excepción de documento.
+        /// </summary>
         [HttpPost("upsert")]
         public async Task<IActionResult> Upsert(
     [FromBody] UpsertRequestDocumentExceptionCommand command)
@@ -33,8 +38,9 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
             });
         }
 
-
-
+        /// <summary>
+        /// Activar o desactivar excepciones de documentos de forma masiva.
+        /// </summary>
         [HttpPost("toggle")]
         public async Task<IActionResult> ToggleExceptions(
             [FromBody] ToggleRequestDocumentExceptionMassCommand command)
@@ -49,27 +55,6 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
                 message = "Excepciones guardadas correctamente"
             });
         }
-
-        //    [HttpPost]
-        //    public async Task<IActionResult> Create(
-        //[FromBody] CreateRequestDocumentExceptionCommand command)
-        //    {
-        //        var id = await _mediator.Send(command);
-        //        return Ok(new { message = "Excepción creada correctamente.", id });
-        //    }
-        //    [HttpPut("toggle")]
-        //    public async Task<IActionResult> Toggle(
-        //   [FromBody] ToggleRequestDocumentExceptionCommand command)
-        //    {
-        //        var result = await _mediator.Send(command);
-
-        //        return Ok(new
-        //        {
-        //            message = "Estado actualizado correctamente.",
-        //            success = result
-        //        });
-        //    }
-
 
     }
 }

@@ -242,6 +242,16 @@
   },
   {
     "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.AcquisitionRequestController",
+    "Method": "TestExpiredRequests",
+    "RelativePath": "api/AcquisitionRequest/test-expired-requests",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.AcquisitionRequestController",
     "Method": "UpdateMaxDate",
     "RelativePath": "api/AcquisitionRequest/update-max-date",
     "HttpMethod": "PATCH",
@@ -311,7 +321,7 @@
   {
     "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.AcquisitionTypeController",
     "Method": "ChangeStatus",
-    "RelativePath": "api/AcquisitionType/{code}/active",
+    "RelativePath": "api/AcquisitionType/{code}/status",
     "HttpMethod": "PATCH",
     "IsController": true,
     "Order": 0,
@@ -405,7 +415,7 @@
   {
     "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.AdministrativeUnitController",
     "Method": "ChangeStatus",
-    "RelativePath": "api/AdministrativeUnit/{code}/active",
+    "RelativePath": "api/AdministrativeUnit/{code}/status",
     "HttpMethod": "PATCH",
     "IsController": true,
     "Order": 0,
@@ -552,7 +562,7 @@
   {
     "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.ApplicationStatusController",
     "Method": "UpdateStateByCode",
-    "RelativePath": "api/ApplicationStatus/code/{code}/state",
+    "RelativePath": "api/ApplicationStatus/code/{code}/status",
     "HttpMethod": "PATCH",
     "IsController": true,
     "Order": 0,
@@ -834,7 +844,7 @@
   {
     "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.CogController",
     "Method": "ChangeStatus",
-    "RelativePath": "api/Cog/{code}/active",
+    "RelativePath": "api/Cog/{code}/status",
     "HttpMethod": "PATCH",
     "IsController": true,
     "Order": 0,
@@ -938,7 +948,7 @@
   {
     "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.CommunityController",
     "Method": "ChangeStatus",
-    "RelativePath": "api/Community/{code}/active",
+    "RelativePath": "api/Community/{code}/status",
     "HttpMethod": "PATCH",
     "IsController": true,
     "Order": 0,
@@ -991,7 +1001,17 @@
         "IsRequired": true
       }
     ],
-    "ReturnTypes": []
+    "ReturnTypes": [
+      {
+        "Type": "System.Int32",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
   },
   {
     "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.DocumentStatusController",
@@ -1005,8 +1025,8 @@
   },
   {
     "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.DocumentStatusController",
-    "Method": "PatchActive",
-    "RelativePath": "api/DocumentStatus/{code}/active",
+    "Method": "ChangeStatus",
+    "RelativePath": "api/DocumentStatus/{code}/status",
     "HttpMethod": "PATCH",
     "IsController": true,
     "Order": 0,
@@ -1158,23 +1178,7 @@
   },
   {
     "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.ExpedientDocumentController",
-    "Method": "DownloadDocument",
-    "RelativePath": "api/expedient-documents/{expedientDocumentId}/download",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "expedientDocumentId",
-        "Type": "System.Int32",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.ExpedientDocumentController",
-    "Method": "UpdateDocument",
+    "Method": "Update",
     "RelativePath": "api/expedient-documents/{id}",
     "HttpMethod": "PUT",
     "IsController": true,
@@ -1205,7 +1209,7 @@
   },
   {
     "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.ExpedientDocumentController",
-    "Method": "DeleteExpedientDocument",
+    "Method": "Delete",
     "RelativePath": "api/expedient-documents/{id}",
     "HttpMethod": "DELETE",
     "IsController": true,
@@ -1219,6 +1223,43 @@
       {
         "Name": "request",
         "Type": "SistemaDigitalizacionPolizas.Domain.Dtos.Auth.DeleteExpedientDocumentRequestDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.ExpedientDocumentController",
+    "Method": "Download",
+    "RelativePath": "api/expedient-documents/{id}/download",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.ExpedientDocumentController",
+    "Method": "Review",
+    "RelativePath": "api/expedient-documents/{id}/review",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "request",
+        "Type": "SistemaDigitalizacionPolizas.Domain.Dtos.AcquisitionRequest.ReviewDocumentRequestDto",
         "IsRequired": true
       }
     ],
@@ -1248,42 +1289,11 @@
         "IsRequired": false
       }
     ],
-    "ReturnTypes": [
-      {
-        "Type": "System.Collections.Generic.List\u00601[[SistemaDigitalizacionPolizas.Domain.Dtos.ExpedientDocument.ExpedientDocumentDto, SistemaDigitalizacionPolizas.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.ExpedientDocumentController",
-    "Method": "ReviewDocument",
-    "RelativePath": "api/expedient-documents/expedient-documents/{id}/review",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "id",
-        "Type": "System.Int32",
-        "IsRequired": true
-      },
-      {
-        "Name": "request",
-        "Type": "SistemaDigitalizacionPolizas.Domain.Dtos.AcquisitionRequest.ReviewDocumentRequestDto",
-        "IsRequired": true
-      }
-    ],
     "ReturnTypes": []
   },
   {
     "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.ExpedientDocumentController",
-    "Method": "GetDocumentsChecklist",
+    "Method": "GetChecklist",
     "RelativePath": "api/expedient-documents/requests/{requestId}/checklist",
     "HttpMethod": "GET",
     "IsController": true,
@@ -1309,7 +1319,7 @@
   },
   {
     "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.ExpedientDocumentController",
-    "Method": "AppendDocuments",
+    "Method": "Append",
     "RelativePath": "api/expedient-documents/requests/{requestId}/documents/{documentTypeId}",
     "HttpMethod": "POST",
     "IsController": true,
@@ -1336,17 +1346,7 @@
         "IsRequired": false
       }
     ],
-    "ReturnTypes": [
-      {
-        "Type": "System.Collections.Generic.List\u00601[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
+    "ReturnTypes": []
   },
   {
     "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.ExpedientDocumentController",
@@ -1465,7 +1465,7 @@
   {
     "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.FundingSourceController",
     "Method": "ChangeStatus",
-    "RelativePath": "api/FundingSource/{code}/active",
+    "RelativePath": "api/FundingSource/{code}/status",
     "HttpMethod": "PATCH",
     "IsController": true,
     "Order": 0,
@@ -1548,7 +1548,23 @@
   },
   {
     "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.NotificationsController",
-    "Method": "GetAllByUser",
+    "Method": "MarkAsRead",
+    "RelativePath": "api/notifications/{id}/read",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.NotificationsController",
+    "Method": "GetAll",
     "RelativePath": "api/notifications/all/{userId}",
     "HttpMethod": "GET",
     "IsController": true,
@@ -1590,23 +1606,7 @@
   },
   {
     "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.NotificationsController",
-    "Method": "MarkAsRead",
-    "RelativePath": "api/notifications/read/{id}",
-    "HttpMethod": "PUT",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "id",
-        "Type": "System.Int32",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.NotificationsController",
-    "Method": "GetUnreadByUser",
+    "Method": "GetUnread",
     "RelativePath": "api/notifications/unread/{userId}",
     "HttpMethod": "GET",
     "IsController": true,
@@ -1735,22 +1735,6 @@
         "Name": "File",
         "Type": "Microsoft.AspNetCore.Http.IFormFile",
         "IsRequired": false
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "SistemaDigitalizacionPolizas.API.Controllers.PaymentPolicyController",
-    "Method": "DeletePaymentPolicy",
-    "RelativePath": "api/PaymentPolicy/payment-policies",
-    "HttpMethod": "DELETE",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "command",
-        "Type": "SistemaDigitalizacionPolizas.Application.Services.PaymentPolicy_Service.Commands.DeletePaymentPolicy.DeletePaymentPolicyCommand",
-        "IsRequired": true
       }
     ],
     "ReturnTypes": []
