@@ -51,20 +51,14 @@ builder.Services.AddHttpContextAccessor();
 // ======================================================
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowFrontend", policy =>
+    options.AddPolicy("AllowAll", policy =>
     {
         policy
-            .WithOrigins(
-                "http://localhost:5173",
-                "https://sdpe-tula-de-allende-front-zdoi.vercel.app"
-
-            )
+            .AllowAnyOrigin()
             .AllowAnyHeader()
-            .AllowAnyMethod()
-            .AllowCredentials();
+            .AllowAnyMethod();
     });
 });
-
 // ======================================================
 // SWAGGER (solo si está habilitado en config)
 // ======================================================
@@ -97,7 +91,7 @@ var app = builder.Build();
 //app.UseMiddleware<ExceptionMiddleware>();
 app.UseSwaggerIfEnabled(builder.Configuration);
 app.UseHttpsRedirection();
-app.UseCors("AllowFrontend");
+app.UseCors("AllowAll");
 app.UseAuthentication();
 app.UseAuthorization();
 
