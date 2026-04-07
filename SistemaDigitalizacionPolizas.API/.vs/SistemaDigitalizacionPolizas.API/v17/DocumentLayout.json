@@ -3,20 +3,20 @@
   "WorkspaceRootPath": "C:\\Estadia Ingenieria\\Marzo\\Sprint10\\SistemaDigitalizacionPolizas.API\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{106E20C3-F20D-41C9-8C22-9151FB2CA0CE}|SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.API.csproj|c:\\estadia ingenieria\\marzo\\sprint10\\sistemadigitalizacionpolizas.api\\sistemadigitalizacionpolizas.api\\dockerfile||{8B382828-6202-11D1-8870-0000F87579D2}",
-      "RelativeMoniker": "D:0:0:{106E20C3-F20D-41C9-8C22-9151FB2CA0CE}|SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.API.csproj|solutionrelative:sistemadigitalizacionpolizas.api\\dockerfile||{8B382828-6202-11D1-8870-0000F87579D2}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{106E20C3-F20D-41C9-8C22-9151FB2CA0CE}|SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.API.csproj|c:\\estadia ingenieria\\marzo\\sprint10\\sistemadigitalizacionpolizas.api\\sistemadigitalizacionpolizas.api\\sistemadigitalizacionpolizas.api.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
-      "RelativeMoniker": "D:0:0:{106E20C3-F20D-41C9-8C22-9151FB2CA0CE}|SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.API.csproj|solutionrelative:sistemadigitalizacionpolizas.api\\sistemadigitalizacionpolizas.api.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{106E20C3-F20D-41C9-8C22-9151FB2CA0CE}|SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.API.csproj|c:\\estadia ingenieria\\marzo\\sprint10\\sistemadigitalizacionpolizas.api\\sistemadigitalizacionpolizas.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{106E20C3-F20D-41C9-8C22-9151FB2CA0CE}|SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.API.csproj|solutionrelative:sistemadigitalizacionpolizas.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{106E20C3-F20D-41C9-8C22-9151FB2CA0CE}|SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.API.csproj|c:\\estadia ingenieria\\marzo\\sprint10\\sistemadigitalizacionpolizas.api\\sistemadigitalizacionpolizas.api\\sistemadigitalizacionpolizas.api.http||{5703B403-55E7-4C63-8C88-A8F52C7A45C5}",
       "RelativeMoniker": "D:0:0:{106E20C3-F20D-41C9-8C22-9151FB2CA0CE}|SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.API.csproj|solutionrelative:sistemadigitalizacionpolizas.api\\sistemadigitalizacionpolizas.api.http||{5703B403-55E7-4C63-8C88-A8F52C7A45C5}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{106E20C3-F20D-41C9-8C22-9151FB2CA0CE}|SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.API.csproj|c:\\estadia ingenieria\\marzo\\sprint10\\sistemadigitalizacionpolizas.api\\sistemadigitalizacionpolizas.api\\dockerfile||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{106E20C3-F20D-41C9-8C22-9151FB2CA0CE}|SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.API.csproj|solutionrelative:sistemadigitalizacionpolizas.api\\dockerfile||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{106E20C3-F20D-41C9-8C22-9151FB2CA0CE}|SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.API.csproj|c:\\estadia ingenieria\\marzo\\sprint10\\sistemadigitalizacionpolizas.api\\sistemadigitalizacionpolizas.api\\sistemadigitalizacionpolizas.api.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{106E20C3-F20D-41C9-8C22-9151FB2CA0CE}|SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.API.csproj|solutionrelative:sistemadigitalizacionpolizas.api\\sistemadigitalizacionpolizas.api.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
     },
     {
       "AbsoluteMoniker": "D:0:0:{EA0C61D2-016C-466D-9240-735CAC9753F7}|SistemaDigitalizacionPolizas.Application\\SistemaDigitalizacionPolizas.Application.csproj|c:\\estadia ingenieria\\marzo\\sprint10\\sistemadigitalizacionpolizas.api\\sistemadigitalizacionpolizas.application\\services\\beneficiary_service\\commands\\createbeneficiary\\createbeneficiarycommand.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -86,11 +86,11 @@
       "DocumentGroups": [
         {
           "DockedHeight": 474,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 4,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 2,
               "Title": "Dockerfile",
               "DocumentMoniker": "C:\\Estadia Ingenieria\\Marzo\\Sprint10\\SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.API\\Dockerfile",
               "RelativeDocumentMoniker": "SistemaDigitalizacionPolizas.API\\Dockerfile",
@@ -103,20 +103,19 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "SistemaDigitalizacionPolizas.API",
+              "DocumentIndex": 3,
+              "Title": "SistemaDigitalizacionPolizas.API.csproj",
               "DocumentMoniker": "C:\\Estadia Ingenieria\\Marzo\\Sprint10\\SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.API.csproj",
               "RelativeDocumentMoniker": "SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.API.csproj",
-              "ToolTip": "C:\\Estadia Ingenieria\\Marzo\\Sprint10\\SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.API.csproj*",
-              "RelativeToolTip": "SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.API.csproj*",
+              "ToolTip": "C:\\Estadia Ingenieria\\Marzo\\Sprint10\\SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.API.csproj",
+              "RelativeToolTip": "SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.API.csproj",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2026-04-07T18:39:20.617Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-07T18:39:20.617Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 1,
               "Title": "SistemaDigitalizacionPolizas.API.http",
               "DocumentMoniker": "C:\\Estadia Ingenieria\\Marzo\\Sprint10\\SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.API.http",
               "RelativeDocumentMoniker": "SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.API.http",
@@ -124,7 +123,8 @@
               "RelativeToolTip": "SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.API.http",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003502|",
-              "WhenOpened": "2026-04-07T18:14:25.342Z"
+              "WhenOpened": "2026-04-07T18:14:25.342Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -140,13 +140,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 0,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Estadia Ingenieria\\Marzo\\Sprint10\\SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.API\\Program.cs",
               "RelativeDocumentMoniker": "SistemaDigitalizacionPolizas.API\\Program.cs",
               "ToolTip": "C:\\Estadia Ingenieria\\Marzo\\Sprint10\\SistemaDigitalizacionPolizas.API\\SistemaDigitalizacionPolizas.API\\Program.cs",
               "RelativeToolTip": "SistemaDigitalizacionPolizas.API\\Program.cs",
-              "ViewState": "AgIAAC0AAAAAAAAAAAAAADgAAAAZAAAAAAAAAA==",
+              "ViewState": "AgIAAFEAAAAAAAAAAAAAAF0AAAAYAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-04-03T17:36:32.264Z",
               "EditorCaption": ""
@@ -197,8 +197,7 @@
               "RelativeToolTip": "SistemaDigitalizacionPolizas.API\\BackgroundWorkers\\EmailBackgroundWorker.cs",
               "ViewState": "AgIAAAwAAAAAAAAAAIBJwAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-02T06:08:09Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-02T06:08:09Z"
             },
             {
               "$type": "Document",
