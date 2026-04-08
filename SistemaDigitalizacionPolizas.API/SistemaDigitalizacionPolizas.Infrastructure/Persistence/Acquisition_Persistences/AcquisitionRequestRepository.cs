@@ -14,7 +14,12 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Acquisition_Pe
     {
         private readonly SdpeDbContext _context;
 
-
+        public async Task<List<AcquisitionRequest>> GetByClassificationId(int classificationId)
+        {
+            return await _context.AcquisitionRequests
+                .Where(x => x.IdAcquisitionClassification == classificationId)
+                .ToListAsync();
+        }
 
         public AcquisitionRequestRepository(SdpeDbContext context)
         {
