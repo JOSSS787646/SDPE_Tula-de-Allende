@@ -10,9 +10,14 @@ using SistemaDigitalizacionPolizas.API.Extensions;
 using System.Text;
 using SistemaDigitalizacionPolizas.API.Middleware;
 
+
+
+
 var builder = WebApplication.CreateBuilder(args);
+
+/*
 var port = Environment.GetEnvironmentVariable("PORT") ?? "80";
-builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
+builder.WebHost.UseUrls($"http://0.0.0.0:{port}");*/
 
 // ======================================================
 // CONTROLLERS
@@ -90,7 +95,7 @@ var app = builder.Build();
 // ======================================================
 // MIDDLEWARE
 // ======================================================
-//app.UseMiddleware<ExceptionMiddleware>();
+app.UseMiddleware<ExceptionMiddleware>();
 app.UseSwaggerIfEnabled(builder.Configuration);
 app.UseHttpsRedirection();
 app.UseCors("AllowAll");
