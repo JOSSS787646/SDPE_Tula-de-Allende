@@ -19,25 +19,54 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Document_Persi
         // =========================================================
         // 🔹 CARGA MASIVA (REEMPLAZAR COMPLETO)
         // =========================================================
-        public async Task ReplaceAsync(
-            int acquisitionClassificationId,
-            IEnumerable<ClasificationDocumentType> entities)
+        public async Task UpsertRangeAsync(
+     int acquisitionClassificationId,
+     IEnumerable<ClasificationDocumentType> entities)
         {
-            // 1️⃣ Obtener relaciones actuales
+            // 1️⃣ Traer existentes de BD
             var existing = await _context.ClasificationDocumentTypes
-                .Where(x => x.ClassificationAcquisitionId
-                            == acquisitionClassificationId)
+                .Where(x => x.ClassificationAcquisitionId == acquisitionClassificationId)
                 .ToListAsync();
 
-            // 2️⃣ Eliminar actuales
-            if (existing.Any())
-                _context.ClasificationDocumentTypes.RemoveRange(existing);
+            // 2️⃣ Convertir a diccionario para búsqueda rápida
+            var existingDict = existing.ToDictionary(
+                x => x.DocumentTypeId,
+                x => x
+            );
 
-            // 3️⃣ Insertar nuevas
-            await _context.ClasificationDocumentTypes
-                .AddRangeAsync(entities);
+            var incomingDict = entities.ToDictionary(
+                x => x.DocumentTypeId,
+                x => x
+            );
 
-            // 4️⃣ Guardar cambios
+            // 3️⃣ INSERT o UPDATE
+            foreach (var entity in entities)
+            {
+                if (existingDict.TryGetValue(entity.DocumentTypeId, out var existingEntity))
+                {
+                    // 🔄 UPDATE
+                    existingEntity.IsRequired = entity.IsRequired;
+                    existingEntity.Active = entity.Active;
+
+                    // opcional: marcar como modificado
+                    _context.ClasificationDocumentTypes.Update(existingEntity);
+                }
+                else
+                {
+                    // ➕ INSERT
+                    await _context.ClasificationDocumentTypes.AddAsync(entity);
+                }
+            }
+
+            // 4️⃣ DELETE (los que ya no vienen)
+            var toDelete = existing
+                .Where(x => !incomingDict.ContainsKey(x.DocumentTypeId))
+                .ToList();
+
+            if (toDelete.Any())
+                _context.ClasificationDocumentTypes.RemoveRange(toDelete);
+
+            // 5️⃣ Guardar cambios
             await _context.SaveChangesAsync();
         }
 

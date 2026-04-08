@@ -70,10 +70,9 @@ namespace SistemaDigitalizacionPolizas.API.Middleware
             // =========================================================
             catch (UnauthorizedAccessException ex)
             {
-                _logger.LogWarning(ex, "[Middleware] Acceso no autorizado: {Path}", context.Request.Path);
+                _logger.LogWarning(ex, "[Middleware] No autorizado: {Path}", context.Request.Path);
 
-                await WriteResponse(context, StatusCodes.Status403Forbidden,
-                    "No tienes permisos para realizar esta acción.");
+                await WriteResponse(context, StatusCodes.Status401Unauthorized, ex.Message);
             }
 
             // =========================================================

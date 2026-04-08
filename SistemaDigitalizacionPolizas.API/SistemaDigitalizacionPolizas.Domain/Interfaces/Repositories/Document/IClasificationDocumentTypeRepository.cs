@@ -20,9 +20,9 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Document_Persi
         /// Reemplaza todos los documentos asociados a una clasificación,
         /// realizando una carga masiva de relaciones.
         /// </summary>
-        Task ReplaceAsync(
-            int acquisitionClassificationId,
-            IEnumerable<ClasificationDocumentType> entities);
+        Task UpsertRangeAsync(
+      int acquisitionClassificationId,
+      IEnumerable<ClasificationDocumentType> entities);
 
         /// <summary>
         /// Obtiene todos los documentos asociados a una clasificación.
