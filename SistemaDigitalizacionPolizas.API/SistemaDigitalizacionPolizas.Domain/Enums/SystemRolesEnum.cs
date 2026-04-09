@@ -16,7 +16,7 @@ namespace SistemaDigitalizacionPolizas.Domain.Enums
         /// <summary>
         /// TESORERIA
         /// </summary>
-        ReadView = 9,
+        AdministradorTesoreria = 3,
 
 
         /// <summary>
@@ -24,7 +24,7 @@ namespace SistemaDigitalizacionPolizas.Domain.Enums
         /// </summary>
 
         //Quien administra las pólizas, puede cargar y eliminar pólizas
-        AdministradorAdquisiciones = 4
+        AdministradorAdquisiciones = 2
 
     }
 }

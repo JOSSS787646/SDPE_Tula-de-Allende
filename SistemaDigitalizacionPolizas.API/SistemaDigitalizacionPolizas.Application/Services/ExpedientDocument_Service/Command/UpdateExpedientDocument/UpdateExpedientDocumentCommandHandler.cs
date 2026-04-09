@@ -125,10 +125,10 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
                 // OBTENER DATOS PARA NOTIFICACIONES
                 // ================================
                 var reviewerEmail =
-                    await _userRepository.GetEmailByRoleAsync((int)SystemRolesEnum.ReadView);
+                    await _userRepository.GetEmailByRoleAsync((int)SystemRolesEnum.AdministradorTesoreria);
 
                 var reviewerUserId =
-                    await _userRepository.GetUserIdByRoleAsync((int)SystemRolesEnum.ReadView);
+                    await _userRepository.GetUserIdByRoleAsync((int)SystemRolesEnum.AdministradorTesoreria);
 
                 var requestInfo =
                     await _notificationRepository.GetRequestNotificationInfoAsync(entity.RequestId);
