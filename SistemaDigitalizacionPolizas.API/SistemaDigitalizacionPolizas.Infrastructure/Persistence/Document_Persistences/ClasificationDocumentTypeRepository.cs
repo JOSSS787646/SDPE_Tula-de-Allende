@@ -40,20 +40,20 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Document_Persi
             );
 
             // 3️⃣ INSERT o UPDATE
+            // 3️⃣ INSERT o UPDATE
             foreach (var entity in entities)
             {
                 if (existingDict.TryGetValue(entity.DocumentTypeId, out var existingEntity))
                 {
                     // 🔄 UPDATE
-                    existingEntity.IsRequired = entity.IsRequired;
-                    existingEntity.Active = entity.Active;
-
-                    // opcional: marcar como modificado
+                    existingEntity.IsRequired = true;
+                    existingEntity.Active = true; 
                     _context.ClasificationDocumentTypes.Update(existingEntity);
                 }
                 else
                 {
                     // ➕ INSERT
+                    entity.Active = true; // 👈 siempre true
                     await _context.ClasificationDocumentTypes.AddAsync(entity);
                 }
             }

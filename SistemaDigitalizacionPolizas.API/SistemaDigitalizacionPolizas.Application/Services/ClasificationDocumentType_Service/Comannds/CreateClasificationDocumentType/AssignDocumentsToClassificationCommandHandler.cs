@@ -43,7 +43,7 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ClasificationDocumen
                 {
                     ClassificationAcquisitionId = request.AcquisitionClassificationId,
                     DocumentTypeId = d.DocumentTypeId,
-                    IsRequired = d.IsRequired,
+                    IsRequired = true,
                     Active = d.Active
                 }).ToList();
 
