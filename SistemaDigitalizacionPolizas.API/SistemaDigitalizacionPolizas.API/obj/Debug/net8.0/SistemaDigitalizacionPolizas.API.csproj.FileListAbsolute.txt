@@ -1325,10 +1325,10 @@ C:\Estadia Ingenieria\Marzo\Sprint10\SistemaDigitalizacionPolizas.API\SistemaDig
 C:\Estadia Ingenieria\Marzo\Sprint10\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.API\obj\Debug\net8.0\staticwebassets\msbuild.buildMultiTargeting.SistemaDigitalizacionPolizas.API.props
 C:\Estadia Ingenieria\Marzo\Sprint10\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.API\obj\Debug\net8.0\staticwebassets\msbuild.buildTransitive.SistemaDigitalizacionPolizas.API.props
 C:\Estadia Ingenieria\Marzo\Sprint10\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.API\obj\Debug\net8.0\staticwebassets.pack.json
-C:\Estadia Ingenieria\Marzo\Sprint10\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.API\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
 C:\Estadia Ingenieria\Marzo\Sprint10\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.API\obj\Debug\net8.0\SistemaD.723BE8F1.Up2Date
 C:\Estadia Ingenieria\Marzo\Sprint10\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.API\obj\Debug\net8.0\SistemaDigitalizacionPolizas.API.dll
 C:\Estadia Ingenieria\Marzo\Sprint10\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.API\obj\Debug\net8.0\refint\SistemaDigitalizacionPolizas.API.dll
 C:\Estadia Ingenieria\Marzo\Sprint10\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.API\obj\Debug\net8.0\SistemaDigitalizacionPolizas.API.pdb
 C:\Estadia Ingenieria\Marzo\Sprint10\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.API\obj\Debug\net8.0\SistemaDigitalizacionPolizas.API.genruntimeconfig.cache
 C:\Estadia Ingenieria\Marzo\Sprint10\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.API\obj\Debug\net8.0\ref\SistemaDigitalizacionPolizas.API.dll
+C:\Estadia Ingenieria\Marzo\Sprint10\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.API\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt

@@ -1,4 +1,5 @@
 ﻿using SistemaDigitalizacionPolizas.Domain.Entities.Acquisition_Entities;
+using SistemaDigitalizacionPolizas.Domain.Entities.AcquisitionRequest_Entities;
 using SistemaDigitalizacionPolizas.Domain.Entities.RequestingAdministration_Entities;
 using System;
 using System.Collections.Generic;
@@ -47,5 +48,7 @@ namespace SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Acquisitio
         /// Obtiene un tipo de adquisición mediante su código de negocio.
         /// </summary>
         Task<AcquisitionType?> GetByCodeAsync(int code);
+
+
     }
 }

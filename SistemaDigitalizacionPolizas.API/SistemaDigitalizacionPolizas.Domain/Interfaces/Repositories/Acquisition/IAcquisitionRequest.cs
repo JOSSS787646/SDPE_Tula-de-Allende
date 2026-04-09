@@ -90,5 +90,8 @@ namespace SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Acquisitio
         /// Obtiene los datos necesarios para evaluar el estado de una solicitud.
         /// </summary>
         Task<AcquisitionRequestStatusDto?> GetStatusDataAsync(int requestId);
+
+
+        Task<List<AcquisitionRequest>> GetByClassificationId(int classificationId);
     }
 }

@@ -1,4 +1,7 @@
-﻿using SistemaDigitalizacionPolizas.Domain.Entities.Document_Entities;
+﻿using SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Service.Service;
+using SistemaDigitalizacionPolizas.Domain.Entities.Document_Entities;
+using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Acquisition;
+using SistemaDigitalizacionPolizas.Domain.Interfaces.Services;
 using SistemaDigitalizacionPolizas.Infrastructure.Persistence.Document_Persistences;
 using System;
 using System.Collections.Generic;
@@ -9,14 +12,23 @@ using System.Threading.Tasks;
 namespace SistemaDigitalizacionPolizas.Application.Services.ClasificationDocumentType_Service.Comannds.CreateClasificationDocumentType
 {
     public class AssignDocumentsToClassificationCommandHandler
-        : IRequestHandler<AssignDocumentsToClassificationCommand, bool>
+    : IRequestHandler<AssignDocumentsToClassificationCommand, bool>
     {
         private readonly IClasificationDocumentTypeRepository _repository;
+        private readonly IAcquisitionRequest _requestRepository; // 👈 necesitas este
+        private readonly IRequestStatusService _requestStatusService;
+        private readonly IUnitOfWorkService _unitOfWork;
 
         public AssignDocumentsToClassificationCommandHandler(
-            IClasificationDocumentTypeRepository repository)
+            IClasificationDocumentTypeRepository repository,
+            IAcquisitionRequest requestRepository,
+            IRequestStatusService requestStatusService,
+            IUnitOfWorkService unitOfWork)
         {
             _repository = repository;
+            _requestRepository = requestRepository;
+            _requestStatusService = requestStatusService;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<bool> Handle(
@@ -31,13 +43,52 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ClasificationDocumen
                 {
                     ClassificationAcquisitionId = request.AcquisitionClassificationId,
                     DocumentTypeId = d.DocumentTypeId,
-                    IsRequired = d.IsRequired,
+                    IsRequired = true,
                     Active = d.Active
-                });
+                }).ToList();
 
-            await _repository.ReplaceAsync(
-                request.AcquisitionClassificationId,
-                entities);
+            // ====================================================
+            // 🔹 TRANSACCIÓN 1: UPSERT
+            // ====================================================
+            await _unitOfWork.BeginTransactionAsync();
+
+            try
+            {
+                await _repository.UpsertRangeAsync(
+                    request.AcquisitionClassificationId,
+                    entities);
+
+                await _unitOfWork.CommitAsync();
+            }
+            catch
+            {
+                await _unitOfWork.RollbackAsync();
+                throw;
+            }
+
+            // ====================================================
+            // 🔹 TRANSACCIÓN 2: RECALCULAR ESTADOS
+            // ====================================================
+            await _unitOfWork.BeginTransactionAsync();
+
+            try
+            {
+                // 🔥 obtener solicitudes afectadas por la clasificación
+                var requests = await _requestRepository
+                    .GetByClassificationId(request.AcquisitionClassificationId);
+
+                foreach (var req in requests)
+                {
+                    await _requestStatusService.RecalculateStatus(req.IdRequest);
+                }
+
+                await _unitOfWork.CommitAsync();
+            }
+            catch
+            {
+                await _unitOfWork.RollbackAsync();
+                throw;
+            }
 
             return true;
         }

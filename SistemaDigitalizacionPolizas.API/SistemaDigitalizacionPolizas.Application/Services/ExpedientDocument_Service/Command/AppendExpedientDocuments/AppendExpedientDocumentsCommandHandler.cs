@@ -144,10 +144,10 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
                 // *** CORRECCIÓN PRINCIPAL ***
                 // Se obtienen TODOS los emails e IDs del rol ReadView, no solo uno
                 var reviewerEmails = await _userRepository
-                    .GetEmailsByRoleAsync((int)SystemRolesEnum.ReadView);
+                    .GetEmailsByRoleAsync((int)SystemRolesEnum.AdministradorTesoreria);
 
                 var reviewerUserIds = await _userRepository
-                    .GetUserIdsByRoleAsync((int)SystemRolesEnum.ReadView);
+                    .GetUserIdsByRoleAsync((int)SystemRolesEnum.AdministradorTesoreria);
 
                 var requestInfo = await _notificationRepository
                     .GetRequestNotificationInfoAsync(request.RequestId);
