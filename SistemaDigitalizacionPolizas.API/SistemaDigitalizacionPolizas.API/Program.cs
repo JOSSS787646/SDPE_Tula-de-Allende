@@ -15,9 +15,9 @@ using SistemaDigitalizacionPolizas.API.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
-/*
-var port = Environment.GetEnvironmentVariable("PORT") ?? "80";
-builder.WebHost.UseUrls($"http://0.0.0.0:{port}");*/
+
+var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
+builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
 
 // ======================================================
 // CONTROLLERS
