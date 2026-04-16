@@ -35,7 +35,7 @@ namespace SistemaDigitalizacionPolizas.Application.Services.Acquisition_Service.
             acquisitionClass.Description = request.Description;
             acquisitionClass.Active = request.Active;
             acquisitionClass.UpdatedBy = _currentUserService.UserId;
-            acquisitionClass.UpdatedAt = DateTime.Now;
+            acquisitionClass.UpdatedAt = DateTime.UtcNow;
 
             return await _acquisitionRepository.UpdateAsync(acquisitionClass);
         }

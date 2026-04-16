@@ -36,7 +36,7 @@ namespace SistemaDigitalizacionPolizas.Application.Services.Community_Service.Co
             community.Description = request.Description;
             community.Active = request.Active;
             community.UpdatedBy = _currentUserService.UserId;
-            community.UpdatedAt = DateTime.Now;
+            community.UpdatedAt = DateTime.UtcNow;
 
             return await _communityRepository.UpdateAsync(community);
         }

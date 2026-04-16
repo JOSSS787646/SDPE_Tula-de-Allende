@@ -45,19 +45,13 @@ public class EmailService : IEmailService
         return await reader.ReadToEndAsync();
     }
 
-    /// <summary>
-    /// Badge superior de la tarjeta:
-    /// Aprobado → fondo verde claro  |  Observado → fondo rojo claro
-    /// </summary>
     private static string BuildBadge(string result)
     {
         bool aprobado = result.Equals("Aprobado", StringComparison.OrdinalIgnoreCase);
-
         var bg = aprobado ? "#e6f4ea" : "#fdecea";
         var border = aprobado ? "#b7dfbe" : "#f5c6c2";
         var badgeBg = aprobado ? "#2e7d32" : "#c62828";
         var label = aprobado ? "✔ DOCUMENTO APROBADO" : "⚠ DOCUMENTO OBSERVADO";
-
         return $@"
 <tr>
   <td style=""background:{bg};border-bottom:1px solid {border};padding:12px 30px;text-align:center;"">
@@ -68,37 +62,22 @@ public class EmailService : IEmailService
 </tr>";
     }
 
-    /// <summary>
-    /// Span coloreado para la celda "Resultado":
-    /// Aprobado → verde  |  Observado → rojo
-    /// </summary>
     private static string BuildResultSpan(string result)
     {
         bool aprobado = result.Equals("Aprobado", StringComparison.OrdinalIgnoreCase);
-
         var color = aprobado ? "#1b5e20" : "#b71c1c";
         var bgSpan = aprobado ? "#e8f5e9" : "#ffebee";
         var icon = aprobado ? "✔" : "⚠";
-
         return $@"<span style=""background:{bgSpan};color:{color};font-weight:700;padding:2px 10px;border-radius:12px;font-size:13px;"">{icon} {result}</span>";
     }
 
-    /// <summary>
-    /// Bloque de observaciones:
-    /// - Si fue Aprobado → no se renderiza (string vacío)
-    /// - Si fue Observado → bloque rojo con el texto
-    /// </summary>
     private static string BuildObservationsBlock(string result, string? observations)
     {
         bool aprobado = result.Equals("Aprobado", StringComparison.OrdinalIgnoreCase);
-
-        if (aprobado)
-            return string.Empty;
-
+        if (aprobado) return string.Empty;
         var text = string.IsNullOrWhiteSpace(observations)
             ? "Sin observaciones registradas."
             : observations;
-
         return $@"
 <div style=""background:#fff5f5;border:1px solid #f5c6c2;border-left:4px solid #c62828;border-radius:10px;padding:20px;margin-bottom:20px;"">
   <p style=""margin:0 0 12px;font-size:13px;font-weight:700;color:#c62828;text-transform:uppercase;letter-spacing:.5px;"">
@@ -109,6 +88,17 @@ public class EmailService : IEmailService
   </div>
 </div>";
     }
+
+    // ─────────────────────────────────────────────────────────────
+    // HELPER: hora México (reutilizable)
+    // ─────────────────────────────────────────────────────────────
+
+    private static DateTime GetMexicoTime() =>
+        TimeZoneInfo.ConvertTimeBySystemTimeZoneId(
+            DateTime.UtcNow,
+            "Central Standard Time (Mexico)"
+        );
+
 
     // ─────────────────────────────────────────────────────────────
     // 1. Recuperación de contraseña
@@ -154,6 +144,9 @@ public class EmailService : IEmailService
 
         var htmlBody = await LoadTemplateAsync(resourceName);
 
+        var mexicoTime = GetMexicoTime(); 
+
+
         var displayName = string.IsNullOrWhiteSpace(userName)
             ? "Usuario Adquisiciones (sin nombre)"
             : userName;
@@ -163,8 +156,10 @@ public class EmailService : IEmailService
             .Replace("{{REQUEST}}", requestId)
             .Replace("{{UNIT}}", administrativeUnit)
             .Replace("{{DESCRIPTION}}", requestDescription)
-            .Replace("{{DATE}}", date.ToString("dd/MM/yyyy"))
-            .Replace("{{TIME}}", date.ToString("HH:mm"))
+
+            .Replace("{{DATE}}", mexicoTime.ToString("dd/MM/yyyy"))  // FIX 2: sin punto y coma erróneo
+            .Replace("{{TIME}}", mexicoTime.ToString("HH:mm"))
+
             .Replace("{{DOCUMENTS}}", documentsList);
 
         var mail = new MailMessage
@@ -197,7 +192,7 @@ public class EmailService : IEmailService
             "SistemaDigitalizacionPolizas.Infrastructure.Persistence.Services.Email.Templates.DocumentReviewNotification.html";
 
         var htmlBody = await LoadTemplateAsync(resourceName);
-        var now = DateTime.Now;
+        var mexicoTime = GetMexicoTime();
 
         htmlBody = htmlBody
             .Replace("{{BADGE}}", BuildBadge(result))
@@ -206,8 +201,8 @@ public class EmailService : IEmailService
             .Replace("{{DOCUMENT}}", documentName)
             .Replace("{{RESULT}}", BuildResultSpan(result))
             .Replace("{{OBSERVATIONS_BLOCK}}", BuildObservationsBlock(result, observations))
-            .Replace("{{DATE}}", now.ToString("dd/MM/yyyy"))
-            .Replace("{{TIME}}", now.ToString("HH:mm"));
+            .Replace("{{DATE}}", mexicoTime.ToString("dd/MM/yyyy"))
+            .Replace("{{TIME}}", mexicoTime.ToString("HH:mm"));
 
         var mail = new MailMessage
         {
@@ -239,7 +234,7 @@ public class EmailService : IEmailService
             "SistemaDigitalizacionPolizas.Infrastructure.Persistence.Services.Email.Templates.DocumentReviewed.html";
 
         var htmlBody = await LoadTemplateAsync(resourceName);
-        var now = DateTime.Now;
+        var mexicoTime = GetMexicoTime();
 
         htmlBody = htmlBody
             .Replace("{{BADGE}}", BuildBadge(result))
@@ -248,8 +243,10 @@ public class EmailService : IEmailService
             .Replace("{{DOCUMENT}}", documentName)
             .Replace("{{RESULT}}", BuildResultSpan(result))
             .Replace("{{OBSERVATIONS_BLOCK}}", BuildObservationsBlock(result, observations))
-            .Replace("{{DATE}}", now.ToString("dd/MM/yyyy"))
-            .Replace("{{TIME}}", now.ToString("HH:mm"));
+
+            .Replace("{{DATE}}", mexicoTime.ToString("dd/MM/yyyy"))  
+            .Replace("{{TIME}}", mexicoTime.ToString("HH:mm"));
+
 
         var mail = new MailMessage
         {
@@ -264,7 +261,9 @@ public class EmailService : IEmailService
         await smtp.SendMailAsync(mail);
     }
 
-
+    // ─────────────────────────────────────────────────────────────
+    // 5. Solicitudes vencidas agrupadas
+    // ─────────────────────────────────────────────────────────────
 
     public async Task SendGroupedExpiredNotificationAsync(
        string to,
@@ -275,7 +274,6 @@ public class EmailService : IEmailService
             "SistemaDigitalizacionPolizas.Infrastructure.Persistence.Services.Email.Templates.ExpiredRequestsGrouped.html";
 
         var htmlBody = await LoadTemplateAsync(resourceName);
-
         var requestsBlock = BuildRequestsBlock(requests);
 
         htmlBody = htmlBody
@@ -289,7 +287,6 @@ public class EmailService : IEmailService
             Body = htmlBody,
             IsBodyHtml = true
         };
-
         mail.To.Add(to);
 
         using var smtp = BuildSmtpClient();
@@ -300,8 +297,6 @@ public class EmailService : IEmailService
     {
         return string.Join("", requests.Select(r =>
         {
-          
-
             return $@"
         <div style='
         background:#fafafa;
@@ -311,15 +306,11 @@ public class EmailService : IEmailService
         padding:20px;
         margin-bottom:18px;
         '>
-
             <p style='margin:0 0 10px;font-size:13px;font-weight:700;color:#5b0b24;'>
                 Solicitud #{r.RequestNumber}
             </p>
-
             <ul style='padding-left:18px;font-size:13px;color:#444;'>
-            
             </ul>
-
         </div>";
         }));
     }

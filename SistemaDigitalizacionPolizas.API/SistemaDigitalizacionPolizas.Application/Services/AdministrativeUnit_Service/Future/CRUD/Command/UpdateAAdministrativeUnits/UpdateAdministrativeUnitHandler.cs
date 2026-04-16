@@ -26,7 +26,7 @@ namespace SistemaDigitalizacionPolizas.Application.Services.AdministrativeUnit_S
             unit.Description = request.Unit.Description;
             unit.Active = request.Unit.Active;
             unit.UpdatedBy = _currentUserService.UserId;
-            unit.UpdatedAt = DateTime.Now;
+            unit.UpdatedAt = DateTime.UtcNow;
 
             return await _repository.UpdateAsync(unit);
         }

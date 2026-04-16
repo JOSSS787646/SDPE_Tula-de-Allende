@@ -33,7 +33,7 @@ namespace SistemaDigitalizacionPolizas.Application.Services.Acquisition_Service.
                 Description = request.Description,
                 Active = true,
                 CreatedBy = _currentUserService.UserId,
-                CreatedAt = DateTime.Now
+                CreatedAt = DateTime.UtcNow
             };
 
             var result = await _acquisitionRepository.AddAsync(acquisitionType);

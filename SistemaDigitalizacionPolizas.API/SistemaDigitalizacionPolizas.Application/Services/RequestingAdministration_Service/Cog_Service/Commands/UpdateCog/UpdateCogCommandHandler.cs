@@ -36,7 +36,7 @@ namespace SistemaDigitalizacionPolizas.Application.Services.RequestingAdministra
             cog.Description = request.Description;
             cog.Active = request.Active;
             cog.UpdatedBy = _currentUserService.UserId;
-            cog.UpdatedAt = DateTime.Now;
+            cog.UpdatedAt = DateTime.UtcNow;
 
             // 3️⃣ Guardar
             return await _repository.UpdateAsync(cog);

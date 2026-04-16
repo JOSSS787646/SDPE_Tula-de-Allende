@@ -57,7 +57,7 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.ApplicationSta
                 return null;
 
             unit.Active = true;
-            unit.CreatedAt = DateTime.Now;
+            unit.CreatedAt = DateTime.UtcNow;
 
             await _context.DocumentStatuses.AddAsync(unit);
             await _context.SaveChangesAsync();
@@ -86,7 +86,7 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.ApplicationSta
 
             cog.Active = false;
             cog.UpdatedBy = userId;
-            cog.UpdatedAt = DateTime.Now;
+            cog.UpdatedAt = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();
             return true;

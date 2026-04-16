@@ -36,7 +36,7 @@ namespace SistemaDigitalizacionPolizas.Application.Services.RequestingAdministra
             proyect.Description = request.Description;
             proyect.Active = request.Active;
             proyect.UpdatedBy = _currentUser.UserId;
-            proyect.UpdatedAt = DateTime.Now;
+            proyect.UpdatedAt = DateTime.UtcNow;
 
             // 3️⃣ Guardar
             return await _repository.UpdateAsync(proyect);

@@ -30,7 +30,7 @@ namespace SistemaDigitalizacionPolizas.Application.Services.RequestingAdministra
                 Description = request.Description,
                 Active = true,
                 CreatedBy = _currentUser.UserId,
-                CreatedAt = DateTime.Now
+                CreatedAt = DateTime.UtcNow
             };
 
             var result = await _proyectRepository.AddAsync(proyect);

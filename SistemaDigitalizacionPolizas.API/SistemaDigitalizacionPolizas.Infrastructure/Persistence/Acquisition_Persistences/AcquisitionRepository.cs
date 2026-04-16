@@ -63,7 +63,7 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Acquisition_Pe
                 return null;
 
             unit.Active = true;
-            unit.CreatedAt = DateTime.Now;
+            unit.CreatedAt = DateTime.UtcNow;
 
             await _context.AcquisitionTypes.AddAsync(unit);
             await _context.SaveChangesAsync();
@@ -93,7 +93,7 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Acquisition_Pe
 
             cog.Active = false;
             cog.UpdatedBy = UserId;
-            cog.UpdatedAt = DateTime.Now;
+            cog.UpdatedAt = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();
             return true;

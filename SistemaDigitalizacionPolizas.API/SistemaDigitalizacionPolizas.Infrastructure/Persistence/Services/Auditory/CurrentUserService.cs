@@ -15,6 +15,7 @@ using SistemaDigitalizacionPolizas.Domain.Interfaces.Services;
 /// </summary>
 /// 
 
+
 namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Services.Auditory
 {
     public class CurrentUserService : ICurrentUserService

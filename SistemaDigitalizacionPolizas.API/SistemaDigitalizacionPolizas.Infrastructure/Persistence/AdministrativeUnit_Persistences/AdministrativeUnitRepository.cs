@@ -20,7 +20,7 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Administrative
             await _context.SaveChangesAsync();
 
             unit.Active = true;
-            unit.CreatedAt = DateTime.Now;
+            unit.CreatedAt = DateTime.UtcNow;
 
             return unit;
 
@@ -71,7 +71,7 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Administrative
             entity.Code = id.Code;
             entity.Description = id.Description;   
             entity.UpdatedBy = id.UpdatedBy;
-            entity.UpdatedAt = DateTime.Now;
+            entity.UpdatedAt = DateTime.UtcNow;
             entity.Active = id.Active;
 
             await _context.SaveChangesAsync();
@@ -92,7 +92,7 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Administrative
 
             entity.Active = false;
             entity.UpdatedBy = userId;
-            entity.UpdatedAt = DateTime.Now;
+            entity.UpdatedAt = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();
             return true;
