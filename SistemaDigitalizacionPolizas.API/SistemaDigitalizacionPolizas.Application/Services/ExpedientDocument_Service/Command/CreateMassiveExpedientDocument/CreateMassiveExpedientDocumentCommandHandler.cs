@@ -209,7 +209,7 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
                             requestId: requestNumber,
                             administrativeUnit: administrativeUnit,
                             requestDescription: requestDescription,
-                            date: DateTime.Now,
+                            date: DateTime.UtcNow,
                             documentsList: documentList
                         )
                     );

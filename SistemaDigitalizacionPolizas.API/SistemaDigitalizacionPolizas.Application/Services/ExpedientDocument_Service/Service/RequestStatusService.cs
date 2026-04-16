@@ -214,7 +214,7 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
             }
 
             bool isExpired = request.CompleteMaximeDate.HasValue &&
-                             DateTime.Now > request.CompleteMaximeDate.Value;
+                             DateTime.UtcNow > request.CompleteMaximeDate.Value;
 
             var ctx = new StatusEvaluationContext(
                 HasObservado: hasObservado,

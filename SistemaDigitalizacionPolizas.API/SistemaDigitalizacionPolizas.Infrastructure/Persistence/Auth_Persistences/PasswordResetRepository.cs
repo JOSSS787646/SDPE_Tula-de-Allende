@@ -25,7 +25,7 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Auth_Persisten
                     x.IdUser == userId &&
                     x.Code == code &&
                     !x.Used &&
-                    x.ExpirationDate > DateTime.Now
+                    x.ExpirationDate > DateTime.UtcNow
                 );
         }
 

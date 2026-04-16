@@ -122,7 +122,7 @@ public async Task<List<BeneficiaryDto>> GetAllAsync()
 
             beneficiary.Active = false;
             beneficiary.ModifiedBy = idBeneficiary;
-            beneficiary.ModifiedAt = DateTime.Now;
+            beneficiary.ModifiedAt = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();
             return true;

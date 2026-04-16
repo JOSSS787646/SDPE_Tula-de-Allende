@@ -58,7 +58,7 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Community_Pers
                 return null;
 
             unit.Active = true;
-            unit.CreatedAt = DateTime.Now;
+            unit.CreatedAt = DateTime.UtcNow;
 
             await _context.Communities.AddAsync(unit);
             await _context.SaveChangesAsync();
@@ -87,7 +87,7 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Community_Pers
 
             cog.Active = false;
             cog.UpdatedBy = idcommunity;
-            cog.UpdatedAt = DateTime.Now;
+            cog.UpdatedAt = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();
             return true;

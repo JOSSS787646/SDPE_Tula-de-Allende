@@ -35,7 +35,7 @@ namespace SistemaDigitalizacionPolizas.Application.Services.Community_Service.Co
                 Description = request.Description,
                 Active = true,
                 CreatedBy = _currentUserService.UserId,
-                CreatedAt = DateTime.Now
+                CreatedAt = DateTime.UtcNow
             };
 
             var result = await _communityRepository.AddAsync(community);

@@ -124,7 +124,7 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.NotificationRe
                 RequestNumber = request.RequestNumber ?? "",
                 AdministrativeUnit = request.AdministrativeUnit.Description,
                 Description = request.Justification ?? "",
-                Date = DateTime.Now,
+                Date = DateTime.UtcNow,
                 Documents = documents
             };
 
