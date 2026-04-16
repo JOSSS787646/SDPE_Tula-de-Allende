@@ -33,7 +33,7 @@ namespace SistemaDigitalizacionPolizas.Application.Services.RequestingAdministra
                 Description = request.Description,
                 Active = true,
                 CreatedBy = _currentUserService.UserId,
-                CreatedAt = DateTime.Now
+                CreatedAt = DateTime.UtcNow
             };
 
             var result = await _Progrepository.AddAsync(prog);

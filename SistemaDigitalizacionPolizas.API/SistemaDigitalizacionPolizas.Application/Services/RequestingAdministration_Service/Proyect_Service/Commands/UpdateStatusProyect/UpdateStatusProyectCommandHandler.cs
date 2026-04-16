@@ -32,7 +32,7 @@ namespace SistemaDigitalizacionPolizas.Application.Services.RequestingAdministra
                 return false;    
             proyect.Active = request.Active;
             proyect.UpdatedBy = _currentUser.UserId;
-            proyect.UpdatedAt = DateTime.Now;
+            proyect.UpdatedAt = DateTime.UtcNow;
 
             return await _repository.UpdateAsync(proyect);
         }

@@ -34,7 +34,7 @@ namespace SistemaDigitalizacionPolizas.Application.Services.AppliccationStatus_S
 
             entity.Active = request.Active;
             entity.UpdatedBy = _currentUserService.UserId;
-            entity.UpdatedAt = DateTime.Now;
+            entity.UpdatedAt = DateTime.UtcNow;
 
             return await _repository.UpdateAsync(entity);
         }

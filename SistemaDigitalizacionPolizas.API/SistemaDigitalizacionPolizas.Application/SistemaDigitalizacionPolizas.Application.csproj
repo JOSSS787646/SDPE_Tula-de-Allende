@@ -6,6 +6,12 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="Services\Auth_Service\Feature\CRUD\Queries\**" />
+    <EmbeddedResource Remove="Services\Auth_Service\Feature\CRUD\Queries\**" />
+    <None Remove="Services\Auth_Service\Feature\CRUD\Queries\**" />
+  </ItemGroup>
+
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="10.0.0" />
@@ -18,7 +24,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Services\Auth_Service\Feature\CRUD\Queries\" />
     <Folder Include="Services\RequestDocumentException_Service\Queries\" />
   </ItemGroup>
 

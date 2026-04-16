@@ -31,7 +31,7 @@ namespace SistemaDigitalizacionPolizas.Application.Services.RequestingAdministra
 
 
                 CreatedBy = _currentUserService.UserId,
-                CreatedAt = DateTime.Now
+                CreatedAt = DateTime.UtcNow
             };
 
             var result = await _repository.AddAsync(cog);

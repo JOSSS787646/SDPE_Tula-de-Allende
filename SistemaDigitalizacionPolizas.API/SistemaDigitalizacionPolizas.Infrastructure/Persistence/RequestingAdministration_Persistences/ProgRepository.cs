@@ -62,7 +62,7 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.RequestingAdmi
                 return null;
 
             unit.Active = true;
-            unit.CreatedAt = DateTime.Now;
+            unit.CreatedAt = DateTime.UtcNow;
 
             await _context.Progs.AddAsync(unit);
             await _context.SaveChangesAsync();
@@ -94,7 +94,7 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.RequestingAdmi
 
             proyect.Active = false;
             proyect.UpdatedBy = userId;
-            proyect.UpdatedAt = DateTime.Now;
+            proyect.UpdatedAt = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();
             return true;

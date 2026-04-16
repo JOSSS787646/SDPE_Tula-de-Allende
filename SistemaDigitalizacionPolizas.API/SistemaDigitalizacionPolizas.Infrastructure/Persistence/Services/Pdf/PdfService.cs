@@ -146,7 +146,7 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Services
 
                             ic.Item().PaddingTop(4).Text("FECHA DE SOLICITUD")
                                 .FontSize(7).FontColor(CT).Bold();
-                            ic.Item().Text((dto.RequestDate ?? DateTime.Now).ToString("dd/MM/yyyy"))
+                            ic.Item().Text((dto.RequestDate ?? DateTime.UtcNow).ToString("dd/MM/yyyy"))
                                 .FontSize(9).FontColor(CP);
 
                             // Estado global del checklist (ExceptionStatus)
@@ -795,7 +795,7 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Services
                         ic.Item().Text("FOLIO").FontSize(7).FontColor(CT).Bold();
                         ic.Item().Text(dto.Folio ?? "—").FontSize(10).Bold().FontColor(CP);
                         ic.Item().PaddingTop(4).Text("FECHA DE SOLICITUD").FontSize(7).FontColor(CT).Bold();
-                        ic.Item().Text((dto.RequestDate ?? DateTime.Now).ToString("dd/MM/yyyy"))
+                        ic.Item().Text((dto.RequestDate ?? DateTime.UtcNow).ToString("dd/MM/yyyy"))
                             .FontSize(10).FontColor(CP);
                         if (dto.AuthorizationDate.HasValue)
                         {

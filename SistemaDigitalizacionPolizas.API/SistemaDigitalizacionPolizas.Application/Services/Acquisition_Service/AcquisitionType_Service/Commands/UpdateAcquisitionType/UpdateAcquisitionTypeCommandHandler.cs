@@ -32,7 +32,7 @@ namespace SistemaDigitalizacionPolizas.Application.Services.Acquisition_Service.
             acquisitionType.Description = request.Description;
             acquisitionType.Active = request.Active;
             acquisitionType.UpdatedBy = _currentUserService.UserId;
-            acquisitionType.UpdatedAt = DateTime.Now;
+            acquisitionType.UpdatedAt = DateTime.UtcNow;
 
             return await _acquisitionTypeRepository.UpdateAsync(acquisitionType);
         }

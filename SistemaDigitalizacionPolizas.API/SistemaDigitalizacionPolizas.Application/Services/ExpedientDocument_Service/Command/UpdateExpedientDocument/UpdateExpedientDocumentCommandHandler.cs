@@ -153,7 +153,7 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
                             requestNumber,
                             administrativeUnitName,
                             requestDescription,
-                            DateTime.Now,
+                            DateTime.UtcNow,
                             $"<div>• Documento actualizado: {entity.FileName}</div>"
                         )
                     );

@@ -31,7 +31,7 @@ CancellationToken cancellationToken)
                 return false;
             acquisitionType.Active = request.Active;
             acquisitionType.UpdatedBy = _currentUserService.UserId;
-            acquisitionType.UpdatedAt = DateTime.Now;
+            acquisitionType.UpdatedAt = DateTime.UtcNow;
 
             return await _acquisitionRepository.UpdateAsync(acquisitionType);
         }

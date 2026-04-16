@@ -102,7 +102,7 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Permissions_Pe
                 return false;
 
             user.Password = hashedPassword;
-            user.UpdateDate = DateTime.Now;
+            user.UpdateDate = DateTime.UtcNow;
 
             _context.Users.Update(user);
             await _context.SaveChangesAsync();
@@ -151,7 +151,7 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.Permissions_Pe
                 return false;
 
             user.Asset = status;
-            user.UpdateDate = DateTime.Now;
+            user.UpdateDate = DateTime.UtcNow;
 
             _context.Users.Update(user);
             await _context.SaveChangesAsync();

@@ -30,7 +30,7 @@ namespace SistemaDigitalizacionPolizas.Application.Services.AdministrativeUnit_S
 
             // Auditoría
             administrativeUnit.UpdatedBy = _currentUser.UserId;
-            administrativeUnit.UpdatedAt = DateTime.Now;
+            administrativeUnit.UpdatedAt = DateTime.UtcNow;
 
             return await _repository.UpdateAsync(administrativeUnit);
         }

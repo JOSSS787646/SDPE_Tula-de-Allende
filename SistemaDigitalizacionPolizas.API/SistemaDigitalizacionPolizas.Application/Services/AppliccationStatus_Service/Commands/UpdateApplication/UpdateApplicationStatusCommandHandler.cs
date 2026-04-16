@@ -39,7 +39,7 @@ namespace SistemaDigitalizacionPolizas.Application.Services.AppliccationStatus_S
 
             // 🔐 Auditoría automática
             entity.UpdatedBy = _currentUserService.UserId;
-            entity.UpdatedAt = DateTime.Now;
+            entity.UpdatedAt = DateTime.UtcNow;
 
             return await _repository.UpdateAsync(entity);
         }

@@ -31,7 +31,7 @@ namespace SistemaDigitalizacionPolizas.Application.Services.RequestingAdministra
                 return false;
             prog.Active = request.Active;
             prog.UpdatedBy = _currentUserService.UserId;
-            prog.UpdatedAt = DateTime.Now;
+            prog.UpdatedAt = DateTime.UtcNow;
 
             return await _repository.UpdateAsync(prog);
         }

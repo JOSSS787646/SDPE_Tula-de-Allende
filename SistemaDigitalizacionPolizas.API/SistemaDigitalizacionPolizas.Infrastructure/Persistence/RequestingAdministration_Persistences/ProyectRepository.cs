@@ -51,7 +51,7 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.RequestingAdmi
 
             // Auditoría inicial
             unit.Active = true;
-            unit.CreatedAt = DateTime.Now;
+            unit.CreatedAt = DateTime.UtcNow;
             // unit.CreatedBy debe venir desde el usuario autenticado
 
             await _context.Proyects.AddAsync(unit);
@@ -85,7 +85,7 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Persistence.RequestingAdmi
 
             proyect.Active = false;
             proyect.UpdatedBy = userId;
-            proyect.UpdatedAt = DateTime.Now;
+            proyect.UpdatedAt = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();
             return true;

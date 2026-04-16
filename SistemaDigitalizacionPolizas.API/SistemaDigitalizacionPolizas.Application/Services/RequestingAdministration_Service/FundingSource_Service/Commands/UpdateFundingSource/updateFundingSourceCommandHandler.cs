@@ -37,7 +37,7 @@ namespace SistemaDigitalizacionPolizas.Application.Services.RequestingAdministra
             fundingSource.Description = request.Description;
             fundingSource.Active = request.Active;
             fundingSource.UpdatedBy = _currentUser.UserId;
-            fundingSource.UpdatedAt = DateTime.Now;
+            fundingSource.UpdatedAt = DateTime.UtcNow;
 
             // 3️⃣ Guardar
             return await _repository.UpdateAsync(fundingSource);

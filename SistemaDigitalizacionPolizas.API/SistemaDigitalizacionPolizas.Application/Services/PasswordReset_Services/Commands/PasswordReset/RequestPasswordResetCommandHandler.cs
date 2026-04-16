@@ -36,7 +36,7 @@ namespace SistemaDigitalizacionPolizas.Application.Services.PasswordReset_Servic
             {
                 IdUser = user.IdUser,
                 Code = code,
-                ExpirationDate = DateTime.Now.AddMinutes(10),
+                ExpirationDate = DateTime.UtcNow.AddMinutes(10),
                 Used = false
             };
 

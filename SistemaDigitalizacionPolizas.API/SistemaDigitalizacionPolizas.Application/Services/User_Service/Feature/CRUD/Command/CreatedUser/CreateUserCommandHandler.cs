@@ -21,7 +21,7 @@
                 IdAdministrativeUnit = request.IdAdministrativeUnit,
                 IdRole = request.IdRole,
                 Asset = true,
-                CreationDate = DateTime.Now
+                CreationDate = DateTime.UtcNow
             };
 
             await _userRepository.AddAsync(user);

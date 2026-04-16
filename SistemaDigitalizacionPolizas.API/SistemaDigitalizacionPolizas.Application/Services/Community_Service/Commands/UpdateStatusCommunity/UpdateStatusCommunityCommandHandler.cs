@@ -32,7 +32,7 @@ namespace SistemaDigitalizacionPolizas.Application.Services.Community_Service.Co
                 return false;
             prog.Active = request.Active;
             prog.UpdatedBy = _currentUserService.UserId;
-            prog.UpdatedAt = DateTime.Now;
+            prog.UpdatedAt = DateTime.UtcNow;
 
             return await _communityRepository.UpdateAsync(prog);
         }

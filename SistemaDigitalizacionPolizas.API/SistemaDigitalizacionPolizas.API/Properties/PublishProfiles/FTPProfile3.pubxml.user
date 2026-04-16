@@ -5,7 +5,7 @@
     <TimeStampOfAssociatedLegacyPublishXmlFile />
     <EncryptedPassword>AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAnVBuR1sc3E6KuPKhqtSHlgAAAAACAAAAAAAQZgAAAAEAACAAAABKhFpbySDSKk2P0YLPV/nzIFAL/75LFpsTmJKdDEO3WwAAAAAOgAAAAAIAACAAAAB/sU4RZfu1Ve5NMPvK+7Oc9bdZyZlTv+2v9D3xaES8QSAAAADWccGOjOvNZCV2HWu5rh0zh7zqNtwTGTGRGlOfsHoSg0AAAACP8CWyklvSiD6BfQEtyxPCP4vPEiUFP70ahZ+yILw27nxMMV5WeInfZrO3fVGZ8Ac0SQbI64gkkWCKopKfsH+9</EncryptedPassword>
     <_PublishTargetUrl>ftp://SistemaPolizasEgresosTulaAllende.somee.com/www.SistemaPolizasEgresosTulaAllende.somee.com</_PublishTargetUrl>
-    <History>True|2026-04-09T17:20:28.8583381Z||;False|2026-04-09T11:16:06.0839415-06:00||;True|2026-04-09T11:00:33.9331712-06:00||;True|2026-04-09T09:11:24.1487657-06:00||;True|2026-04-08T14:20:58.8665936-06:00||;</History>
+    <History>True|2026-04-16T15:55:35.3569858Z||;True|2026-04-09T11:20:28.8583381-06:00||;False|2026-04-09T11:16:06.0839415-06:00||;True|2026-04-09T11:00:33.9331712-06:00||;True|2026-04-09T09:11:24.1487657-06:00||;True|2026-04-08T14:20:58.8665936-06:00||;</History>
     <LastFailureDetails />
   </PropertyGroup>
   <ItemGroup>
@@ -313,16 +313,16 @@
       <publishTime>10/22/2021 18:49:58</publishTime>
     </File>
     <File Include="SistemaDigitalizacionPolizas.API.deps.json">
-      <publishTime>04/09/2026 11:16:40</publishTime>
+      <publishTime>04/16/2026 09:51:46</publishTime>
     </File>
     <File Include="SistemaDigitalizacionPolizas.API.dll">
-      <publishTime>04/09/2026 11:16:40</publishTime>
+      <publishTime>04/16/2026 09:51:45</publishTime>
     </File>
     <File Include="SistemaDigitalizacionPolizas.API.exe">
-      <publishTime>04/09/2026 11:16:40</publishTime>
+      <publishTime>04/16/2026 09:51:46</publishTime>
     </File>
     <File Include="SistemaDigitalizacionPolizas.API.pdb">
-      <publishTime>04/09/2026 11:16:40</publishTime>
+      <publishTime>04/16/2026 09:51:45</publishTime>
     </File>
     <File Include="SistemaDigitalizacionPolizas.API.runtimeconfig.json">
       <publishTime>04/07/2026 13:54:24</publishTime>
@@ -331,10 +331,10 @@
       <publishTime>04/03/2026 11:45:33</publishTime>
     </File>
     <File Include="SistemaDigitalizacionPolizas.Application.dll">
-      <publishTime>04/09/2026 10:56:30</publishTime>
+      <publishTime>04/16/2026 09:51:28</publishTime>
     </File>
     <File Include="SistemaDigitalizacionPolizas.Application.pdb">
-      <publishTime>04/09/2026 10:56:30</publishTime>
+      <publishTime>04/16/2026 09:51:28</publishTime>
     </File>
     <File Include="SistemaDigitalizacionPolizas.Domain.dll">
       <publishTime>04/09/2026 10:56:29</publishTime>
@@ -343,10 +343,10 @@
       <publishTime>04/09/2026 10:56:28</publishTime>
     </File>
     <File Include="SistemaDigitalizacionPolizas.Infrastructure.dll">
-      <publishTime>04/09/2026 10:56:31</publishTime>
+      <publishTime>04/16/2026 09:51:30</publishTime>
     </File>
     <File Include="SistemaDigitalizacionPolizas.Infrastructure.pdb">
-      <publishTime>04/09/2026 10:56:31</publishTime>
+      <publishTime>04/16/2026 09:51:30</publishTime>
     </File>
     <File Include="Swashbuckle.AspNetCore.Swagger.dll">
       <publishTime>03/18/2025 12:11:02</publishTime>
@@ -403,7 +403,7 @@
       <publishTime>10/22/2021 18:49:44</publishTime>
     </File>
     <File Include="web.config">
-      <publishTime>04/09/2026 11:16:41</publishTime>
+      <publishTime>04/16/2026 09:51:46</publishTime>
     </File>
   </ItemGroup>
 </Project>

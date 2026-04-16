@@ -182,7 +182,7 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
                                 requestNumber,
                                 administrativeUnitName,
                                 requestDescription,
-                                DateTime.Now,
+                                DateTime.UtcNow,
                                 documentList
                             )
                         );

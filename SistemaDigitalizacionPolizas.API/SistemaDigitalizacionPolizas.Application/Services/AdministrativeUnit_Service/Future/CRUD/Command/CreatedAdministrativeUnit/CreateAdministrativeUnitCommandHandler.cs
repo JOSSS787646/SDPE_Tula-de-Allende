@@ -27,7 +27,7 @@ public class CreateAdministrativeUnitCommandHandler
             Description = request.Description,
             Active = request.Active,
             CreatedBy = _currentUserService.UserId,
-            CreatedAt = DateTime.Now
+            CreatedAt = DateTime.UtcNow
         };
 
         var result = await _administrativeUnitRepository.CreateAsync(unit);

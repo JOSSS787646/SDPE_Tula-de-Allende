@@ -38,7 +38,7 @@ namespace SistemaDigitalizacionPolizas.Application.Services.RequestingAdministra
             progr.Description = request.Description;
             progr.Active = request.Active;
             progr.UpdatedBy = _currentUserService.UserId;
-            progr.UpdatedAt = DateTime.Now;
+            progr.UpdatedAt = DateTime.UtcNow;
 
             // 3️⃣ Guardar
             return await _repository.UpdateAsync(progr);
