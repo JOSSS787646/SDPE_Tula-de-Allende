@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SistemaDigitalizacionPolizas.Domain.Dtos.Pdf;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,5 +7,5 @@ using System.Threading.Tasks;
 
 namespace SistemaDigitalizacionPolizas.Application.Services.Pdf_Service.Commands.GenerateChecklistPdf
 {
-    public record GenerateChecklistPdfCommand(int RequestId) : IRequest<byte[]>;
+    public record GenerateChecklistPdfCommand(int RequestId) : IRequest<PdfFileResultDto>;
 }

@@ -357,10 +357,10 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Services
                 {
                     c.Item().Height(28);
                     c.Item().BorderBottom(1).BorderColor("#374151").PaddingBottom(3)
-                        .Text(dto.AcquisitionsSignatoryName ?? "").FontSize(9).FontColor(CP);
+                        .Text( "").FontSize(9).FontColor(CP);
                     c.Item().PaddingTop(3).Text("Nombre y firma").FontSize(7).Italic().FontColor(CT);
                     c.Item().Text(
-                        dto.AcquisitionsSignatoryTitle ?? "Guadalupe Noguez Becerra / Adquisiciones")
+                        dto.AcquisitionsSignatoryTitle ?? "Adquisiciones")
                         .FontSize(7.5f).Bold().FontColor(CP);
                 });
 
@@ -370,10 +370,10 @@ namespace SistemaDigitalizacionPolizas.Infrastructure.Services
                 {
                     c.Item().Height(28);
                     c.Item().BorderBottom(1).BorderColor("#374151").PaddingBottom(3)
-                        .Text(dto.TreasurySignatoryName ?? "").FontSize(9).FontColor(CP);
+                        .Text("").FontSize(9).FontColor(CP);
                     c.Item().PaddingTop(3).Text("Nombre y firma").FontSize(7).Italic().FontColor(CT);
                     c.Item().Text(
-                        dto.TreasurySignatoryTitle ?? "Jaqueline Moreno Martinez / Tesoreria")
+                        dto.TreasurySignatoryTitle ?? "Tesoreria")
                         .FontSize(7.5f).Bold().FontColor(CP);
                 });
             });

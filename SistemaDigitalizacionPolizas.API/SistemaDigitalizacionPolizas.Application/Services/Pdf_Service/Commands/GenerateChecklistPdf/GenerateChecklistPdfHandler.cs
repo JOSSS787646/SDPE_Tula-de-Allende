@@ -1,14 +1,15 @@
-﻿using SistemaDigitalizacionPolizas.Application.Services.Pdf_Service.Commands.GenerateChecklistPdf;
+﻿using MediatR;
 using SistemaDigitalizacionPolizas.Application.Services.Pdf_Service;
+using SistemaDigitalizacionPolizas.Application.Services.Pdf_Service.Commands.GenerateChecklistPdf;
 using SistemaDigitalizacionPolizas.Domain.Dtos.AcquisitionRequest;
 using SistemaDigitalizacionPolizas.Domain.Dtos.Pdf;
+using SistemaDigitalizacionPolizas.Domain.Entities.AcquisitionRequest_Entities;
 using SistemaDigitalizacionPolizas.Domain.Enums;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Acquisition;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Document;
-using SistemaDigitalizacionPolizas.Domain.Entities.AcquisitionRequest_Entities;
 
 public class GenerateChecklistPdfHandler
-    : IRequestHandler<GenerateChecklistPdfCommand, byte[]>
+    : IRequestHandler<GenerateChecklistPdfCommand, PdfFileResultDto>
 {
     private readonly IAcquisitionRequest _requestRepository;
     private readonly IDocumentExpedientRepository _documentRepository;
@@ -24,7 +25,7 @@ public class GenerateChecklistPdfHandler
         _pdfService = pdfService;
     }
 
-    public async Task<byte[]> Handle(
+    public async Task<PdfFileResultDto> Handle(
         GenerateChecklistPdfCommand request,
         CancellationToken cancellationToken)
     {
@@ -43,7 +44,14 @@ public class GenerateChecklistPdfHandler
         var dto = MapToChecklistPdfDto(entity, checklist);
 
         // 🔹 4. Generar PDF
-        return _pdfService.GenerateChecklistPdf(dto);
+        var pdfBytes = _pdfService.GenerateChecklistPdf(dto);
+
+        // 🔥 5. Retornar PDF + nombre del archivo
+        return new PdfFileResultDto
+        {
+            Content = pdfBytes,
+            FileName = $"Checklist_{entity.RequestNumber}.pdf"
+        };
     }
 
     // 🔥 MAPPER PROFESIONAL
@@ -66,12 +74,7 @@ public class GenerateChecklistPdfHandler
             Program = entity.Program?.Description,
             Project = entity.Project?.Description,
 
-            // ── FIRMAS ───────────────────────────────
-            AcquisitionsSignatoryName = "Guadalupe Noguez Becerra",
-            AcquisitionsSignatoryTitle = "Adquisiciones",
-
-            TreasurySignatoryName = "Jaqueline Moreno Martínez",
-            TreasurySignatoryTitle = "Tesorería",
+ 
 
             // ── CHECKLIST ────────────────────────────
             Checklist = checklist.Select(doc =>
@@ -80,11 +83,11 @@ public class GenerateChecklistPdfHandler
 
                 // 🔥 1. ESTADO REAL (EXCEPCIONES)
                 var exceptionStatus = files
-    .OrderByDescending(f => f.Status != null ? f.Status.Id : 0)
-    .Select(f => f.Status?.Description)
-    .FirstOrDefault(s => !string.IsNullOrWhiteSpace(s));
+                    .OrderByDescending(f => f.Status != null ? f.Status.Id : 0)
+                    .Select(f => f.Status?.Description)
+                    .FirstOrDefault(s => !string.IsNullOrWhiteSpace(s));
 
-                // 🔥 2. FALLBACK (por si no hay excepción)
+                // 🔥 2. FALLBACK
                 var approved = files.Count(f =>
                     f.Status != null &&
                     f.Status.Id == (int)DocumentStatusEnum.Aprobado);
@@ -109,10 +112,10 @@ public class GenerateChecklistPdfHandler
                     NoApplies = doc.NoApplies,
                     Uploaded = doc.Uploaded,
 
-                    // 🔥 NUEVO (PRINCIPAL)
+                    // 🔥 PRINCIPAL
                     ExceptionStatus = exceptionStatus ?? fallbackStatus,
 
-                    // ⚠️ LEGACY (puedes eliminar después)
+                    // ⚠️ LEGACY
                     GlobalStatus = fallbackStatus,
 
                     Observations = files

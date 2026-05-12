@@ -260,3 +260,42 @@ C:\Estadia Ingenieria\Marzo\Sprint10\SistemaDigitalizacionPolizas.API\SistemaDig
 C:\Estadia Ingenieria\Marzo\Sprint10\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Infrastructure\obj\Debug\net8.0\SistemaDigitalizacionPolizas.Infrastructure.pdb
 C:\Estadia Ingenieria\Marzo\Sprint10\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Infrastructure\obj\Debug\net8.0\SistemaDigitalizacionPolizas.Infrastructure.genruntimeconfig.cache
 C:\Estadia Ingenieria\Marzo\Sprint10\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Infrastructure\obj\Debug\net8.0\ref\SistemaDigitalizacionPolizas.Infrastructure.dll
+C:\SDPE_FINAL\Back\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Infrastructure\bin\Debug\net8.0\LatoFont\Lato-Black.ttf
+C:\SDPE_FINAL\Back\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Infrastructure\bin\Debug\net8.0\LatoFont\Lato-BlackItalic.ttf
+C:\SDPE_FINAL\Back\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Infrastructure\bin\Debug\net8.0\LatoFont\Lato-Bold.ttf
+C:\SDPE_FINAL\Back\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Infrastructure\bin\Debug\net8.0\LatoFont\Lato-BoldItalic.ttf
+C:\SDPE_FINAL\Back\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Infrastructure\bin\Debug\net8.0\LatoFont\Lato-ExtraBold.ttf
+C:\SDPE_FINAL\Back\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Infrastructure\bin\Debug\net8.0\LatoFont\Lato-ExtraBoldItalic.ttf
+C:\SDPE_FINAL\Back\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Infrastructure\bin\Debug\net8.0\LatoFont\Lato-ExtraLight.ttf
+C:\SDPE_FINAL\Back\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Infrastructure\bin\Debug\net8.0\LatoFont\Lato-ExtraLightItalic.ttf
+C:\SDPE_FINAL\Back\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Infrastructure\bin\Debug\net8.0\LatoFont\Lato-Italic.ttf
+C:\SDPE_FINAL\Back\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Infrastructure\bin\Debug\net8.0\LatoFont\Lato-Light.ttf
+C:\SDPE_FINAL\Back\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Infrastructure\bin\Debug\net8.0\LatoFont\Lato-LightItalic.ttf
+C:\SDPE_FINAL\Back\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Infrastructure\bin\Debug\net8.0\LatoFont\Lato-Medium.ttf
+C:\SDPE_FINAL\Back\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Infrastructure\bin\Debug\net8.0\LatoFont\Lato-MediumItalic.ttf
+C:\SDPE_FINAL\Back\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Infrastructure\bin\Debug\net8.0\LatoFont\Lato-Regular.ttf
+C:\SDPE_FINAL\Back\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Infrastructure\bin\Debug\net8.0\LatoFont\Lato-SemiBold.ttf
+C:\SDPE_FINAL\Back\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Infrastructure\bin\Debug\net8.0\LatoFont\Lato-SemiBoldItalic.ttf
+C:\SDPE_FINAL\Back\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Infrastructure\bin\Debug\net8.0\LatoFont\Lato-Thin.ttf
+C:\SDPE_FINAL\Back\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Infrastructure\bin\Debug\net8.0\LatoFont\Lato-ThinItalic.ttf
+C:\SDPE_FINAL\Back\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Infrastructure\bin\Debug\net8.0\LatoFont\OFL.txt
+C:\SDPE_FINAL\Back\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Infrastructure\bin\Debug\net8.0\SistemaDigitalizacionPolizas.Infrastructure.deps.json
+C:\SDPE_FINAL\Back\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Infrastructure\bin\Debug\net8.0\SistemaDigitalizacionPolizas.Infrastructure.runtimeconfig.json
+C:\SDPE_FINAL\Back\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Infrastructure\bin\Debug\net8.0\SistemaDigitalizacionPolizas.Infrastructure.dll
+C:\SDPE_FINAL\Back\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Infrastructure\bin\Debug\net8.0\SistemaDigitalizacionPolizas.Infrastructure.pdb
+C:\SDPE_FINAL\Back\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Infrastructure\bin\Debug\net8.0\SistemaDigitalizacionPolizas.Application.dll
+C:\SDPE_FINAL\Back\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Infrastructure\bin\Debug\net8.0\SistemaDigitalizacionPolizas.Domain.dll
+C:\SDPE_FINAL\Back\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Infrastructure\bin\Debug\net8.0\SistemaDigitalizacionPolizas.Application.pdb
+C:\SDPE_FINAL\Back\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Infrastructure\bin\Debug\net8.0\SistemaDigitalizacionPolizas.Domain.pdb
+C:\SDPE_FINAL\Back\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Infrastructure\obj\Debug\net8.0\SistemaDigitalizacionPolizas.Infrastructure.csproj.AssemblyReference.cache
+C:\SDPE_FINAL\Back\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Infrastructure\obj\Debug\net8.0\SistemaDigitalizacionPolizas.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+C:\SDPE_FINAL\Back\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Infrastructure\obj\Debug\net8.0\SistemaDigitalizacionPolizas.Infrastructure.AssemblyInfoInputs.cache
+C:\SDPE_FINAL\Back\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Infrastructure\obj\Debug\net8.0\SistemaDigitalizacionPolizas.Infrastructure.AssemblyInfo.cs
+C:\SDPE_FINAL\Back\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Infrastructure\obj\Debug\net8.0\SistemaDigitalizacionPolizas.Infrastructure.csproj.CoreCompileInputs.cache
+C:\SDPE_FINAL\Back\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Infrastructure\obj\Debug\net8.0\SistemaDigitalizacionPolizas.Infrastructure.sourcelink.json
+C:\SDPE_FINAL\Back\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Infrastructure\obj\Debug\net8.0\SistemaD.91879B73.Up2Date
+C:\SDPE_FINAL\Back\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Infrastructure\obj\Debug\net8.0\SistemaDigitalizacionPolizas.Infrastructure.dll
+C:\SDPE_FINAL\Back\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Infrastructure\obj\Debug\net8.0\refint\SistemaDigitalizacionPolizas.Infrastructure.dll
+C:\SDPE_FINAL\Back\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Infrastructure\obj\Debug\net8.0\SistemaDigitalizacionPolizas.Infrastructure.pdb
+C:\SDPE_FINAL\Back\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Infrastructure\obj\Debug\net8.0\SistemaDigitalizacionPolizas.Infrastructure.genruntimeconfig.cache
+C:\SDPE_FINAL\Back\SistemaDigitalizacionPolizas.API\SistemaDigitalizacionPolizas.Infrastructure\obj\Debug\net8.0\ref\SistemaDigitalizacionPolizas.Infrastructure.dll

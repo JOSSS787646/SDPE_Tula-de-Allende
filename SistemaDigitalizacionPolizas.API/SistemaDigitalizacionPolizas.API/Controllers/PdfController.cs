@@ -54,16 +54,16 @@ namespace SistemaDigitalizacionPolizas.API.Controllers
         [HttpGet("checklist/{requestId}")]
         public async Task<IActionResult> GetChecklistPdf(int requestId)
         {
-            var pdfBytes = await _mediator
+            var result = await _mediator
                 .Send(new GenerateChecklistPdfCommand(requestId));
 
-            if (pdfBytes == null || pdfBytes.Length == 0)
+            if (result == null || result.Content.Length == 0)
                 return NotFound("No se pudo generar el PDF");
 
             return File(
-                pdfBytes,
+                result.Content,
                 "application/pdf",
-                $"Checklist_{requestId}.pdf"
+                result.FileName
             );
         }
     }

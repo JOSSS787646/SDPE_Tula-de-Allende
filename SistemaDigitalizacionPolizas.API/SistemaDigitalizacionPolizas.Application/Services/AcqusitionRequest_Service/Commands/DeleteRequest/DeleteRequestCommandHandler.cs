@@ -2,9 +2,7 @@
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Acquisition;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Document;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Services;
-using BCrypt.Net;
 using SistemaDigitalizacionPolizas.Application.Services.AcqusitionRequest_Service.Commands.DeleteRequest;
-
 
 public class DeleteRequestCommandHandler
     : IRequestHandler<DeleteRequestCommand, bool>
@@ -33,35 +31,44 @@ public class DeleteRequestCommandHandler
         DeleteRequestCommand request,
         CancellationToken cancellationToken)
     {
-        // 1️⃣ Obtener usuario actual
+        // ==========================================
+        // 1. Validar usuario
+        // ==========================================
         var userId = _currentUser.UserId;
-
         var user = await _userRepository.GetByIdAsync(userId);
 
         if (user == null)
-            throw new Exception("Usuario no encontrado");
+            throw new KeyNotFoundException("Usuario no encontrado.");
 
-        // 2️⃣ Validar contraseña
+        // ==========================================
+        // 2. Validar contraseña
+        // ==========================================
         var validPassword = BCrypt.Net.BCrypt.Verify(
             request.Password,
             user.Password
         );
 
         if (!validPassword)
-            throw new Exception("Contraseña incorrecta");
+            throw new UnauthorizedAccessException("Contraseña incorrecta.");
 
-        // 3️⃣ Obtener documentos
+        // ==========================================
+        // 3. Obtener documentos activos
+        // ==========================================
         var documents = await _documentRepository
             .GetActiveByRequestId(request.RequestId);
 
-        // 4️⃣ eliminar archivos en paralelo
+        // ==========================================
+        // 4. Eliminar archivos físicos en paralelo
+        // ==========================================
         var deleteTasks = documents
             .Where(d => !string.IsNullOrEmpty(d.FilePath))
             .Select(d => _fileStorageService.DeleteFileAsync(d.FilePath));
 
         await Task.WhenAll(deleteTasks);
 
-        // 5️⃣ eliminar en cascada en BD
+        // ==========================================
+        // 5. Eliminar en cascada en BD
+        // ==========================================
         await _requestRepository.DeleteCascadeAsync(request.RequestId);
 
         return true;

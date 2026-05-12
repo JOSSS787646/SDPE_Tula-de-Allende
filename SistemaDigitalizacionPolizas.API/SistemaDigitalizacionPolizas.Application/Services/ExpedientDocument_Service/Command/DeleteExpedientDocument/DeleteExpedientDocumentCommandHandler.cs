@@ -3,7 +3,6 @@ using SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Servic
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Repositories.Document;
 using SistemaDigitalizacionPolizas.Domain.Interfaces.Services;
 
-
 namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Service.Command.DeleteExpedientDocument
 {
     public class DeleteExpedientDocumentCommandHandler
@@ -36,54 +35,57 @@ namespace SistemaDigitalizacionPolizas.Application.Services.ExpedientDocument_Se
             DeleteExpedientDocumentCommand request,
             CancellationToken cancellationToken)
         {
+            // ==========================================
+            // 1. Validar usuario
+            // ==========================================
             var userId = _currentUser.UserId;
-
             var user = await _userRepository.GetByIdAsync(userId);
 
             if (user == null)
-                throw new Exception("Usuario no encontrado.");
+                throw new KeyNotFoundException("Usuario no encontrado.");
 
+            // ==========================================
+            // 2. Validar contraseña
+            // ==========================================
             var validPassword = BCrypt.Net.BCrypt.Verify(
                 request.Password,
                 user.Password
             );
 
             if (!validPassword)
-                throw new Exception("Contraseña incorrecta.");
+                throw new UnauthorizedAccessException("Contraseña incorrecta.");
 
+            // ==========================================
+            // 3. Validar documento
+            // ==========================================
             var entity = await _repository.GetByIdAsync(request.Id);
 
             if (entity == null)
-                throw new Exception("Documento no encontrado.");
+                throw new KeyNotFoundException("Documento no encontrado.");
 
             var filePath = entity.FilePath;
             var requestId = entity.RequestId;
 
+            // ==========================================
+            // 4. Iniciar transacción
+            // ==========================================
             await _unitOfWork.BeginTransactionAsync();
 
             try
             {
-                // ==========================================
-                // 1. Eliminar documento
-                // ==========================================
+                // Eliminar documento
                 _repository.Delete(entity);
 
-                // 🔥 IMPORTANTE: persistir antes de recalcular
+                // Persistir antes de recalcular
                 await _unitOfWork.SaveChangesAsync();
 
-                // ==========================================
-                // 2. Recalcular estado
-                // ==========================================
+                // Recalcular estado de la solicitud
                 await _requestStatusService.RecalculateStatus(requestId);
 
-                // ==========================================
-                // 3. Confirmar transacción
-                // ==========================================
+                // Confirmar transacción
                 await _unitOfWork.CommitAsync();
 
-                // ==========================================
-                // 4. Eliminar archivo físico (fuera de transacción)
-                // ==========================================
+                // Eliminar archivo físico (fuera de transacción)
                 if (!string.IsNullOrEmpty(filePath))
                     await _fileStorageService.DeleteAsync(filePath);
 
